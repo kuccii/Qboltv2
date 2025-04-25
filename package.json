@@ -14,6 +14,7 @@
     "@supabase/supabase-js": "^2.39.7",
     "@tanstack/react-table": "^8.13.2",
     "@types/jwt-decode": "^2.2.1",
+    "clsx": "^2.1.1",
     "date-fns": "^3.3.1",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
@@ -25,6 +26,7 @@
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.22.3",
     "recharts": "^2.12.2",
+    "tailwind-merge": "^3.2.0",
     "twilio": "^4.22.0",
     "zod": "^3.22.4"
   },
