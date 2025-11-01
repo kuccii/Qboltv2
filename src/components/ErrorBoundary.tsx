@@ -41,7 +41,7 @@ class ErrorBoundary extends Component<Props, State> {
             <p className="text-gray-600 mb-4 text-center">
               We're sorry, but something went wrong. Please try refreshing the page.
             </p>
-            {process.env.NODE_ENV === 'development' && (
+            {import.meta.env.DEV && (
               <div className="mt-4 p-4 bg-gray-100 rounded">
                 <h3 className="font-medium text-gray-900 mb-2">Error Details:</h3>
                 <pre className="text-sm text-gray-600 overflow-auto">

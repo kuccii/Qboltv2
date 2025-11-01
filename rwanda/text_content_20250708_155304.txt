@@ -1,0 +1,190 @@
+Rwanda - 2.3 Road Network | Digital Logistics Capacity Assessments
+Skip to main content
+Search
+Select your language
+العربية
+中文
+English
+Français
+Português
+Русский
+Español
+Rwanda
+Rwanda - 2.3 Road Network
+Export to PDF
+Home
+Show Navigation
+Hide Navigation
+Rwanda
+Rwanda - 1 Country Profile
+Rwanda - 1.1 Humanitarian Background
+Rwanda - 1.2 Regulatory Departments & Quality Control
+Rwanda - 1.3 Customs Information
+Rwanda - 2 Logistics Infrastructure
+Rwanda - 2.1 Port Assessment
+Rwanda - 2.2 Aviation
+Rwanda - 2.2.1 Kigali International Airport
+Rwanda - 2.2.2 Gisenyi/Rubavu National Airport
+Rwanda - 2.2.3 Kamembe National Airport
+2.2.4 Rwanda Ruhengeri National Airport
+Rwanda - 2.3 Road Network
+Rwanda - 2.4 Railway Assessment
+Rwanda - 2.5 Waterways Assessment
+Rwanda - 2.6 Storage Assessment
+Rwanda - 2.7 Milling Assessment
+Rwanda - 3 Logistics Services
+Rwanda - 3.1 Fuel
+Rwanda - 3.2 Transporters
+Rwanda - 3.3 Manual Labor
+Rwanda - 3.4 Telecommunications
+3.5 Rwanda Food and Additional Suppliers
+Rwanda - 3.5.1 Food Suppliers
+Rwanda - 3.6 Rwanda Additional Services
+4 Rwanda Contact Lists
+Rwanda - 4.1 Government Contact List
+Rwanda - 4.2 Humanitarian Agency Contact List
+Rwanda - 4.3 Laboratory and Quality Testing Companies Contact List
+Rwanda - 4.4 Ports and Waterways Companies Contact List
+Rwanda - 4.5 Airport Companies Contact List
+Rwanda - 4.6 Storage and Milling Companies Contact List
+Rwanda - 4.8 Transporter Contact List
+Rwanda - 4.9 Railway Companies Contact List
+Rwanda - 4.10 Supplier Contact List
+Rwanda - 4.11 Additional Services Contact List
+5 Rwanda Annexes
+Rwanda - 5.1 Acronyms and Abbreviations
+Road Network
+All activities within the road transport sector are managed by the Rwanda Transport Development Agency (RTDA) which operates under the Ministry of Infrastructure (MINIFRA). Within the legal and institutional framework stated in the National Transport Policy, MINIFRA is responsible for the sector's policies and strategies.
+Rwanda is dependent on its road transport system for the economic development of the country. All the major towns are connected by the road network. Rwanda is also well connected by the road transport system with the neighbouring countries of Uganda, Kenya, Tanzania, Burundi and the Democratic Republic of Congo. The road system plays a very important role in the import and export business of the country.
+The Rwanda road network has improved through rehabilitation and upgrading during the past years. The total road network covers 7,500 km of paved roads and 11,346 km unpaved roads, making a total of 18846 km. Roads are classified into national (2,860 km), District (1,835 km) and gravel roads (3,563 km). (Source:
+RTDA
+)
+Primary roads, which are suitable for heavy long-haul trucks, connect the capital Kigali with the provinces and international border crossings. The paved primary roads link Kigali with the major locations of Ngoma, Kirehe, Huye, Gicumbi, Nyagatare, Rusizi, Musanze and Rubavu. Many of these roads are steep, especially in the Northern and Southern provinces, and therefore travel speeds along these roads should be quite slow.
+Secondary roads are generally acceptable for small trucks (15 MT max) but require 4WD during rainy seasons especially on roads in mountainous areas. These roads are narrow, steep and difficult to pass during the 6 – 7 month long rainy season. The condition of the district roads in rural areas will only allow small trucks of a 10 MT capacity during the dry season and only about 5 mt during the rainy season.
+Rwanda is a small country and the distances from Kigali to the provincial towns are not very far in relative terms. However, due to road conditions and the terrain, the average travelling time for a heavy loaded vehicle, it takes from Kigali as follows: Huye, 3 hours; Rusizi, 5 hours; Rubavu, 2 hours, Ngoma, 3 hours; and Karongi, 4 hours.
+All secondary roads are unpaved and become very difficult to travel across during the wet season. Truck movements during the rainy season become very difficult due to floods and mudslides, especially with the mountainous terrain of the country,
+The government’s plan to improve the transport sector places emphasis on rural areas. Its major objectives include maintenance and rehabilitation of the rural road network in order to promote commercial exchanges and reviewing the feasibility of an international railway line that connects to the Tanzanian rail network. These initiatives would make a substantial improvement to the infrastructure to support economic growth and ease the burden on humanitarian programmes.
+For more information on Primary Roads in Rwanda, please see the following attachment:
+Rwanda Primary Roads Information
+For more information on government contact details, please see the following link:
+4.1 Government Contact List
+.
+Distance Matrix
+Distances from Capital City to Major Towns (km)
+Kigali
+Muhanga
+Huye
+Nyamagabe
+Rusizi
+Karongi
+Rubavu
+Kigali
+51
+133
+161
+290
+138
+156
+Muhanga
+51
+83
+112
+238
+87
+164
+Huye
+133
+83
+28
+155
+119
+247
+Nyamagabe
+161
+112
+28
+126
+197
+312
+Rusizi
+290
+238
+155
+126
+130
+248
+Karongi
+138
+87
+165
+197
+130
+110
+Rubavu
+156
+164
+247
+312
+248
+110
+Distances from Capital City to Major Towns (km)
+Kigali
+Musanze
+Gicumbi
+Ngoma
+Nyagatare
+Kigali
+94
+66
+114
+162
+Musanze
+94
+106
+224
+190
+Gicumbi
+66
+106
+183
+79
+Ngoma
+114
+224
+183
+121
+Nyagatare
+162
+190
+79
+121
+Road Security
+Security within Rwanda is generally very good and the UN Security level for Rwanda is level 1, except for the north-east of Rwanda close to the DRC border where it is level 2. The security in areas bordering DRC is very volatile due to unpredictable armed conflict in the eastern DRC.
+Weighbridges and Axle Load Limits
+Following the assent of the East African Community Vehicle load bill, axle loads are limited to 56 mt and a maximum seven axles for commercial trucks. Measurement is based on axle load imposed are for a maximum 10 tons for a single axle t, 18 tons for Tandem and 24 tons for Tridem. A tolerance of 5% of the permissible maximum axle load limit shall be allowed on the axle load limits. All member states will be aligned to that law. Previously, Kenya allowed a maximum of 48 tons for vehicles on its roads, Rwanda and Burundi 53 tons, while Tanzania and Uganda allowed 56 tons. The approved higher payload to be applied will reduce the transport cost. (Sources:
+Northern Corridor Transit and Transport Coordination Authority
+and
+The East African
+)
+Road Class and Surface Conditions
+Classification
+Road Description
+Class – RN
+Route National (Bitumen) – There are 13 routes under this classification; they have bitumen surfacing and are international links with Kigali and the major towns within Rwanda.
+Class – RN
+Route National (Gravel) – There are about 30 routes under this classification; they have gravel surfaces and are international links with Kigali and the major towns.
+Class – RD
+Route District (Gravel) – There are 77 routes under this classification; they have gravel surfaces and are used for intra & inter-district travel.
+Class – UC
+Unclassified Routes – All other routes within Rwanda.
+Class – UR
+Urban Routes – Urban roads administered by Kigali City Municipality.
+Bridges
+Generally, rivers are quite small in Rwanda due to the hilly nature of the land. Therefore, the bridges are quite small and are of good construction, resulting in few problems with bridges in urban areas. In the rural areas, bridges are affected by the rainy season. Two major bridges in the country are the Rusumo Bridge and the Nyabarongo Bridge.
+The Rusumo Bridge is located at the Rusumo Border Post on the Central Corridor and was first constructed in the year 1972. The construction of a One Stop Border Post (OSBP) facility between the Republic of Rwanda and the United Republic of Tanzania included the complete replacement with a new bridge, which is 82 m long and 13.5 m wide. The facility, which became operational in November 2014, is a key entry point for traffic originating from Dar es Salaam in Tanzania to Rwanda, Burundi and DRC.
+Book Navigation
+2.2.4 Rwanda Ruhengeri National Airport
+Rwanda - 2.4 Railway Assessment
+Contact
+About the LCA tool
+© 2025. WFP. Logistics Cluster

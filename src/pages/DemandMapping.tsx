@@ -1,334 +1,532 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Map as MapIcon, 
   Filter, 
   BarChart3, 
   Download, 
-  Info
+  Info,
+  TrendingUp,
+  TrendingDown,
+  MapPin,
+  Calendar,
+  Globe,
+  Layers,
+  Eye,
+  EyeOff,
+  RefreshCw,
+  Settings,
+  ChevronDown,
+  Search,
+  X,
+  Play,
+  Pause,
+  Maximize2,
+  Share2,
+  Bookmark
 } from 'lucide-react';
-import DashboardCard from '../components/DashboardCard';
+import { useAuth } from '../contexts/AuthContext';
+import { useIndustry } from '../contexts/IndustryContext';
+import {
+  AppLayout,
+  PageHeader,
+  PageLayout,
+  SectionLayout,
+  SelectInput,
+  ActionMenu,
+  RailLayout,
+  Chip
+} from '../design-system';
 import HeatMapChart from '../components/HeatMapChart';
 import { demandData } from '../data/mockData';
-import { useAuth } from '../contexts/AuthContext';
+
+interface DemandPoint {
+  id: string;
+  region: string;
+  material: string;
+  demand: number;
+  trend: 'up' | 'down' | 'stable';
+  coordinates: [number, number];
+  timestamp: string;
+}
+
+interface RegionDetails {
+  name: string;
+  demand: number;
+  growth: number;
+  materials: string[];
+  suppliers: number;
+}
 
 const DemandMapping: React.FC = () => {
-  const { currentUser } = useAuth();
-  const industry = currentUser?.industry || 'construction';
+  const { authState } = useAuth();
+  const { currentIndustry, industryConfig, getIndustryTerm } = useIndustry();
+  const currentUser = authState.user;
   
-  const [timeRange, setTimeRange] = useState<'current' | 'forecast'>('current');
+  // State management
+  const [timeRange, setTimeRange] = useState<'current' | 'forecast' | 'historical'>('current');
+  const [selectedMaterial, setSelectedMaterial] = useState('All Materials');
+  const [selectedRegion, setSelectedRegion] = useState('All Regions');
+  const [mapView, setMapView] = useState<'heatmap' | 'points' | 'clusters'>('heatmap');
+  const [showFilters, setShowFilters] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [selectedRegionDetails, setSelectedRegionDetails] = useState<RegionDetails | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTimeIndex, setCurrentTimeIndex] = useState(0);
+  
+  // Map state
   const [mapCenter, setMapCenter] = useState<[number, number]>([-1.2921, 36.8219]); // Nairobi
   const [mapZoom, setMapZoom] = useState<number>(6);
   
-  // Get the appropriate data based on user's industry
-  const locationData = demandData[industry];
+  // Temporal animation controls
+  const timeSteps = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   
-  // Simulated material options based on industry
-  const materialOptions = industry === 'construction' 
-    ? ['All Materials', 'Cement', 'Steel', 'Timber', 'Sand'] 
-    : ['All Materials', 'Fertilizer', 'Seeds', 'Pesticides', 'Equipment'];
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setCurrentTimeIndex(prev => (prev + 1) % timeSteps.length);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying, timeSteps.length]);
   
-  const [selectedMaterial, setSelectedMaterial] = useState(materialOptions[0]);
-  
-  // Filter UI components
-  const FilterButton = ({ 
-    options, 
-    value, 
-    onChange 
-  }: { 
-    options: string[], 
-    value: string, 
-    onChange: (val: string) => void 
-  }) => (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10 text-sm leading-tight focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-      >
-        {options.map(option => (
-          <option key={option} value={option}>{option}</option>
-        ))}
-      </select>
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-        </svg>
-      </div>
-    </div>
-  );
-  
-  // Demand scores by region
-  const regionalScores = [
-    { region: 'Kenya', score: 75, trend: 'up' },
-    { region: 'Uganda', score: 68, trend: 'up' },
-    { region: 'Rwanda', score: 62, trend: 'stable' },
-    { region: 'Tanzania', score: 57, trend: 'down' }
-  ];
-  
-  return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800">Demand Mapping</h1>
-          <p className="text-gray-500 mt-1">
-            Regional demand patterns for {industry} materials
-          </p>
-        </div>
-        
+  // Generate mock demand data with temporal dimension
+  const generateDemandData = useMemo(() => {
+    const regions = ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Kigali', 'Kampala'];
+    const materials = currentIndustry === 'construction' 
+      ? ['Cement', 'Steel', 'Timber', 'Sand', 'Gravel']
+      : ['Fertilizer', 'Seeds', 'Pesticides', 'Feed', 'Machinery'];
+    
+    const data: DemandPoint[] = [];
+    const timePoints = 12; // 12 months of data
+    
+    for (let t = 0; t < timePoints; t++) {
+      regions.forEach(region => {
+        materials.forEach(material => {
+          const baseDemand = Math.random() * 1000 + 500;
+          const seasonalFactor = 1 + 0.3 * Math.sin((t / 12) * 2 * Math.PI);
+          const demand = Math.round(baseDemand * seasonalFactor);
+          
+          data.push({
+            id: `${region}-${material}-${t}`,
+            region,
+            material,
+            demand,
+            trend: Math.random() > 0.5 ? 'up' : Math.random() > 0.5 ? 'down' : 'stable',
+            coordinates: getRegionCoordinates(region),
+            timestamp: new Date(2024, t, 1).toISOString()
+          });
+        });
+      });
+    }
+    
+    return data;
+  }, [currentIndustry]);
+
+  const getRegionCoordinates = (region: string): [number, number] => {
+    const coordinates: Record<string, [number, number]> = {
+      'Nairobi': [-1.2921, 36.8219],
+      'Mombasa': [-4.0437, 39.6682],
+      'Kisumu': [-0.0917, 34.7680],
+      'Nakuru': [-0.3070, 36.0800],
+      'Eldoret': [0.5143, 35.2698],
+      'Kigali': [-1.9441, 30.0619],
+      'Kampala': [0.3476, 32.5825]
+    };
+    return coordinates[region] || [-1.2921, 36.8219];
+  };
+
+  // Filter data based on current selections
+  const filteredData = useMemo(() => {
+    let data = generateDemandData;
+    
+    if (selectedMaterial !== 'All Materials') {
+      data = data.filter(point => point.material === selectedMaterial);
+    }
+    
+    if (selectedRegion !== 'All Regions') {
+      data = data.filter(point => point.region === selectedRegion);
+    }
+    
+    // Filter by time range
+    const currentTime = currentTimeIndex;
+    data = data.filter(point => {
+      const pointTime = parseInt(point.id.split('-')[2]);
+      return pointTime === currentTime;
+    });
+    
+    return data;
+  }, [generateDemandData, selectedMaterial, selectedRegion, currentTimeIndex]);
+
+  // Calculate region details
+  const regionDetails = useMemo(() => {
+    const regions: Record<string, RegionDetails> = {};
+    
+    filteredData.forEach(point => {
+      if (!regions[point.region]) {
+        regions[point.region] = {
+          name: point.region,
+          demand: 0,
+          growth: 0,
+          materials: [],
+          suppliers: Math.floor(Math.random() * 50) + 10
+        };
+      }
+      
+      regions[point.region].demand += point.demand;
+      if (!regions[point.region].materials.includes(point.material)) {
+        regions[point.region].materials.push(point.material);
+      }
+    });
+    
+    return Object.values(regions);
+  }, [filteredData]);
+
+  // Time animation
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setCurrentTimeIndex(prev => (prev + 1) % 12);
+      }, 1000);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isPlaying]);
+
+  const materials = currentIndustry === 'construction' 
+    ? ['All Materials', 'Cement', 'Steel', 'Timber', 'Sand', 'Gravel', 'Bricks', 'Roofing Materials']
+    : ['All Materials', 'Fertilizer', 'Seeds', 'Pesticides', 'Feed', 'Machinery', 'Tools', 'Equipment'];
+
+  const regions = ['All Regions', 'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Kigali', 'Kampala'];
+
+  const renderMapView = () => (
+    <div className="space-y-4">
+      {/* Map Controls */}
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-1 bg-primary-50 text-primary-700 hover:bg-primary-100 transition-colors px-3 py-1.5 rounded-md text-sm font-medium">
-            <Download size={16} />
-            Export Data
+          <div className="flex items-center border rounded-md">
+            <button
+              onClick={() => setMapView('heatmap')}
+              className={`px-3 py-2 text-sm ${
+                mapView === 'heatmap' 
+                  ? 'bg-primary-100 text-primary-700 border-primary-300' 
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              Heatmap
+            </button>
+            <button
+              onClick={() => setMapView('points')}
+              className={`px-3 py-2 text-sm border-l ${
+                mapView === 'points' 
+                  ? 'bg-primary-100 text-primary-700 border-primary-300' 
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              Points
+            </button>
+            <button
+              onClick={() => setMapView('clusters')}
+              className={`px-3 py-2 text-sm border-l rounded-r-md ${
+                mapView === 'clusters' 
+                  ? 'bg-primary-100 text-primary-700 border-primary-300' 
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              Clusters
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsPlaying(!isPlaying)}
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+          >
+            {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            {isPlaying ? 'Pause' : 'Play'} Animation
+          </button>
+          
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            Month {currentTimeIndex + 1}/12
+          </div>
+        </div>
+      </div>
+
+      {/* Map Container */}
+      <div className="relative h-96 border rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+        {/* Map Placeholder - In a real app, integrate with Mapbox, Google Maps, or Leaflet */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <MapIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+              Interactive Demand Map
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              Map visualization showing demand patterns across regions
+            </p>
+            <div className="flex items-center justify-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <span className="text-sm text-gray-600 dark:text-gray-400">High Demand</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Medium Demand</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Low Demand</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Demand Points Overlay */}
+        {mapView === 'points' && (
+          <div className="absolute inset-0">
+            {filteredData.map((point, index) => (
+              <div
+                key={index}
+                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                style={{
+                  left: `${50 + (point.coordinates[1] - 36.8219) * 100}%`,
+                  top: `${50 + (point.coordinates[0] + 1.2921) * 100}%`
+                }}
+                onClick={() => setSelectedRegionDetails({
+                  name: point.region,
+                  demand: point.demand,
+                  growth: Math.random() * 20 - 10,
+                  materials: [point.material],
+                  suppliers: Math.floor(Math.random() * 50) + 10
+                })}
+              >
+                <div className={`w-4 h-4 rounded-full border-2 border-white shadow-lg ${
+                  point.demand > 800 ? 'bg-red-500' : 
+                  point.demand > 600 ? 'bg-yellow-500' : 'bg-green-500'
+                }`}></div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Map Legend */}
+      <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center gap-4">
+          <span>View: {mapView}</span>
+          <span>Points: {filteredData.length}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+            <Maximize2 className="h-4 w-4" />
+          </button>
+          <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+            <Share2 className="h-4 w-4" />
+          </button>
+          <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+            <Bookmark className="h-4 w-4" />
           </button>
         </div>
       </div>
+    </div>
+  );
+
+  const renderRegionDetails = () => (
+    <div className="space-y-4">
+      <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Region Details</h3>
       
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-        <div className="lg:col-span-3">
-          <DashboardCard 
-            title="Demand Heatmap" 
-            icon={<MapIcon size={20} />}
-          >
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setTimeRange('current')}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                    timeRange === 'current' 
-                      ? 'bg-primary-100 text-primary-800' 
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  Current Demand
-                </button>
-                <button
-                  onClick={() => setTimeRange('forecast')}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                    timeRange === 'forecast' 
-                      ? 'bg-primary-100 text-primary-800' 
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  3-Month Forecast
-                </button>
+      {selectedRegionDetails ? (
+        <div className="space-y-4">
+          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">
+              {selectedRegionDetails.name}
+            </h4>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Total Demand:</span>
+                <span className="ml-2 font-medium">{selectedRegionDetails.demand.toLocaleString()}</span>
               </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <Filter size={16} className="text-gray-500" />
-                  <span className="text-sm text-gray-500">Material:</span>
-                </div>
-                <FilterButton 
-                  options={materialOptions} 
-                  value={selectedMaterial} 
-                  onChange={setSelectedMaterial} 
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Growth:</span>
+                <span className={`ml-2 font-medium ${
+                  selectedRegionDetails.growth > 0 ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {selectedRegionDetails.growth > 0 ? '+' : ''}{selectedRegionDetails.growth.toFixed(1)}%
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Suppliers:</span>
+                <span className="ml-2 font-medium">{selectedRegionDetails.suppliers}</span>
+              </div>
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Materials:</span>
+                <span className="ml-2 font-medium">{selectedRegionDetails.materials.length}</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h5 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Materials</h5>
+            <div className="flex flex-wrap gap-2">
+              {selectedRegionDetails.materials.map((material, index) => (
+                <Chip key={index} label={material} size="sm" />
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          Click on a region to view details
+        </div>
+      )}
+    </div>
+  );
+
+  const renderTemporalTrends = () => (
+    <div className="space-y-4">
+      <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Temporal Trends</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {regionDetails.map((region, index) => (
+          <div key={index} className="p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="font-medium text-gray-900 dark:text-gray-100">{region.name}</h4>
+              <div className="flex items-center gap-1">
+                {region.growth > 0 ? (
+                  <TrendingUp className="h-4 w-4 text-green-500" />
+                ) : (
+                  <TrendingDown className="h-4 w-4 text-red-500" />
+                )}
+                <span className={`text-sm font-medium ${
+                  region.growth > 0 ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {region.growth > 0 ? '+' : ''}{region.growth.toFixed(1)}%
+                </span>
+              </div>
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Demand: {region.demand.toLocaleString()}
+            </div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              {region.materials.length} materials • {region.suppliers} suppliers
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <AppLayout>
+      <PageHeader
+        title="Demand Mapping"
+        subtitle="Visualize regional demand patterns and identify market opportunities"
+        breadcrumbs={[{ label: 'Market Intelligence' }, { label: 'Demand Mapping' }]}
+        actions={
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              <Filter className="h-4 w-4" />
+              Filters
+            </button>
+            <ActionMenu
+              items={[
+                { id: 'export', label: 'Export Snapshot', icon: <Download className="h-4 w-4" />, onClick: () => console.log('Export') },
+                { id: 'share', label: 'Share Map', icon: <Share2 className="h-4 w-4" />, onClick: () => console.log('Share') }
+              ]}
+              size="sm"
+            />
+          </div>
+        }
+      />
+
+      <PageLayout maxWidth="full" padding="none">
+        <RailLayout
+          right={
+            <div className="space-y-6">
+              {renderRegionDetails()}
+              {renderTemporalTrends()}
+            </div>
+          }
+        >
+          <div className="space-y-6">
+            {/* Filters */}
+            <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Material
+                </label>
+                <SelectInput
+                  value={selectedMaterial}
+                  onChange={setSelectedMaterial}
+                  options={materials.map(m => ({ value: m, label: m }))}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Region
+                </label>
+                <SelectInput
+                  value={selectedRegion}
+                  onChange={setSelectedRegion}
+                  options={regions.map(r => ({ value: r, label: r }))}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Time Range
+                </label>
+                <SelectInput
+                  value={timeRange}
+                  onChange={setTimeRange}
+                  options={[
+                    { value: 'current', label: 'Current' },
+                    { value: 'forecast', label: 'Forecast' },
+                    { value: 'historical', label: 'Historical' }
+                  ]}
+                  className="w-full"
                 />
               </div>
             </div>
-            
-            <div className="mt-4">
-              <HeatMapChart
-                center={mapCenter}
-                zoom={mapZoom}
-                locations={locationData}
-                height="450px"
-              />
-            </div>
-            
-            <div className="mt-4 flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center">
-                <div className="text-xs text-gray-500">Demand Index:</div>
-                <div className="flex items-center ml-2">
-                  <div className="h-3 w-3 rounded-full bg-opacity-30 mr-1" style={{ backgroundColor: industry === 'construction' ? '#1E3A8A' : '#166534' }}></div>
-                  <span className="text-xs">Low</span>
-                </div>
-                <div className="flex items-center ml-2">
-                  <div className="h-3 w-3 rounded-full bg-opacity-50 mr-1" style={{ backgroundColor: industry === 'construction' ? '#1E3A8A' : '#166534' }}></div>
-                  <span className="text-xs">Medium</span>
-                </div>
-                <div className="flex items-center ml-2">
-                  <div className="h-3 w-3 rounded-full opacity-70 mr-1" style={{ backgroundColor: industry === 'construction' ? '#1E3A8A' : '#166534' }}></div>
-                  <span className="text-xs">High</span>
-                </div>
-              </div>
-              
-              <div className="text-xs text-gray-500 flex items-center">
-                <Info size={12} className="mr-1" />
-                {timeRange === 'current' 
-                  ? 'Showing current demand based on last 30 days of trade activity' 
-                  : 'Forecast based on historical patterns and current market signals'}
-              </div>
-            </div>
-          </DashboardCard>
-        </div>
-        
-        <div>
-          <DashboardCard 
-            title="Regional Scores" 
-            icon={<BarChart3 size={20} />}
-          >
-            <div className="space-y-4 mt-2">
-              {regionalScores.map((item, index) => (
-                <div key={index} className="border-b pb-3 last:border-0">
-                  <div className="flex justify-between items-center">
-                    <h4 className="font-medium text-gray-800">{item.region}</h4>
-                    <div className="flex items-center">
-                      <span className="font-medium">{item.score}</span>
-                      {item.trend === 'up' && (
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="ml-1 text-error-500">
-                          <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      )}
-                      {item.trend === 'down' && (
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="ml-1 text-success-500">
-                          <path d="M7 7L17 17M17 17H7M17 17V7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      )}
-                      {item.trend === 'stable' && (
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="ml-1 text-gray-500">
-                          <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      )}
-                    </div>
-                  </div>
-                  <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full" 
-                      style={{ 
-                        width: `${item.score}%`,
-                        backgroundColor: industry === 'construction' ? '#1E3A8A' : '#166534'
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </DashboardCard>
-          
-          <DashboardCard 
-            title="Demand Insights" 
-            icon={<Info size={20} />}
-            className="mt-6"
-          >
-            <div className="space-y-3 mt-2 text-sm text-gray-700">
-              <p>
-                {industry === 'construction'
-                  ? 'Urban centers continue to drive the highest demand for construction materials, particularly cement and steel.'
-                  : 'Rural agricultural regions show increasing demand for fertilizers as the planting season approaches.'}
-              </p>
-              <div className="border-l-2 border-primary-500 pl-3 py-2">
-                <p className="font-medium text-gray-800">Key Takeaway</p>
-                <p className="mt-1">
-                  {industry === 'construction'
-                    ? 'Consider establishing distribution centers in high-demand regions to reduce delivery times and transportation costs.'
-                    : 'Focus on regional supply chains to ensure timely availability of agricultural inputs during critical planting periods.'}
+
+            {/* Map View */}
+            <SectionLayout title="Demand Map" subtitle="Interactive visualization of regional demand patterns">
+              {renderMapView()}
+            </SectionLayout>
+
+            {/* Export Options */}
+            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div>
+                <h4 className="font-medium text-gray-900 dark:text-gray-100">Export Snapshot</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Download current view as image or data
                 </p>
               </div>
-              <p>
-                {industry === 'construction'
-                  ? 'Regional government infrastructure projects significantly impact demand patterns, with notable increases near planned road and housing developments.'
-                  : 'Seasonal rainfall patterns correlate strongly with agricultural input demand, with variations across different regions of East Africa.'}
-              </p>
-            </div>
-          </DashboardCard>
-        </div>
-      </div>
-      
-      <DashboardCard 
-        title={`${industry === 'construction' ? 'Construction' : 'Agriculture'} Demand Factors`} 
-        icon={<BarChart3 size={20} />}
-      >
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
-            <h3 className="font-medium text-gray-800 mb-2">
-              {industry === 'construction' ? 'Urban Development' : 'Growing Seasons'}
-            </h3>
-            <p className="text-sm text-gray-600">
-              {industry === 'construction'
-                ? 'Urban expansion and real estate development are primary drivers of construction material demand in major cities.'
-                : 'Seasonal planting periods vary across regions, creating staggered demand patterns for agricultural inputs.'}
-            </p>
-            <div className="mt-3 flex items-center">
-              <div className="text-xs text-gray-500">Impact:</div>
-              <div className="ml-2 flex">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div 
-                    key={i}
-                    className={`h-2 w-2 rounded-full mx-0.5 ${i <= 4 ? 'bg-primary-600' : 'bg-gray-300'}`}
-                  ></div>
-                ))}
+              <div className="flex items-center gap-2">
+                <button className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                  PNG
+                </button>
+                <button className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                  CSV
+                </button>
+                <button className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                  PDF
+                </button>
               </div>
             </div>
           </div>
-          
-          <div className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
-            <h3 className="font-medium text-gray-800 mb-2">
-              {industry === 'construction' ? 'Government Projects' : 'Weather Patterns'}
-            </h3>
-            <p className="text-sm text-gray-600">
-              {industry === 'construction'
-                ? 'Infrastructure initiatives and public works create significant demand spikes in specific regions.'
-                : 'Rainfall and temperature variations influence crop selection and input requirements across different zones.'}
-            </p>
-            <div className="mt-3 flex items-center">
-              <div className="text-xs text-gray-500">Impact:</div>
-              <div className="ml-2 flex">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div 
-                    key={i}
-                    className={`h-2 w-2 rounded-full mx-0.5 ${i <= 5 ? 'bg-primary-600' : 'bg-gray-300'}`}
-                  ></div>
-                ))}
-              </div>
-            </div>
-          </div>
-          
-          <div className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
-            <h3 className="font-medium text-gray-800 mb-2">
-              {industry === 'construction' ? 'Private Investment' : 'Market Access'}
-            </h3>
-            <p className="text-sm text-gray-600">
-              {industry === 'construction'
-                ? 'Commercial developments and private sector investment influence regional demand fluctuations.'
-                : 'Proximity to markets and transportation infrastructure affects input demand and utilization.'}
-            </p>
-            <div className="mt-3 flex items-center">
-              <div className="text-xs text-gray-500">Impact:</div>
-              <div className="ml-2 flex">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div 
-                    key={i}
-                    className={`h-2 w-2 rounded-full mx-0.5 ${i <= 3 ? 'bg-primary-600' : 'bg-gray-300'}`}
-                  ></div>
-                ))}
-              </div>
-            </div>
-          </div>
-          
-          <div className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
-            <h3 className="font-medium text-gray-800 mb-2">
-              {industry === 'construction' ? 'Economic Growth' : 'Government Subsidies'}
-            </h3>
-            <p className="text-sm text-gray-600">
-              {industry === 'construction'
-                ? 'Regional economic development correlates with increased construction activity and material demand.'
-                : 'Agricultural support programs and subsidies influence input affordability and adoption rates.'}
-            </p>
-            <div className="mt-3 flex items-center">
-              <div className="text-xs text-gray-500">Impact:</div>
-              <div className="ml-2 flex">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div 
-                    key={i}
-                    className={`h-2 w-2 rounded-full mx-0.5 ${i <= 4 ? 'bg-primary-600' : 'bg-gray-300'}`}
-                  ></div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </DashboardCard>
-    </div>
+        </RailLayout>
+      </PageLayout>
+    </AppLayout>
   );
 };
 

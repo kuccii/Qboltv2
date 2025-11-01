@@ -4,13 +4,29 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { TrendingUp, AlertTriangle, CheckCircle, Send, ThumbsUp, Flag } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useToastNotifications } from '../contexts/ToastContext';
+import { validateMaterialName, validateLocation, validatePrice, sanitizeInput } from '../lib/validation';
+import FormField from './FormField';
 
 const priceSchema = z.object({
-  material: z.string().min(1, 'Material is required'),
-  location: z.string().min(1, 'Location is required'),
-  price: z.number().min(0, 'Price must be positive'),
-  unit: z.string().min(1, 'Unit is required'),
-  notes: z.string().optional()
+  material: z.string()
+    .min(1, 'Material is required')
+    .min(2, 'Material name must be at least 2 characters')
+    .max(50, 'Material name must be less than 50 characters')
+    .regex(/^[a-zA-Z0-9\s\-]+$/, 'Material name contains invalid characters'),
+  location: z.string()
+    .min(1, 'Location is required')
+    .min(2, 'Location must be at least 2 characters')
+    .max(100, 'Location must be less than 100 characters'),
+  price: z.number()
+    .min(0, 'Price must be positive')
+    .max(1000000000, 'Price is too high'),
+  unit: z.string()
+    .min(1, 'Unit is required')
+    .max(20, 'Unit must be less than 20 characters'),
+  notes: z.string()
+    .max(500, 'Notes must be less than 500 characters')
+    .optional()
 });
 
 type PriceSubmission = z.infer<typeof priceSchema>;
@@ -30,6 +46,7 @@ interface PriceReport {
 
 const PriceReporting: React.FC = () => {
   const { currentUser } = useAuth();
+  const { success, error: showError } = useToastNotifications();
   const [reports, setReports] = useState<PriceReport[]>([
     {
       id: '1',
@@ -61,9 +78,33 @@ const PriceReporting: React.FC = () => {
   });
 
   const onSubmit = (data: PriceSubmission) => {
+    // Sanitize input data
+    const sanitizedData = {
+      material: sanitizeInput(data.material, { maxLength: 50, removeSpecialChars: true }),
+      location: sanitizeInput(data.location, { maxLength: 100, removeSpecialChars: true }),
+      price: data.price,
+      unit: sanitizeInput(data.unit, { maxLength: 20, removeSpecialChars: true }),
+      notes: data.notes ? sanitizeInput(data.notes, { maxLength: 500 }) : undefined
+    };
+
+    // Additional validation
+    const materialValidation = validateMaterialName(sanitizedData.material);
+    const locationValidation = validateLocation(sanitizedData.location);
+    const priceValidation = validatePrice(sanitizedData.price);
+
+    if (!materialValidation.isValid || !locationValidation.isValid || !priceValidation.isValid) {
+      // Show validation errors (in a real app, you'd display these to the user)
+      console.error('Validation failed:', {
+        material: materialValidation.errors,
+        location: locationValidation.errors,
+        price: priceValidation.errors
+      });
+      return;
+    }
+
     const newReport: PriceReport = {
       id: Date.now().toString(),
-      ...data,
+      ...sanitizedData,
       submittedBy: currentUser?.name || 'Anonymous',
       timestamp: new Date(),
       verified: false,
@@ -71,6 +112,7 @@ const PriceReporting: React.FC = () => {
     };
     setReports([newReport, ...reports]);
     reset();
+    success('Price Report Submitted', 'Your price report has been successfully submitted and is pending verification.');
   };
 
   const handleVote = (reportId: string) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { 
   TrendingUp, 
   Filter, 
@@ -6,249 +6,564 @@ import {
   AlertCircle,
   RefreshCw,
   BarChart3,
-  Map
+  Map,
+  Upload,
+  CheckCircle,
+  ArrowLeft,
+  ArrowRight,
+  Save,
+  Eye,
+  FileText,
+  Camera,
+  DollarSign,
+  Calendar,
+  MapPin,
+  Package,
+  Info,
+  Clock
 } from 'lucide-react';
 import DashboardCard from '../components/DashboardCard';
 import PriceChart from '../components/PriceChart';
 import StatusBadge from '../components/StatusBadge';
 import { priceData, agriculturePriceData, priceChanges } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
+import { useIndustry } from '../contexts/IndustryContext';
+import {
+  AppLayout,
+  PageHeader,
+  PageLayout,
+  SectionLayout,
+  SelectInput,
+  ActionMenu,
+  RailLayout,
+  Chip
+} from '../design-system';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+
+interface PriceReport {
+  id: string;
+  region: string;
+  material: string;
+  price: number;
+  currency: string;
+  date: string;
+  notes: string;
+  evidence: string[];
+  status: 'draft' | 'submitted' | 'verified';
+  createdAt: string;
+}
 
 const PriceReporting: React.FC = () => {
   const { currentUser } = useAuth();
-  const industry = currentUser?.industry || 'construction';
+  const { currentIndustry, industryConfig, getIndustryTerm } = useIndustry();
   
-  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('3m');
-  const [region, setRegion] = useState<string>('All Regions');
+  // Wizard state
+  const [currentStep, setCurrentStep] = useState(1);
+  const [region, setRegion] = useState<string>('');
+  const [material, setMaterial] = useState<string>('');
+  const [priceValue, setPriceValue] = useState<string>('');
+  const [currency, setCurrency] = useState<string>('USD');
+  const [date, setDate] = useState<string>('');
+  const [notes, setNotes] = useState<string>('');
+  const [evidenceFiles, setEvidenceFiles] = useState<File[]>([]);
+  const [agree, setAgree] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [reportType, setReportType] = useState<'price' | 'demand' | 'supply'>('price');
   
-  // Simulated last updated time
-  const lastUpdated = new Date();
-  lastUpdated.setHours(lastUpdated.getHours() - 4);
+  // Draft management
+  const [draftReports, setDraftReports] = useLocalStorage<PriceReport[]>('price-report-drafts', []);
+  const [recentPrices, setRecentPrices] = useState<any[]>([]);
+  const [showContextPanel, setShowContextPanel] = useState(true);
+  
+  // Auto-save draft
+  const saveDraft = useCallback(() => {
+    if (region && material && priceValue) {
+      const draft: PriceReport = {
+        id: `draft-${Date.now()}`,
+        region,
+        material,
+        price: parseFloat(priceValue) || 0,
+        currency,
+        date: date || new Date().toISOString().split('T')[0],
+        notes,
+        evidence: evidenceFiles.map(f => f.name),
+        status: 'draft',
+        createdAt: new Date().toISOString()
+      };
+      
+      setDraftReports(prev => {
+        const filtered = prev.filter(d => d.id !== draft.id);
+        return [...filtered, draft].slice(-5); // Keep last 5 drafts
+      });
+    }
+  }, [region, material, priceValue, currency, date, notes, evidenceFiles, setDraftReports]);
 
-  // Prepare chart data based on industry
-  const dataKeys = industry === 'construction' 
-    ? [
-        { key: 'cement', color: '#1E3A8A', name: 'Cement (per ton)' },
-        { key: 'steel', color: '#374151', name: 'Steel (per ton)' },
-        { key: 'timber', color: '#047857', name: 'Timber (per cubic meter)' },
-        { key: 'sand', color: '#B45309', name: 'Sand (per cubic meter)' }
-      ]
-    : [
-        { key: 'fertilizer', color: '#166534', name: 'Fertilizer (per 50kg)' },
-        { key: 'seeds', color: '#B45309', name: 'Seeds (per kg)' },
-        { key: 'pesticides', color: '#1E3A8A', name: 'Pesticides (per liter)' },
-        { key: 'equipment', color: '#374151', name: 'Equipment (rental per day)' }
-      ];
-      
-  const priceDataToUse = industry === 'construction' ? priceData : agriculturePriceData;
-  const priceChangeData = priceChanges[industry];
-  
-  // Define regions for the filter
-  const regions = ['All Regions', 'Kenya', 'Uganda', 'Rwanda', 'Tanzania'];
-  
-  // Helper function to format date
-  const formatDate = (date: Date): string => {
-    return date.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  // Auto-save every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(saveDraft, 30000);
+    return () => clearInterval(interval);
+  }, [saveDraft]);
+
+  // Load recent prices for context
+  useEffect(() => {
+    const currentData = currentIndustry === 'construction' ? priceData : agriculturePriceData;
+    setRecentPrices(currentData.slice(-10).reverse());
+  }, [currentIndustry]);
+
+  const steps = [
+    { id: 1, title: 'Location & Material', description: 'Select region and material type' },
+    { id: 2, title: 'Price Details', description: 'Enter price and date information' },
+    { id: 3, title: 'Evidence & Notes', description: 'Upload evidence and add notes' },
+    { id: 4, title: 'Review & Submit', description: 'Review and submit your report' }
+  ];
+
+  const regions = ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Thika', 'Malindi', 'Kitale'];
+  const materials = currentIndustry === 'construction' 
+    ? ['Cement', 'Steel', 'Timber', 'Sand', 'Gravel', 'Bricks', 'Roofing Materials']
+    : ['Fertilizer', 'Seeds', 'Pesticides', 'Feed', 'Machinery', 'Tools', 'Equipment'];
+
+  const handleNext = () => {
+    if (currentStep < steps.length) {
+      setCurrentStep(currentStep + 1);
+    }
   };
-  
-  return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800">Price Reporting</h1>
-          <p className="text-gray-500 mt-1">
-            Generate and analyze price reports for your industry
-          </p>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          <div className="text-sm text-gray-500 flex items-center">
-            <RefreshCw size={14} className="mr-1" />
-            Updated: {formatDate(lastUpdated)}
-          </div>
-          <button className="flex items-center gap-1 bg-primary-50 text-primary-700 hover:bg-primary-100 transition-colors px-3 py-1.5 rounded-md text-sm font-medium">
-            <Download size={16} />
-            Export Report
-          </button>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="lg:col-span-2">
-          <DashboardCard 
-            title="Price Analysis" 
-            icon={<BarChart3 size={20} />}
-          >
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setReportType('price')}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                    reportType === 'price' 
-                      ? 'bg-primary-100 text-primary-800' 
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  Price Trends
-                </button>
-                <button
-                  onClick={() => setReportType('demand')}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                    reportType === 'demand' 
-                      ? 'bg-primary-100 text-primary-800' 
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  Demand Analysis
-                </button>
-                <button
-                  onClick={() => setReportType('supply')}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                    reportType === 'supply' 
-                      ? 'bg-primary-100 text-primary-800' 
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  Supply Metrics
-                </button>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <Filter size={16} className="text-gray-500" />
-                  <span className="text-sm text-gray-500">Region:</span>
-                </div>
-                <select
-                  value={region}
-                  onChange={(e) => setRegion(e.target.value)}
-                  className="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10 text-sm leading-tight focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                >
-                  {regions.map(region => (
-                    <option key={region} value={region}>{region}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            
-            <div className="h-96">
-              <PriceChart 
-                data={priceDataToUse} 
-                dataKeys={dataKeys} 
-                height={384}
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setSubmitting(false);
+    
+    // Clear form
+    setRegion('');
+    setMaterial('');
+    setPriceValue('');
+    setDate('');
+    setNotes('');
+    setEvidenceFiles([]);
+    setAgree(false);
+    setCurrentStep(1);
+  };
+
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Region *
+              </label>
+              <SelectInput
+                value={region}
+                onChange={setRegion}
+                options={regions.map(r => ({ value: r, label: r }))}
+                placeholder="Select region"
+                className="w-full"
               />
             </div>
-          </DashboardCard>
-        </div>
-        
-        <div>
-          <DashboardCard 
-            title="Market Insights" 
-            icon={<AlertCircle size={20} />}
-          >
-            <div className="space-y-4 mt-2">
-              <div className="bg-primary-50 border border-primary-100 rounded-lg p-4">
-                <h3 className="font-medium text-primary-800 mb-2">Key Findings</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary-500 mt-1">•</span>
-                    <span>{industry === 'construction' 
-                      ? 'Cement prices show a 5.2% increase in urban centers due to increased construction activity.'
-                      : 'Fertilizer prices remain stable but availability varies by region.'}
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary-500 mt-1">•</span>
-                    <span>{industry === 'construction' 
-                      ? 'Steel suppliers offering bulk discounts to counter recent price increases.'
-                      : 'Seed prices showing seasonal variations with import constraints.'}
-                    </span>
-                  </li>
-                </ul>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Material Type *
+              </label>
+              <SelectInput
+                value={material}
+                onChange={setMaterial}
+                options={materials.map(m => ({ value: m, label: m }))}
+                placeholder="Select material"
+                className="w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Report Type
+              </label>
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { value: 'price', label: 'Price Report', icon: DollarSign },
+                  { value: 'demand', label: 'Demand Report', icon: TrendingUp },
+                  { value: 'supply', label: 'Supply Report', icon: Package }
+                ].map(({ value, label, icon: Icon }) => (
+                  <button
+                    key={value}
+                    onClick={() => setReportType(value as any)}
+                    className={`p-3 border rounded-lg text-left transition-colors ${
+                      reportType === value
+                        ? 'border-primary-500 bg-primary-50 text-primary-700'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
+                  >
+                    <Icon className="h-5 w-5 mb-2" />
+                    <div className="text-sm font-medium">{label}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Price Value *
+                </label>
+                <input
+                  type="number"
+                  value={priceValue}
+                  onChange={(e) => setPriceValue(e.target.value)}
+                  placeholder="Enter price"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                />
               </div>
               
-              <div className="border-t pt-4">
-                <h3 className="font-medium text-gray-800 mb-2">Regional Analysis</h3>
-                <div className="space-y-3">
-                  {regions.filter(r => r !== 'All Regions').map(region => (
-                    <div key={region} className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">{region}</span>
-                      <span className="text-sm font-medium text-gray-800">
-                        {industry === 'construction' ? '+3.2%' : '-1.5%'}
-                      </span>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Currency
+                </label>
+                <SelectInput
+                  value={currency}
+                  onChange={setCurrency}
+                  options={[
+                    { value: 'USD', label: 'USD' },
+                    { value: 'KES', label: 'KES' },
+                    { value: 'EUR', label: 'EUR' }
+                  ]}
+                  className="w-full"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Date of Observation *
+              </label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+              />
+            </div>
+
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+              <div className="flex items-start">
+                <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3" />
+                <div>
+                  <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200">Price Guidelines</h4>
+                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                    Report the actual market price you observed. Include any bulk discounts or special conditions in your notes.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 3:
+        return (
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Evidence Files
+              </label>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Upload photos, receipts, or documents as evidence
+                </p>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*,.pdf"
+                  onChange={(e) => setEvidenceFiles(Array.from(e.target.files || []))}
+                  className="mt-2"
+                />
+              </div>
+              {evidenceFiles.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  {evidenceFiles.map((file, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                      <span className="text-sm text-gray-700 dark:text-gray-300">{file.name}</span>
+                      <button
+                        onClick={() => setEvidenceFiles(prev => prev.filter((_, i) => i !== index))}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <AlertCircle className="h-4 w-4" />
+                      </button>
                     </div>
                   ))}
                 </div>
-              </div>
+              )}
             </div>
-          </DashboardCard>
-          
-          <DashboardCard 
-            title="Price Alerts" 
-            icon={<AlertCircle size={20} />}
-            className="mt-6"
-          >
-            <div className="space-y-4 mt-2">
-              <div className="bg-warning-50 border border-warning-200 rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <AlertCircle size={20} className="text-warning-500 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-gray-800">
-                      {industry === 'construction' ? 'Cement Price Surge' : 'Fertilizer Availability'}
-                    </h4>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {industry === 'construction'
-                        ? 'Prices have increased 5.2% over the past month, exceeding typical seasonal adjustments.'
-                        : 'Availability in rural areas remains inconsistent. Consider securing supplies early.'}
-                    </p>
-                    <div className="mt-2 flex items-center gap-2">
-                      <StatusBadge type="warning" text="MONITORING" />
-                      <span className="text-xs text-gray-500">Updated 2 days ago</span>
-                    </div>
-                  </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Additional Notes
+              </label>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Add any additional context, conditions, or observations..."
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+              />
+            </div>
+          </div>
+        );
+
+      case 4:
+        return (
+          <div className="space-y-6">
+            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Report Summary</h3>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-gray-600 dark:text-gray-400">Region:</span>
+                  <span className="ml-2 font-medium">{region}</span>
+                </div>
+                <div>
+                  <span className="text-gray-600 dark:text-gray-400">Material:</span>
+                  <span className="ml-2 font-medium">{material}</span>
+                </div>
+                <div>
+                  <span className="text-gray-600 dark:text-gray-400">Price:</span>
+                  <span className="ml-2 font-medium">{priceValue} {currency}</span>
+                </div>
+                <div>
+                  <span className="text-gray-600 dark:text-gray-400">Date:</span>
+                  <span className="ml-2 font-medium">{date}</span>
                 </div>
               </div>
             </div>
-          </DashboardCard>
+
+            <div className="flex items-start">
+              <input
+                type="checkbox"
+                id="agree"
+                checked={agree}
+                onChange={(e) => setAgree(e.target.checked)}
+                className="mt-1"
+              />
+              <label htmlFor="agree" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                I confirm that the information provided is accurate and I have the right to share this data.
+              </label>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  const renderContextPanel = () => (
+    <div className="space-y-6">
+      {/* Recent Prices */}
+      <div>
+        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Recent Prices</h3>
+        <div className="space-y-2">
+          {recentPrices.slice(0, 5).map((price, index) => (
+            <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="flex justify-between items-start">
+                <div>
+                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{price.material}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">{price.region}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{price.price}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">{price.currency}</div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-      
-      <DashboardCard 
-        title="Historical Analysis" 
-        icon={<TrendingUp size={20} />}
-      >
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {dataKeys.map((item, index) => {
-            const material = item.key;
-            const changePercent = priceChangeData[material as keyof typeof priceChangeData] || 0;
-            const latestPrice = priceDataToUse[priceDataToUse.length - 1][material] || 0;
-            
-            return (
-              <div key={index} className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
-                <h3 className="font-medium text-gray-800 mb-2">{item.name}</h3>
-                <div className="text-2xl font-bold text-gray-800">
-                  ${latestPrice}
-                </div>
-                <div className="flex items-center mt-1">
-                  <div className={`text-sm font-medium ${changePercent >= 0 ? 'text-error-600' : 'text-success-600'}`}>
-                    {changePercent >= 0 ? '+' : ''}{changePercent}%
+
+      {/* Draft Reports */}
+      {draftReports.length > 0 && (
+        <div>
+          <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Draft Reports</h3>
+          <div className="space-y-2">
+            {draftReports.slice(-3).map((draft) => (
+              <div key={draft.id} className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{draft.material}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{draft.region}</div>
                   </div>
-                  <div className="text-xs text-gray-500 ml-2">
-                    vs. previous period
+                  <Chip label="Draft" size="sm" variant="warning" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Reporting Guidelines */}
+      <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+        <h4 className="text-sm font-medium text-green-800 dark:text-green-200 mb-2">Reporting Guidelines</h4>
+        <ul className="text-xs text-green-700 dark:text-green-300 space-y-1">
+          <li>• Report actual market prices you observed</li>
+          <li>• Include bulk discounts in notes</li>
+          <li>• Upload evidence when possible</li>
+          <li>• Be specific about location and date</li>
+        </ul>
+      </div>
+    </div>
+  );
+
+  return (
+    <AppLayout>
+      <PageHeader
+        title="Price Reporting"
+        subtitle="Report market prices to help the community stay informed"
+        breadcrumbs={[{ label: 'Market Intelligence' }, { label: 'Price Reporting' }]}
+        actions={
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowContextPanel(!showContextPanel)}
+              className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              <Eye className="h-4 w-4" />
+              {showContextPanel ? 'Hide' : 'Show'} Context
+            </button>
+            <ActionMenu
+              items={[
+                { id: 'save-draft', label: 'Save Draft', icon: <Save className="h-4 w-4" />, onClick: saveDraft },
+                { id: 'export', label: 'Export Data', icon: <Download className="h-4 w-4" />, onClick: () => console.log('Export') }
+              ]}
+              size="sm"
+            />
+          </div>
+        }
+      />
+
+      <PageLayout maxWidth="full" padding="none">
+        <div className="flex h-screen">
+          {/* Main Wizard */}
+          <div className={`flex-1 ${showContextPanel ? 'mr-80' : ''}`}>
+            <div className="h-full flex flex-col">
+              {/* Progress Steps */}
+              <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+                <div className="px-6 py-4">
+                  <div className="flex items-center justify-between">
+                    {steps.map((step, index) => (
+                      <div key={step.id} className="flex items-center">
+                        <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
+                          currentStep >= step.id
+                            ? 'bg-primary-600 text-white'
+                            : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                        }`}>
+                          {step.id}
+                        </div>
+                        <div className="ml-3">
+                          <div className={`text-sm font-medium ${
+                            currentStep >= step.id
+                              ? 'text-primary-600 dark:text-primary-400'
+                              : 'text-gray-500 dark:text-gray-400'
+                          }`}>
+                            {step.title}
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {step.description}
+                          </div>
+                        </div>
+                        {index < steps.length - 1 && (
+                          <div className={`w-12 h-0.5 mx-4 ${
+                            currentStep > step.id
+                              ? 'bg-primary-600'
+                              : 'bg-gray-200 dark:bg-gray-700'
+                          }`} />
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
-            );
-          })}
+
+              {/* Step Content */}
+              <div className="flex-1 p-6 overflow-y-auto">
+                <div className="max-w-2xl mx-auto">
+                  {renderStepContent()}
+                </div>
+              </div>
+
+              {/* Navigation */}
+              <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-4">
+                <div className="flex justify-between items-center">
+                  <button
+                    onClick={handlePrevious}
+                    disabled={currentStep === 1}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Previous
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={saveDraft}
+                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                    >
+                      <Save className="h-4 w-4" />
+                      Save Draft
+                    </button>
+
+                    {currentStep < steps.length ? (
+                      <button
+                        onClick={handleNext}
+                        disabled={!region || !material || (currentStep === 2 && (!priceValue || !date))}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Next
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleSubmit}
+                        disabled={!agree || submitting}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {submitting ? (
+                          <>
+                            <RefreshCw className="h-4 w-4 animate-spin" />
+                            Submitting...
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle className="h-4 w-4" />
+                            Submit Report
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Context Panel */}
+          {showContextPanel && (
+            <div className="w-80 border-l border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6 overflow-y-auto">
+              {renderContextPanel()}
+            </div>
+          )}
         </div>
-      </DashboardCard>
-    </div>
+      </PageLayout>
+    </AppLayout>
   );
 };
 
-export default PriceReporting; 
+export default PriceReporting;

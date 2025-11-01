@@ -39,6 +39,70 @@ export const priceChanges = {
   }
 };
 
+// Risk-adjusted pricing data
+export const riskAdjustedPricing = {
+  construction: {
+    cement: {
+      basePrice: 320,
+      riskAdjustment: 15,
+      supplierReliability: 8.5,
+      marketVolatility: 6.2,
+      insuranceCoverage: 85
+    },
+    steel: {
+      basePrice: 850,
+      riskAdjustment: 22,
+      supplierReliability: 7.8,
+      marketVolatility: 8.1,
+      insuranceCoverage: 72
+    },
+    timber: {
+      basePrice: 420,
+      riskAdjustment: 18,
+      supplierReliability: 6.9,
+      marketVolatility: 7.5,
+      insuranceCoverage: 68
+    },
+    sand: {
+      basePrice: 180,
+      riskAdjustment: 8,
+      supplierReliability: 9.1,
+      marketVolatility: 4.2,
+      insuranceCoverage: 92
+    }
+  },
+  agriculture: {
+    fertilizer: {
+      basePrice: 280,
+      riskAdjustment: 12,
+      supplierReliability: 8.8,
+      marketVolatility: 5.8,
+      insuranceCoverage: 88
+    },
+    seeds: {
+      basePrice: 150,
+      riskAdjustment: 6,
+      supplierReliability: 9.2,
+      marketVolatility: 3.1,
+      insuranceCoverage: 95
+    },
+    pesticides: {
+      basePrice: 220,
+      riskAdjustment: 16,
+      supplierReliability: 7.5,
+      marketVolatility: 6.9,
+      insuranceCoverage: 78
+    },
+    equipment: {
+      basePrice: 580,
+      riskAdjustment: 25,
+      supplierReliability: 6.8,
+      marketVolatility: 9.2,
+      insuranceCoverage: 65
+    }
+  }
+};
+
 // Material demand by region
 export const demandData = {
   construction: [
@@ -98,7 +162,23 @@ export const supplierData = [
     qualityScore: 88, 
     deliveryScore: 93,
     lastDelivery: '2023-08-10',
-    tier: 'premium'
+    tier: 'premium',
+    verification: {
+      status: 'verified' as const,
+      documents: 'verified' as const,
+      reputation: 'verified' as const,
+      transactions: 'verified' as const
+    },
+    insurance: {
+      status: 'active' as const,
+      type: 'general' as const,
+      coverageAmount: 5000000,
+      currency: 'USD',
+      expiryDate: new Date('2024-12-31')
+    },
+    riskScore: 8.5,
+    transactionHistory: 156,
+    avgDeliveryTime: 3.2
   },
   {
     id: 2,
@@ -111,7 +191,23 @@ export const supplierData = [
     qualityScore: 82,
     deliveryScore: 83,
     lastDelivery: '2023-08-05',
-    tier: 'standard'
+    tier: 'standard',
+    verification: {
+      status: 'verified' as const,
+      documents: 'verified' as const,
+      reputation: 'verified' as const,
+      transactions: 'pending' as const
+    },
+    insurance: {
+      status: 'active' as const,
+      type: 'cargo' as const,
+      coverageAmount: 2000000,
+      currency: 'USD',
+      expiryDate: new Date('2024-06-15')
+    },
+    riskScore: 7.2,
+    transactionHistory: 89,
+    avgDeliveryTime: 4.1
   },
   {
     id: 3,
@@ -124,7 +220,22 @@ export const supplierData = [
     qualityScore: 80,
     deliveryScore: 79,
     lastDelivery: '2023-08-12',
-    tier: 'standard'
+    tier: 'standard',
+    verification: {
+      status: 'pending' as const,
+      documents: 'verified' as const,
+      reputation: 'pending' as const,
+      transactions: 'pending' as const
+    },
+    insurance: {
+      status: 'inactive' as const,
+      type: 'general' as const,
+      coverageAmount: 0,
+      currency: 'USD'
+    },
+    riskScore: 6.1,
+    transactionHistory: 34,
+    avgDeliveryTime: 5.8
   },
   {
     id: 4,
@@ -137,7 +248,23 @@ export const supplierData = [
     qualityScore: 88,
     deliveryScore: 90,
     lastDelivery: '2023-08-08',
-    tier: 'premium'
+    tier: 'premium',
+    verification: {
+      status: 'verified' as const,
+      documents: 'verified' as const,
+      reputation: 'verified' as const,
+      transactions: 'verified' as const
+    },
+    insurance: {
+      status: 'active' as const,
+      type: 'general' as const,
+      coverageAmount: 3000000,
+      currency: 'USD',
+      expiryDate: new Date('2024-09-30')
+    },
+    riskScore: 8.8,
+    transactionHistory: 124,
+    avgDeliveryTime: 2.8
   },
   {
     id: 5,
@@ -150,7 +277,23 @@ export const supplierData = [
     qualityScore: 90,
     deliveryScore: 86,
     lastDelivery: '2023-08-15',
-    tier: 'standard'
+    tier: 'standard',
+    verification: {
+      status: 'verified' as const,
+      documents: 'verified' as const,
+      reputation: 'verified' as const,
+      transactions: 'verified' as const
+    },
+    insurance: {
+      status: 'active' as const,
+      type: 'cargo' as const,
+      coverageAmount: 1500000,
+      currency: 'USD',
+      expiryDate: new Date('2024-08-20')
+    },
+    riskScore: 7.8,
+    transactionHistory: 67,
+    avgDeliveryTime: 3.5
   },
   {
     id: 6,
@@ -163,7 +306,23 @@ export const supplierData = [
     qualityScore: 70,
     deliveryScore: 69,
     lastDelivery: '2023-08-02',
-    tier: 'standard'
+    tier: 'standard',
+    verification: {
+      status: 'rejected' as const,
+      documents: 'rejected' as const,
+      reputation: 'pending' as const,
+      transactions: 'pending' as const
+    },
+    insurance: {
+      status: 'expired' as const,
+      type: 'general' as const,
+      coverageAmount: 0,
+      currency: 'USD',
+      expiryDate: new Date('2023-06-30')
+    },
+    riskScore: 4.2,
+    transactionHistory: 12,
+    avgDeliveryTime: 7.3
   },
   {
     id: 7,
@@ -290,6 +449,50 @@ export const dashboardMetrics = {
   }
 };
 
+// Recent activity data for dashboard
+export const recentActivity = [
+  {
+    type: 'price_update',
+    message: 'Cement prices increased by 5.2% in Nairobi region',
+    time: '2 hours ago'
+  },
+  {
+    type: 'supplier_added',
+    message: 'New supplier "Steel Masters" added to directory',
+    time: '4 hours ago'
+  },
+  {
+    type: 'alert',
+    message: 'Supply disruption alert for steel delivery in Mombasa',
+    time: '6 hours ago'
+  },
+  {
+    type: 'price_update',
+    message: 'Timber prices decreased by 2.1% across Uganda',
+    time: '8 hours ago'
+  },
+  {
+    type: 'supplier_added',
+    message: 'Quality verification completed for 3 suppliers',
+    time: '1 day ago'
+  },
+  {
+    type: 'alert',
+    message: 'High volatility detected in fertilizer prices',
+    time: '1 day ago'
+  },
+  {
+    type: 'price_update',
+    message: 'Sand prices stable in Rwanda region',
+    time: '2 days ago'
+  },
+  {
+    type: 'supplier_added',
+    message: 'New premium supplier "Green Seeds Ltd" verified',
+    time: '3 days ago'
+  }
+];
+
 export interface LogisticsItem {
   id: string;
   industry: 'construction' | 'agriculture';
@@ -351,7 +554,113 @@ export const logisticsData: LogisticsItem[] = [
   }
 ];
 
+// Helper function to convert CountrySupplier to Supplier format
+function convertToSupplierFormat(countrySuppliers: any[]): Supplier[] {
+  return countrySuppliers.map(cs => ({
+    id: cs.id,
+    name: cs.name,
+    industry: mapCategoryToIndustry(cs.category),
+    location: `${cs.location}, ${cs.countryCode}`,
+    region: cs.region,
+    materials: cs.materials,
+    rating: cs.rating || 4.0,
+    deliveryTime: estimateDeliveryTime(cs.countryCode),
+    reliability: cs.verified ? 95 : 85,
+    phone: cs.contact.phone,
+    email: cs.contact.email,
+  }));
+}
+
+function mapCategoryToIndustry(category: string): 'construction' | 'agriculture' {
+  const constructionCategories = ['laboratory', 'storage', 'construction'];
+  return constructionCategories.includes(category) ? 'construction' : 'agriculture';
+}
+
+function estimateDeliveryTime(countryCode: string): string {
+  const deliveryTimes = {
+    'RW': '48-72 hours',
+    'KE': '24-48 hours',
+    'UG': '48-72 hours',
+    'TZ': '72-96 hours',
+    'ET': '96-120 hours'
+  };
+  return deliveryTimes[countryCode] || '48-72 hours';
+}
+
+// Rwanda suppliers from logcluster.org data
+const rwandaSuppliers = [
+  {
+    id: 'rw-lab-rsb',
+    name: 'Rwanda Standards Board (RSB)',
+    category: 'laboratory',
+    location: 'Kicukiro, Kigali',
+    region: 'Rwanda',
+    countryCode: 'RW',
+    contact: {
+      email: 'alphonse.mbabazi@rsb.gov.rw',
+      phone: '+250 788 30 3492',
+      website: 'https://www.rsb.gov.rw'
+    },
+    services: ['Physical Testing', 'Chemical Testing', 'Microbiology Testing', 'Material Testing'],
+    materials: ['Construction Materials', 'Food Products', 'Agricultural Products'],
+    verified: true,
+    rating: 4.8
+  },
+  {
+    id: 'rw-lab-fda',
+    name: 'Rwanda Food and Drug Authority (Rwanda FDA)',
+    category: 'laboratory',
+    location: 'Nyarutarama, Kigali',
+    region: 'Rwanda',
+    countryCode: 'RW',
+    contact: {
+      email: 'info@rwandafda.gov.rw',
+      phone: '+250 789193529',
+      website: 'https://www.rwandafda.gov.rw'
+    },
+    services: ['Chemical Testing', 'Microbiology Testing', 'Pharmaceutical Testing'],
+    materials: ['Food Products', 'Pharmaceuticals', 'Agricultural Products'],
+    verified: true,
+    rating: 4.6
+  },
+  {
+    id: 'rw-food-aif',
+    name: 'Africa Improved Foods (AIF)',
+    category: 'food',
+    location: 'Masoro, Kigali',
+    region: 'Rwanda',
+    countryCode: 'RW',
+    contact: {
+      email: 'blandine.ingabire@africaimprovedfoods.com',
+      phone: '+250 788 38 9516',
+      website: 'https://africaimprovedfoods.com'
+    },
+    services: ['Food Testing', 'Quality Control', 'Nutritional Analysis'],
+    materials: ['Food Products', 'Fortified Foods', 'Agricultural Products'],
+    verified: true,
+    rating: 4.4
+  },
+  {
+    id: 'rw-agri-naeb',
+    name: 'National Agriculture Export Development Board (NAEB)',
+    category: 'agriculture',
+    location: 'Kigali/Kicukiro',
+    region: 'Rwanda',
+    countryCode: 'RW',
+    contact: {
+      email: 'info@naeb.gov.rw',
+      phone: '+250 2525 75600',
+      website: 'https://naeb.gov.rw'
+    },
+    services: ['Agricultural Testing', 'Export Quality Control', 'Crop Analysis'],
+    materials: ['Agricultural Products', 'Export Crops', 'Seeds'],
+    verified: true,
+    rating: 4.5
+  }
+];
+
 export const supplierDirectoryData: Supplier[] = [
+  // Existing suppliers
   {
     id: '1',
     name: 'BuildTech Supplies',
@@ -377,5 +686,106 @@ export const supplierDirectoryData: Supplier[] = [
     reliability: 90,
     phone: '+256 700 789 012',
     email: 'info@agripro.com'
-  }
+  },
+  
+  // Rwanda suppliers (converted from CountrySupplier format)
+  ...convertToSupplierFormat(rwandaSuppliers)
 ];
+
+// Trade Opportunities Data
+export const tradeOpportunities = {
+  construction: [
+    {
+      id: 1,
+      title: 'Nairobi Infrastructure Project',
+      description: 'Large-scale road construction requiring cement, steel, and aggregates',
+      value: 2500000,
+      currency: 'USD',
+      location: 'Nairobi, Kenya',
+      deadline: new Date('2024-03-15'),
+      riskLevel: 'low' as const,
+      insuranceRequired: true,
+      materials: ['cement', 'steel', 'aggregates'],
+      status: 'active' as const,
+      postedDate: new Date('2024-01-15'),
+      buyer: 'Kenya National Highways Authority'
+    },
+    {
+      id: 2,
+      title: 'Mombasa Port Expansion',
+      description: 'Port infrastructure development with steel structures and concrete',
+      value: 1800000,
+      currency: 'USD',
+      location: 'Mombasa, Kenya',
+      deadline: new Date('2024-04-30'),
+      riskLevel: 'medium' as const,
+      insuranceRequired: true,
+      materials: ['steel', 'cement', 'timber'],
+      status: 'active' as const,
+      postedDate: new Date('2024-01-20'),
+      buyer: 'Kenya Ports Authority'
+    },
+    {
+      id: 3,
+      title: 'Kampala Housing Development',
+      description: 'Residential construction project requiring various building materials',
+      value: 1200000,
+      currency: 'USD',
+      location: 'Kampala, Uganda',
+      deadline: new Date('2024-05-15'),
+      riskLevel: 'low' as const,
+      insuranceRequired: false,
+      materials: ['cement', 'timber', 'sand'],
+      status: 'active' as const,
+      postedDate: new Date('2024-01-25'),
+      buyer: 'Uganda Housing Corporation'
+    }
+  ],
+  agriculture: [
+    {
+      id: 4,
+      title: 'Rwanda Fertilizer Distribution',
+      description: 'Large-scale fertilizer supply for upcoming planting season',
+      value: 800000,
+      currency: 'USD',
+      location: 'Kigali, Rwanda',
+      deadline: new Date('2024-03-01'),
+      riskLevel: 'low' as const,
+      insuranceRequired: true,
+      materials: ['fertilizer', 'seeds'],
+      status: 'active' as const,
+      postedDate: new Date('2024-01-10'),
+      buyer: 'Rwanda Agriculture Board'
+    },
+    {
+      id: 5,
+      title: 'Tanzania Irrigation Equipment',
+      description: 'Modern irrigation systems for commercial farming operations',
+      value: 650000,
+      currency: 'USD',
+      location: 'Dar es Salaam, Tanzania',
+      deadline: new Date('2024-04-15'),
+      riskLevel: 'medium' as const,
+      insuranceRequired: true,
+      materials: ['equipment', 'irrigation'],
+      status: 'active' as const,
+      postedDate: new Date('2024-01-18'),
+      buyer: 'Tanzania Agricultural Development Bank'
+    },
+    {
+      id: 6,
+      title: 'Kenya Seed Supply Program',
+      description: 'High-quality seeds for smallholder farmers across Kenya',
+      value: 450000,
+      currency: 'USD',
+      location: 'Nakuru, Kenya',
+      deadline: new Date('2024-02-28'),
+      riskLevel: 'low' as const,
+      insuranceRequired: false,
+      materials: ['seeds', 'pesticides'],
+      status: 'active' as const,
+      postedDate: new Date('2024-01-22'),
+      buyer: 'Kenya Seed Company'
+    }
+  ]
+};

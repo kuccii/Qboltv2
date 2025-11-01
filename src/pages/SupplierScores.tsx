@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { 
   Users, 
   Search, 
@@ -9,25 +9,34 @@ import {
   AlertCircle, 
   CheckCircle,
   XCircle,
-  Clock
+  Clock,
+  Shield,
+  FileText,
+  TrendingUp,
+  TrendingDown
 } from 'lucide-react';
 import DashboardCard from '../components/DashboardCard';
 import SupplierScore from '../components/SupplierScore';
 import StatusBadge from '../components/StatusBadge';
 import { supplierData } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
+import { useIndustry } from '../contexts/IndustryContext';
+import { VerificationBadge, InsuranceIndicator } from '../design-system';
 
 const SupplierScores: React.FC = () => {
   const { currentUser } = useAuth();
-  const industry = currentUser?.industry || 'construction';
+  const { currentIndustry, industryConfig, getIndustryTerm } = useIndustry();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMaterial, setSelectedMaterial] = useState('all');
   const [selectedTier, setSelectedTier] = useState('all');
+  const [selectedSupplierId, setSelectedSupplierId] = useState<string | null>(null);
+  const [weights, setWeights] = useState<{ quality: number; delivery: number; reliability: number }>({ quality: 40, delivery: 30, reliability: 30 });
+  const totalWeight = weights.quality + weights.delivery + weights.reliability || 1;
   
   // Filter suppliers based on industry and search/filter settings
   const filteredSuppliers = supplierData
-    .filter(supplier => supplier.industry === industry)
+    .filter(supplier => supplier.industry === currentIndustry)
     .filter(supplier => 
       searchTerm === '' || 
       supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -41,12 +50,23 @@ const SupplierScores: React.FC = () => {
       selectedTier === 'all' || 
       supplier.tier === selectedTier
     );
+
+  const withWeightedScores = useMemo(() => {
+    return filteredSuppliers.map(s => {
+      const weighted = (
+        (s.qualityScore || 0) * weights.quality +
+        (s.deliveryScore || 0) * weights.delivery +
+        (s.reliabilityScore || 0) * weights.reliability
+      ) / totalWeight;
+      return { ...s, weightedScore: Math.round(weighted) } as typeof s & { weightedScore: number };
+    });
+  }, [filteredSuppliers, weights, totalWeight]);
   
   // Get unique materials for this industry
   const uniqueMaterials = Array.from(
     new Set(
       supplierData
-        .filter(supplier => supplier.industry === industry)
+        .filter(supplier => supplier.industry === currentIndustry)
         .flatMap(supplier => supplier.materials)
     )
   );
@@ -79,7 +99,7 @@ const SupplierScores: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div className="relative w-full md:w-72">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search size={18} className="text-gray-400" />
+              <svg className="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="2"/></svg>
             </div>
             <input
               type="text"
@@ -164,21 +184,41 @@ const SupplierScores: React.FC = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredSuppliers.length > 0 ? (
-                filteredSuppliers.map(supplier => (
+                  <tbody className="bg-white divide-y divide-gray-200">
+              {withWeightedScores.length > 0 ? (
+                withWeightedScores
+                  .sort((a, b) => (b.weightedScore || 0) - (a.weightedScore || 0))
+                  .map(supplier => (
                   <tr key={supplier.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div>
-                          <div className="text-sm font-medium text-gray-900">{supplier.name}</div>
+                          <div className="flex items-center gap-2">
+                            <div className="text-sm font-medium text-gray-900">{supplier.name}</div>
+                            {(supplier as any).verification && (
+                              <VerificationBadge 
+                                status={(supplier as any).verification.status}
+                                type="documents"
+                                size="sm"
+                              />
+                            )}
+                          </div>
                           <div className="text-sm text-gray-500">{supplier.location}</div>
+                          {(supplier as any).insurance && (
+                            <div className="mt-1">
+                              <InsuranceIndicator 
+                                status={(supplier as any).insurance.status}
+                                type={(supplier as any).insurance.type}
+                                size="sm"
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <SupplierScore score={supplier.score} size="sm" />
+                        <SupplierScore score={(supplier as any).weightedScore ?? supplier.score} size="sm" />
                         <div className="ml-2">
                           <div className="text-xs text-gray-500">Quality: {supplier.qualityScore}</div>
                           <div className="text-xs text-gray-500">Delivery: {supplier.deliveryScore}</div>
@@ -227,7 +267,7 @@ const SupplierScores: React.FC = () => {
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button className="text-primary-600 hover:text-primary-900 mr-3">Details</button>
+                      <button className="text-primary-600 hover:text-primary-900 mr-3" onClick={() => setSelectedSupplierId(String(supplier.id))}>Details</button>
                       <button className="text-gray-600 hover:text-gray-900">Contact</button>
                     </td>
                   </tr>
@@ -379,9 +419,9 @@ const SupplierScores: React.FC = () => {
             </div>
           </div>
         </DashboardCard>
-      </div>
-      
-      <DashboardCard 
+    </div>
+
+    <DashboardCard 
         title="Supplier Evaluation Framework" 
         icon={<Users size={20} />}
       >
@@ -474,6 +514,93 @@ const SupplierScores: React.FC = () => {
           </p>
         </div>
       </DashboardCard>
+
+      {/* Details Drawer */}
+      {selectedSupplierId && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-xl z-30">
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            {withWeightedScores.filter(s => String(s.id) === selectedSupplierId).map(s => (
+              <div key={s.id} className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="text-lg font-semibold text-gray-800">{s.name}</h3>
+                    {(s as any).verification && (
+                      <VerificationBadge 
+                        status={(s as any).verification.status}
+                        type="documents"
+                        size="sm"
+                      />
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-500">{s.location}</p>
+                  <div className="mt-3 flex items-center gap-2 text-sm">
+                    <span className="text-gray-600">Tier:</span>
+                    <StatusBadge type={s.tier === 'premium' ? 'success' : 'info'} text={s.tier.toUpperCase()} />
+                  </div>
+                  {(s as any).insurance && (
+                    <div className="mt-2">
+                      <InsuranceIndicator 
+                        status={(s as any).insurance.status}
+                        type={(s as any).insurance.type}
+                        coverageAmount={(s as any).insurance.coverageAmount}
+                        currency={(s as any).insurance.currency}
+                        size="sm"
+                        showAmount={true}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-800 mb-2">Score Breakdown</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>Weighted Score: {(s as any).weightedScore ?? s.score}</li>
+                    <li>Quality: {s.qualityScore} × {weights.quality}%</li>
+                    <li>Delivery: {s.deliveryScore} × {weights.delivery}%</li>
+                    <li>Reliability: {s.reliabilityScore} × {weights.reliability}%</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-800 mb-2">Risk Analysis</h4>
+                  <div className="space-y-2 text-sm">
+                    {(s as any).riskScore && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-600">Risk Score:</span>
+                        <span className={`font-semibold ${(s as any).riskScore > 7 ? 'text-green-600' : (s as any).riskScore > 5 ? 'text-yellow-600' : 'text-red-600'}`}>
+                          {(s as any).riskScore}/10
+                        </span>
+                      </div>
+                    )}
+                    {(s as any).transactionHistory && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-600">Transactions:</span>
+                        <span className="font-semibold">{(s as any).transactionHistory}</span>
+                      </div>
+                    )}
+                    {(s as any).avgDeliveryTime && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-600">Avg Delivery:</span>
+                        <span className="font-semibold">{(s as any).avgDeliveryTime} days</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-800 mb-2">Materials</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {s.materials.map((m, i) => (
+                      <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">{m}</span>
+                    ))}
+                  </div>
+                  <div className="mt-3 flex gap-2">
+                    <button className="px-3 py-1.5 text-sm border rounded">Contact</button>
+                    <button className="px-3 py-1.5 text-sm" onClick={() => setSelectedSupplierId(null)}>Close</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,0 +1,224 @@
+/* Industry-specific CSS variables and themes */
+
+:root {
+  /* Construction Theme */
+  --construction-primary: #1E3A8A;
+  --construction-secondary: #374151;
+  --construction-accent: #F59E0B;
+  --construction-background: #F8FAFC;
+  --construction-surface: #FFFFFF;
+  --construction-text: #1F2937;
+  --construction-text-secondary: #6B7280;
+  --construction-border: #E5E7EB;
+  --construction-success: #10B981;
+  --construction-warning: #F59E0B;
+  --construction-error: #EF4444;
+  --construction-info: #3B82F6;
+
+  /* Agriculture Theme */
+  --agriculture-primary: #166534;
+  --agriculture-secondary: #B45309;
+  --agriculture-accent: #F59E0B;
+  --agriculture-background: #F0FDF4;
+  --agriculture-surface: #FFFFFF;
+  --agriculture-text: #1F2937;
+  --agriculture-text-secondary: #6B7280;
+  --agriculture-border: #D1FAE5;
+  --agriculture-success: #10B981;
+  --agriculture-warning: #F59E0B;
+  --agriculture-error: #EF4444;
+  --agriculture-info: #3B82F6;
+
+  /* Default to construction theme */
+  --industry-primary: var(--construction-primary);
+  --industry-secondary: var(--construction-secondary);
+  --industry-accent: var(--construction-accent);
+  --industry-background: var(--construction-background);
+  --industry-surface: var(--construction-surface);
+  --industry-text: var(--construction-text);
+  --industry-text-secondary: var(--construction-text-secondary);
+  --industry-border: var(--construction-border);
+  --industry-success: var(--construction-success);
+  --industry-warning: var(--construction-warning);
+  --industry-error: var(--construction-error);
+  --industry-info: var(--construction-info);
+}
+
+/* Industry-specific utility classes */
+.industry-construction {
+  --industry-primary: var(--construction-primary);
+  --industry-secondary: var(--construction-secondary);
+  --industry-accent: var(--construction-accent);
+  --industry-background: var(--construction-background);
+  --industry-surface: var(--construction-surface);
+  --industry-text: var(--construction-text);
+  --industry-text-secondary: var(--construction-text-secondary);
+  --industry-border: var(--construction-border);
+  --industry-success: var(--construction-success);
+  --industry-warning: var(--construction-warning);
+  --industry-error: var(--construction-error);
+  --industry-info: var(--construction-info);
+}
+
+.industry-agriculture {
+  --industry-primary: var(--agriculture-primary);
+  --industry-secondary: var(--agriculture-secondary);
+  --industry-accent: var(--agriculture-accent);
+  --industry-background: var(--agriculture-background);
+  --industry-surface: var(--agriculture-surface);
+  --industry-text: var(--agriculture-text);
+  --industry-text-secondary: var(--agriculture-text-secondary);
+  --industry-border: var(--agriculture-border);
+  --industry-success: var(--agriculture-success);
+  --industry-warning: var(--agriculture-warning);
+  --industry-error: var(--agriculture-error);
+  --industry-info: var(--agriculture-info);
+}
+
+/* Industry-specific component styles */
+.industry-primary {
+  color: var(--industry-primary);
+}
+
+.industry-primary-bg {
+  background-color: var(--industry-primary);
+}
+
+.industry-primary-border {
+  border-color: var(--industry-primary);
+}
+
+.industry-secondary {
+  color: var(--industry-secondary);
+}
+
+.industry-secondary-bg {
+  background-color: var(--industry-secondary);
+}
+
+.industry-accent {
+  color: var(--industry-accent);
+}
+
+.industry-accent-bg {
+  background-color: var(--industry-accent);
+}
+
+.industry-surface {
+  background-color: var(--industry-surface);
+}
+
+.industry-text {
+  color: var(--industry-text);
+}
+
+.industry-text-secondary {
+  color: var(--industry-text-secondary);
+}
+
+.industry-border {
+  border-color: var(--industry-border);
+}
+
+/* Industry-specific gradients */
+.industry-gradient-primary {
+  background: linear-gradient(135deg, var(--industry-primary), var(--industry-secondary));
+}
+
+.industry-gradient-accent {
+  background: linear-gradient(135deg, var(--industry-accent), var(--industry-primary));
+}
+
+/* Industry-specific shadows */
+.industry-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.industry-shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Industry-specific hover states */
+.industry-hover:hover {
+  background-color: var(--industry-primary);
+  color: white;
+}
+
+.industry-hover-secondary:hover {
+  background-color: var(--industry-secondary);
+  color: white;
+}
+
+/* Industry-specific focus states */
+.industry-focus:focus {
+  outline: 2px solid var(--industry-primary);
+  outline-offset: 2px;
+}
+
+/* Industry-specific active states */
+.industry-active {
+  background-color: var(--industry-primary);
+  color: white;
+}
+
+/* Industry-specific disabled states */
+.industry-disabled {
+  background-color: var(--industry-border);
+  color: var(--industry-text-secondary);
+  cursor: not-allowed;
+}
+
+/* Industry-specific animations */
+@keyframes industry-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.industry-pulse {
+  animation: industry-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Industry-specific transitions */
+.industry-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Industry-specific responsive design */
+@media (max-width: 768px) {
+  .industry-mobile {
+    padding: 1rem;
+  }
+  
+  .industry-mobile-text {
+    font-size: 0.875rem;
+  }
+}
+
+/* Industry-specific dark mode support */
+.dark .industry-primary {
+  color: var(--industry-primary);
+}
+
+.dark .industry-primary-bg {
+  background-color: var(--industry-primary);
+}
+
+.dark .industry-surface {
+  background-color: #1F2937;
+}
+
+.dark .industry-text {
+  color: #F9FAFB;
+}
+
+.dark .industry-text-secondary {
+  color: #9CA3AF;
+}
+
+.dark .industry-border {
+  border-color: #374151;
+}

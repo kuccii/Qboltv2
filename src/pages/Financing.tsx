@@ -17,10 +17,11 @@ import DashboardCard from '../components/DashboardCard';
 import StatusBadge from '../components/StatusBadge';
 import { financingOffers } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
+import { useIndustry } from '../contexts/IndustryContext';
 
 const Financing: React.FC = () => {
   const { currentUser } = useAuth();
-  const industry = currentUser?.industry || 'construction';
+  const { currentIndustry, industryConfig, getIndustryTerm } = useIndustry();
   
   const [financeAmount, setFinanceAmount] = useState(10000);
   const [financeTerm, setFinanceTerm] = useState(6);
@@ -30,7 +31,7 @@ const Financing: React.FC = () => {
   
   // Filter financing offers based on industry
   const availableOffers = financingOffers.filter(
-    offer => offer.industry === 'both' || offer.industry === industry
+    offer => offer.industry === 'both' || offer.industry === currentIndustry
   );
   
   // Format currency

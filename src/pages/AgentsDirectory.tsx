@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import DashboardCard from '../components/DashboardCard';
 import { useAuth } from '../contexts/AuthContext';
+import { useIndustry } from '../contexts/IndustryContext';
 
 interface Agent {
   id: number;
@@ -33,6 +34,7 @@ interface Agent {
 
 const AgentsDirectory: React.FC = () => {
   const { currentUser } = useAuth();
+  const { currentIndustry, industryConfig, getIndustryTerm } = useIndustry();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
