@@ -162,7 +162,60 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="h-16 flex items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <Building2 className="text-white" size={20} />
+              </div>
+              <span className="text-xl font-bold text-gray-900 dark:text-white">
+                Qivook
+              </span>
+            </Link>
+
+            {/* Navigation */}
+            <nav className="hidden md:flex items-center gap-6">
+              <Link to="/#features" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                Features
+              </Link>
+              <Link to="/#testimonials" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                Testimonials
+              </Link>
+              <Link to="/#coverage" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                Coverage
+              </Link>
+              {isLoggedIn ? (
+                <Link
+                  to="/app"
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
+            </nav>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -268,7 +321,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Features Section */}
-      <div className="py-20">
+      <div id="features" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -304,7 +357,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Coverage Map Section */}
-      <div className="bg-gray-50 dark:bg-gray-800 py-20">
+      <div id="coverage" className="bg-gray-50 dark:bg-gray-800 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -340,7 +393,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Testimonials Section */}
-      <div className="py-20">
+      <div id="testimonials" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -417,6 +470,103 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 dark:bg-black text-gray-300 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Company Info */}
+            <div className="col-span-1 md:col-span-2">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <Building2 className="text-white" size={20} />
+                </div>
+                <span className="text-xl font-bold text-white">
+                  Qivook
+                </span>
+              </div>
+              <p className="text-sm text-gray-400 mb-4 max-w-md">
+                East Africa's premier trade intelligence platform. Connect suppliers, track prices, optimize logistics, and access financing - all in one powerful platform.
+              </p>
+              <div className="flex items-center gap-4">
+                <a href="mailto:info@qivook.com" className="text-gray-400 hover:text-white transition-colors">
+                  <Mail size={20} />
+                </a>
+                <a href="tel:+254700000000" className="text-gray-400 hover:text-white transition-colors">
+                  <Phone size={20} />
+                </a>
+                <a href="https://www.linkedin.com/company/qivook" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                  <ExternalLink size={20} />
+                </a>
+              </div>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-white font-semibold mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link to="/#features" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/#testimonials" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Testimonials
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/#coverage" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Coverage
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Get Started
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Support */}
+            <div>
+              <h3 className="text-white font-semibold mb-4">Support</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link to="/help" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Help Center
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contact" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/privacy" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/terms" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Terms of Service
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="mt-8 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-sm text-gray-400">
+              © {new Date().getFullYear()} Qivook. All rights reserved.
+            </p>
+            <div className="flex items-center gap-6 mt-4 md:mt-0">
+              <span className="text-sm text-gray-400">Made with ❤️ for East Africa</span>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       {/* Demo Modal */}
       {showDemo && (
