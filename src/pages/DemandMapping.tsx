@@ -28,7 +28,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
 import {
   AppLayout,
-  PageHeader,
   PageLayout,
   SectionLayout,
   SelectInput,
@@ -38,6 +37,8 @@ import {
 } from '../design-system';
 import HeatMapChart from '../components/HeatMapChart';
 import { demandData } from '../data/mockData';
+import { unifiedApi } from '../services/unifiedApi';
+import HeaderStrip from '../components/HeaderStrip';
 
 interface DemandPoint {
   id: string;
@@ -73,6 +74,69 @@ const DemandMapping: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTimeIndex, setCurrentTimeIndex] = useState(0);
   
+  // Fetch real demand data from Supabase
+  const [realDemandData, setRealDemandData] = useState<any[]>([]);
+  const [demandLoading, setDemandLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDemandData = async () => {
+      try {
+        setDemandLoading(true);
+        // Fetch demand data from all East African countries
+        const countries = ['RW', 'KE', 'UG', 'TZ', 'ET'];
+        const demandPromises = countries.map(countryCode =>
+          unifiedApi.countries.getDemand(countryCode, {
+            region: selectedRegion !== 'All Regions' ? selectedRegion : undefined,
+            material: selectedMaterial !== 'All Materials' ? selectedMaterial : undefined,
+            industry: currentIndustry,
+            timeRange: timeRange === 'current' ? undefined : timeRange
+          }).catch(err => {
+            console.warn(`Failed to fetch demand for ${countryCode}:`, err);
+            return []; // Return empty array on error
+          })
+        );
+        
+        const allDemandArrays = await Promise.all(demandPromises);
+        const allDemand = allDemandArrays.flat();
+        setRealDemandData(allDemand);
+        setLastUpdated(new Date());
+      } catch (err) {
+        console.error('Failed to fetch demand data:', err);
+        setRealDemandData([]);
+      } finally {
+        setDemandLoading(false);
+      }
+    };
+    fetchDemandData();
+  }, [selectedRegion, selectedMaterial, currentIndustry, timeRange]);
+
+  const handleRefresh = async () => {
+    try {
+      setDemandLoading(true);
+      const countries = ['RW', 'KE', 'UG', 'TZ', 'ET'];
+      const demandPromises = countries.map(countryCode =>
+        unifiedApi.countries.getDemand(countryCode, {
+          region: selectedRegion !== 'All Regions' ? selectedRegion : undefined,
+          material: selectedMaterial !== 'All Materials' ? selectedMaterial : undefined,
+          industry: currentIndustry,
+          timeRange: timeRange === 'current' ? undefined : timeRange
+        }).catch(err => {
+          console.warn(`Failed to fetch demand for ${countryCode}:`, err);
+          return [];
+        })
+      );
+      
+      const allDemandArrays = await Promise.all(demandPromises);
+      const allDemand = allDemandArrays.flat();
+      setRealDemandData(allDemand);
+      setLastUpdated(new Date());
+    } catch (err) {
+      console.error('Failed to refresh demand data:', err);
+    } finally {
+      setDemandLoading(false);
+    }
+  };
+  
   // Map state
   const [mapCenter, setMapCenter] = useState<[number, number]>([-1.2921, 36.8219]); // Nairobi
   const [mapZoom, setMapZoom] = useState<number>(6);
@@ -89,11 +153,45 @@ const DemandMapping: React.FC = () => {
     }
     return () => clearInterval(interval);
   }, [isPlaying, timeSteps.length]);
+
+  const getRegionCoordinates = (region: string): [number, number] => {
+    const coordinates: Record<string, [number, number]> = {
+      'Nairobi': [-1.2921, 36.8219],
+      'Mombasa': [-4.0437, 39.6682],
+      'Kisumu': [-0.0917, 34.7680],
+      'Nakuru': [-0.3070, 36.0800],
+      'Eldoret': [0.5143, 35.2698],
+      'Kigali': [-1.9441, 30.0619],
+      'Kampala': [0.3476, 32.5825],
+      'Dar es Salaam': [-6.7924, 39.2083],
+      'Addis Ababa': [9.1450, 38.7667],
+      'RW': [-1.9441, 30.0619], // Rwanda
+      'KE': [-1.2921, 36.8219], // Kenya
+      'UG': [0.3476, 32.5825], // Uganda
+      'TZ': [-6.7924, 39.2083], // Tanzania
+      'ET': [9.1450, 38.7667], // Ethiopia
+    };
+    return coordinates[region] || [-1.2921, 36.8219];
+  };
   
-  // Generate mock demand data with temporal dimension
+  // Generate demand data - Use real data if available, fallback to mock
   const generateDemandData = useMemo(() => {
-    const regions = ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Kigali', 'Kampala'];
-    const materials = currentIndustry === 'construction' 
+    // Use real data if available
+    if (realDemandData.length > 0) {
+      return realDemandData.map((item: any) => ({
+        id: item.id || `${item.country_code}-${item.region}-${item.material}-${item.timestamp}`,
+        region: item.region || item.country_code,
+        material: item.material,
+        demand: item.demand_quantity || item.forecast_demand || 0,
+        trend: (item.trend || 'stable') as 'up' | 'down' | 'stable',
+        coordinates: item.coordinates ? JSON.parse(item.coordinates) : getRegionCoordinates(item.region || item.country_code),
+        timestamp: item.timestamp || item.created_at
+      }));
+    }
+
+    // Fallback to mock data
+    const mockRegions = ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Kigali', 'Kampala', 'Dar es Salaam', 'Addis Ababa'];
+    const mockMaterials = currentIndustry === 'construction' 
       ? ['Cement', 'Steel', 'Timber', 'Sand', 'Gravel']
       : ['Fertilizer', 'Seeds', 'Pesticides', 'Feed', 'Machinery'];
     
@@ -101,8 +199,8 @@ const DemandMapping: React.FC = () => {
     const timePoints = 12; // 12 months of data
     
     for (let t = 0; t < timePoints; t++) {
-      regions.forEach(region => {
-        materials.forEach(material => {
+      mockRegions.forEach(region => {
+        mockMaterials.forEach(material => {
           const baseDemand = Math.random() * 1000 + 500;
           const seasonalFactor = 1 + 0.3 * Math.sin((t / 12) * 2 * Math.PI);
           const demand = Math.round(baseDemand * seasonalFactor);
@@ -121,20 +219,7 @@ const DemandMapping: React.FC = () => {
     }
     
     return data;
-  }, [currentIndustry]);
-
-  const getRegionCoordinates = (region: string): [number, number] => {
-    const coordinates: Record<string, [number, number]> = {
-      'Nairobi': [-1.2921, 36.8219],
-      'Mombasa': [-4.0437, 39.6682],
-      'Kisumu': [-0.0917, 34.7680],
-      'Nakuru': [-0.3070, 36.0800],
-      'Eldoret': [0.5143, 35.2698],
-      'Kigali': [-1.9441, 30.0619],
-      'Kampala': [0.3476, 32.5825]
-    };
-    return coordinates[region] || [-1.2921, 36.8219];
-  };
+  }, [realDemandData, currentIndustry]);
 
   // Filter data based on current selections
   const filteredData = useMemo(() => {
@@ -197,11 +282,11 @@ const DemandMapping: React.FC = () => {
     };
   }, [isPlaying]);
 
-  const materials = currentIndustry === 'construction' 
+  const allMaterials = currentIndustry === 'construction' 
     ? ['All Materials', 'Cement', 'Steel', 'Timber', 'Sand', 'Gravel', 'Bricks', 'Roofing Materials']
     : ['All Materials', 'Fertilizer', 'Seeds', 'Pesticides', 'Feed', 'Machinery', 'Tools', 'Equipment'];
 
-  const regions = ['All Regions', 'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Kigali', 'Kampala'];
+  const allRegions = ['All Regions', 'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Kigali', 'Kampala', 'Dar es Salaam', 'Addis Ababa'];
 
   const renderMapView = () => (
     <div className="space-y-4">
@@ -423,12 +508,23 @@ const DemandMapping: React.FC = () => {
 
   return (
     <AppLayout>
-      <PageHeader
-        title="Demand Mapping"
-        subtitle="Visualize regional demand patterns and identify market opportunities"
-        breadcrumbs={[{ label: 'Market Intelligence' }, { label: 'Demand Mapping' }]}
-        actions={
+      <HeaderStrip 
+        title="Demand Mapping for East Africa"
+        subtitle="Visualize regional demand patterns and identify market opportunities across East Africa"
+        chips={[
+          { label: 'Regions', value: regionDetails.length, variant: 'info' },
+          { label: 'Data Points', value: filteredData.length, variant: 'info' },
+        ]}
+        right={
           <div className="flex items-center gap-3">
+            <button
+              onClick={handleRefresh}
+              disabled={demandLoading}
+              className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+            >
+              <RefreshCw className={`h-4 w-4 ${demandLoading ? 'animate-spin' : ''}`} />
+              Refresh
+            </button>
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50"
@@ -446,7 +542,7 @@ const DemandMapping: React.FC = () => {
           </div>
         }
       />
-
+      
       <PageLayout maxWidth="full" padding="none">
         <RailLayout
           right={
@@ -456,7 +552,7 @@ const DemandMapping: React.FC = () => {
             </div>
           }
         >
-          <div className="space-y-6">
+          <div className="px-6 py-6 space-y-6">
             {/* Filters */}
             <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <div className="flex-1">
@@ -466,7 +562,7 @@ const DemandMapping: React.FC = () => {
                 <SelectInput
                   value={selectedMaterial}
                   onChange={setSelectedMaterial}
-                  options={materials.map(m => ({ value: m, label: m }))}
+                  options={allMaterials.map(m => ({ value: m, label: m }))}
                   className="w-full"
                 />
               </div>
@@ -477,7 +573,7 @@ const DemandMapping: React.FC = () => {
                 <SelectInput
                   value={selectedRegion}
                   onChange={setSelectedRegion}
-                  options={regions.map(r => ({ value: r, label: r }))}
+                  options={allRegions.map(r => ({ value: r, label: r }))}
                   className="w-full"
                 />
               </div>
@@ -500,7 +596,29 @@ const DemandMapping: React.FC = () => {
 
             {/* Map View */}
             <SectionLayout title="Demand Map" subtitle="Interactive visualization of regional demand patterns">
-              {renderMapView()}
+              {demandLoading ? (
+                <div className="flex items-center justify-center h-96 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="text-center">
+                    <RefreshCw className="h-8 w-8 animate-spin text-primary-600 mx-auto mb-2" />
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Loading demand data...</p>
+                  </div>
+                </div>
+              ) : filteredData.length === 0 ? (
+                <div className="flex items-center justify-center h-96 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="text-center">
+                    <MapIcon className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                    <p className="text-sm text-gray-600 dark:text-gray-400">No demand data available for the selected filters</p>
+                    <button
+                      onClick={handleRefresh}
+                      className="mt-4 px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700"
+                    >
+                      Refresh Data
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                renderMapView()
+              )}
             </SectionLayout>
 
             {/* Export Options */}

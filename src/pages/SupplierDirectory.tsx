@@ -21,9 +21,9 @@ import StatusBadge from '../components/StatusBadge';
 import { supplierDirectoryData } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
+import { unifiedApi } from '../services/unifiedApi';
 import {
   AppLayout,
-  PageHeader,
   PageLayout,
   SectionLayout,
   SearchInput,
@@ -36,6 +36,7 @@ import {
   VerificationBadge,
   InsuranceIndicator
 } from '../design-system';
+import HeaderStrip from '../components/HeaderStrip';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const SupplierDirectory: React.FC = () => {
@@ -47,16 +48,107 @@ const SupplierDirectory: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMaterial, setSelectedMaterial] = useState('all');
   const [selectedRegion, setSelectedRegion] = useState('all');
+  const [selectedCountry, setSelectedCountry] = useState<string>('all');
   const [verification, setVerification] = useState<string[]>([]);
   const [minRating, setMinRating] = useState<number>(0);
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'map'>('list');
   const [showFilters, setShowFilters] = useState(false);
   const [savedViews, setSavedViews] = useState<string[]>([]);
+  const [countrySuppliers, setCountrySuppliers] = useState<any[]>([]);
+  const [suppliersLoading, setSuppliersLoading] = useState(true);
+  const [suppliersError, setSuppliersError] = useState<string | null>(null);
+
+  // Available countries from country profiles
+  const availableCountries: { code: string; name: string }[] = [
+    { code: 'RW', name: 'Rwanda' },
+    { code: 'KE', name: 'Kenya' },
+    { code: 'UG', name: 'Uganda' },
+    { code: 'TZ', name: 'Tanzania' },
+    { code: 'ET', name: 'Ethiopia' },
+  ];
+
+  // Fetch suppliers from country profiles
+  useEffect(() => {
+    const fetchCountrySuppliers = async () => {
+      try {
+        setSuppliersLoading(true);
+        setSuppliersError(null);
+
+        // Determine which countries to fetch
+        const countriesToFetch = selectedCountry === 'all' 
+          ? availableCountries.map(c => c.code)
+          : [selectedCountry];
+
+        // Fetch suppliers from all selected countries
+        const supplierPromises = countriesToFetch.map(countryCode =>
+          unifiedApi.countries.getSuppliers(countryCode, {
+            verified: verification.includes('verified') ? true : undefined,
+            search: searchTerm || undefined
+          }).catch(err => {
+            console.warn(`Failed to fetch suppliers for ${countryCode}:`, err);
+            return []; // Return empty array on error
+          })
+        );
+
+        const allSuppliersArrays = await Promise.all(supplierPromises);
+        const allSuppliers = allSuppliersArrays.flat();
+
+        // Transform country suppliers to match SupplierDirectory format
+        const transformedSuppliers = allSuppliers.map((s: any) => ({
+          id: s.id,
+          name: s.name,
+          location: s.location,
+          region: s.region || s.location,
+          country: s.country_code,
+          rating: s.rating || 0,
+          reliability: 0, // Not available in country_suppliers
+          deliveryTime: '5-7 days', // Default
+          materials: s.materials || [],
+          verified: s.verified || false,
+          insurance: false, // Not available in country_suppliers
+          industry: s.category || currentIndustry, // Use category as industry
+          phone: s.phone,
+          email: s.email,
+          website: s.website,
+          description: s.description,
+          category: s.category,
+          services: s.services || [],
+          certifications: s.certifications || []
+        }));
+
+        setCountrySuppliers(transformedSuppliers);
+      } catch (err) {
+        console.error('Failed to fetch country suppliers:', err);
+        setSuppliersError(err instanceof Error ? err.message : 'Failed to fetch suppliers');
+        setCountrySuppliers([]);
+      } finally {
+        setSuppliersLoading(false);
+      }
+    };
+
+    fetchCountrySuppliers();
+  }, [selectedCountry, verification, searchTerm, currentIndustry]);
+
+  // Use country suppliers if available, fallback to mock data
+  const suppliersToUse = countrySuppliers.length > 0 
+    ? countrySuppliers
+    : supplierDirectoryData;
   
   // Filter suppliers based on industry and search/filter settings
-  const filteredSuppliers = supplierDirectoryData
-    .filter(supplier => supplier.industry === currentIndustry)
+  const filteredSuppliers = suppliersToUse
+    .filter(supplier => {
+      // For country suppliers, filter by category matching industry
+      if (countrySuppliers.length > 0) {
+        const categoryMap: Record<string, string[]> = {
+          'construction': ['construction', 'laboratory', 'storage'],
+          'agriculture': ['agriculture', 'food', 'storage']
+        };
+        const allowedCategories = categoryMap[currentIndustry] || [];
+        return allowedCategories.includes((supplier as any).category) || supplier.industry === currentIndustry;
+      }
+      return supplier.industry === currentIndustry;
+    })
     .filter(supplier => 
       searchTerm === '' || 
       supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,27 +158,55 @@ const SupplierDirectory: React.FC = () => {
       selectedMaterial === 'all' || 
       supplier.materials.includes(selectedMaterial)
     )
-    .filter(supplier => 
-      selectedRegion === 'all' || 
-      supplier.region === selectedRegion
-    )
-    .filter(supplier => (verification.length === 0) || (verification.includes('verified') ? (supplier as any).verified ?? true : true))
+    .filter(supplier => {
+      if (selectedRegion === 'all') return true;
+      // Match by region or country
+      return supplier.region === selectedRegion || 
+             (supplier as any).country === selectedRegion ||
+             supplier.location === selectedRegion;
+    })
+    .filter(supplier => {
+      if (verification.length === 0) return true;
+      if (verification.includes('verified')) return supplier.verified === true;
+      return true;
+    })
     .filter(supplier => (supplier.rating || 0) >= minRating);
   
   // Get unique materials and regions for this industry
   const uniqueMaterials = Array.from(
     new Set(
-      supplierDirectoryData
-        .filter(supplier => supplier.industry === currentIndustry)
+      suppliersToUse
+        .filter(supplier => {
+          if (countrySuppliers.length > 0) {
+            const categoryMap: Record<string, string[]> = {
+              'construction': ['construction', 'laboratory', 'storage'],
+              'agriculture': ['agriculture', 'food', 'storage']
+            };
+            const allowedCategories = categoryMap[currentIndustry] || [];
+            return allowedCategories.includes((supplier as any).category) || supplier.industry === currentIndustry;
+          }
+          return supplier.industry === currentIndustry;
+        })
         .flatMap(supplier => supplier.materials)
     )
   );
   
   const uniqueRegions = Array.from(
     new Set(
-      supplierDirectoryData
-        .filter(supplier => supplier.industry === currentIndustry)
-        .map(supplier => supplier.region)
+      suppliersToUse
+        .filter(supplier => {
+          if (countrySuppliers.length > 0) {
+            const categoryMap: Record<string, string[]> = {
+              'construction': ['construction', 'laboratory', 'storage'],
+              'agriculture': ['agriculture', 'food', 'storage']
+            };
+            const allowedCategories = categoryMap[currentIndustry] || [];
+            return allowedCategories.includes((supplier as any).category) || supplier.industry === currentIndustry;
+          }
+          return supplier.industry === currentIndustry;
+        })
+        .map(supplier => supplier.region || (supplier as any).country || supplier.location)
+        .filter(Boolean)
     )
   );
 
@@ -130,17 +250,17 @@ const SupplierDirectory: React.FC = () => {
   // Comparison tray items
   const comparisonItems = useMemo(() => {
     return compareIds.map(id => {
-      const supplier = supplierDirectoryData.find(s => s.id === id);
+      const supplier = suppliersToUse.find(s => s.id === id);
       if (!supplier) return null;
       return {
         id: supplier.id,
         name: supplier.name,
         type: 'supplier' as const,
         data: supplier,
-        image: supplier.logo
+        image: (supplier as any).logo
       };
     }).filter(Boolean);
-  }, [compareIds]);
+  }, [compareIds, suppliersToUse]);
 
   const handleCompare = () => {
     // Navigate to comparison page or open comparison modal
@@ -172,6 +292,21 @@ const SupplierDirectory: React.FC = () => {
       onChange: (value: string | string[]) => setSelectedMaterial(Array.isArray(value) ? value[0] : value)
     },
     {
+      id: 'country',
+      label: 'Country',
+      type: 'radio' as const,
+      options: [
+        { value: 'all', label: 'All Countries' },
+        ...availableCountries.map(c => ({ 
+          value: c.code, 
+          label: c.name,
+          count: suppliersToUse.filter(s => (s as any).country === c.code).length
+        }))
+      ],
+      value: selectedCountry,
+      onChange: (value: string | string[]) => setSelectedCountry(Array.isArray(value) ? value[0] : value)
+    },
+    {
       id: 'region',
       label: 'Region',
       type: 'radio' as const,
@@ -180,7 +315,10 @@ const SupplierDirectory: React.FC = () => {
         ...uniqueRegions.map(r => ({ 
           value: r, 
           label: r,
-          count: supplierDirectoryData.filter(s => s.region === r && s.industry === currentIndustry).length
+          count: suppliersToUse.filter(s => {
+            const region = s.region || (s as any).country || s.location;
+            return region === r;
+          }).length
         }))
       ],
       value: selectedRegion,
@@ -272,11 +410,10 @@ const SupplierDirectory: React.FC = () => {
   
   return (
     <AppLayout>
-      <PageHeader
+      <HeaderStrip 
         title={`${getIndustryTerm('suppliers')} Directory`}
         subtitle={`Find and connect with verified ${getIndustryTerm('suppliers').toLowerCase()} in your industry`}
-        breadcrumbs={[{ label: getIndustryTerm('suppliers') }]}
-        actions={
+        right={
           <div className="flex items-center gap-3">
             <SearchInput 
               value={searchTerm} 
@@ -284,78 +421,37 @@ const SupplierDirectory: React.FC = () => {
               placeholder={`Search ${getIndustryTerm('suppliers').toLowerCase()}...`} 
               size="sm" 
             />
-            
-            {/* View Mode Toggle */}
             <div className="flex items-center border rounded-md">
-              <button 
-                onClick={() => setViewMode('list')} 
-                className={`px-3 py-2 text-sm flex items-center gap-1 rounded-l-md ${
-                  viewMode === 'list' 
-                    ? 'bg-primary-100 text-primary-700 border-primary-300' 
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-              >
+              <button onClick={() => setViewMode('list')} className={`px-3 py-2 text-sm flex items-center gap-1 rounded-l-md ${viewMode === 'list' ? 'bg-primary-100 text-primary-700 border-primary-300' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
                 <ListIcon className="h-4 w-4" />
                 List
               </button>
-              <button 
-                onClick={() => setViewMode('grid')} 
-                className={`px-3 py-2 text-sm flex items-center gap-1 border-l ${
-                  viewMode === 'grid' 
-                    ? 'bg-primary-100 text-primary-700 border-primary-300' 
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-              >
+              <button onClick={() => setViewMode('grid')} className={`px-3 py-2 text-sm flex items-center gap-1 border-l ${viewMode === 'grid' ? 'bg-primary-100 text-primary-700 border-primary-300' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
                 <GridIcon className="h-4 w-4" />
                 Grid
               </button>
-              <button 
-                onClick={() => setViewMode('map')} 
-                className={`px-3 py-2 text-sm flex items-center gap-1 rounded-r-md border-l ${
-                  viewMode === 'map' 
-                    ? 'bg-primary-100 text-primary-700 border-primary-300' 
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-              >
+              <button onClick={() => setViewMode('map')} className={`px-3 py-2 text-sm flex items-center gap-1 rounded-r-md border-l ${viewMode === 'map' ? 'bg-primary-100 text-primary-700 border-primary-300' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
                 <MapIcon className="h-4 w-4" />
                 Map
               </button>
             </div>
-
-            <button 
-              onClick={() => setShowFilters(!showFilters)} 
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-            >
+            <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50">
               <FilterIcon className="h-4 w-4" />
               Filters
               {(selectedMaterial !== 'all' || selectedRegion !== 'all' || verification.length > 0 || minRating > 0) && (
-                <span className="px-2 py-0.5 text-xs bg-primary-100 text-primary-700 rounded-full">
-                  Active
-                </span>
+                <span className="px-2 py-0.5 text-xs bg-primary-100 text-primary-700 rounded-full">Active</span>
               )}
             </button>
-            
             <ActionMenu
               items={[
-                { 
-                  id: 'export', 
-                  label: 'Export List', 
-                  icon: <Download className="h-4 w-4" />, 
-                  description: 'Download CSV/PDF', 
-                  onClick: () => console.log('Export') 
-                },
-                { 
-                  id: 'save-view', 
-                  label: 'Save Current View', 
-                  icon: <Plus className="h-4 w-4" />, 
-                  description: 'Save filters and view settings', 
-                  onClick: () => console.log('Save view') 
-                }
+                { id: 'export', label: 'Export List', icon: <Download className="h-4 w-4" />, description: 'Download CSV/PDF', onClick: () => console.log('Export') },
+                { id: 'save-view', label: 'Save Current View', icon: <Plus className="h-4 w-4" />, description: 'Save filters and view settings', onClick: () => console.log('Save view') }
               ]}
               size="sm"
             />
           </div>
         }
+        chips={[{ label: 'Total', value: suppliersToUse.length }, { label: 'Filtered', value: filteredSuppliers.length, variant: 'info' }]}
       />
 
       <PageLayout maxWidth="full" padding="none">
@@ -437,6 +533,13 @@ const SupplierDirectory: React.FC = () => {
                   </select>
                 </div>
                 <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-700">Country</label>
+                  <select value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)} className="text-sm border rounded px-2 py-1">
+                    <option value="all">All</option>
+                    {availableCountries.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
+                  </select>
+                </div>
+                <div className="flex items-center gap-2">
                   <label className="text-sm text-gray-700">Region</label>
                   <select value={selectedRegion} onChange={e => setSelectedRegion(e.target.value)} className="text-sm border rounded px-2 py-1">
                     <option value="all">All</option>
@@ -466,9 +569,18 @@ const SupplierDirectory: React.FC = () => {
               </SectionLayout>
             ) : null}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredSuppliers.length > 0 ? (
-                filteredSuppliers.map(supplier => (
+            {suppliersLoading ? (
+              <div className="col-span-full text-center py-8 text-gray-500">
+                Loading suppliers from country profiles...
+              </div>
+            ) : suppliersError ? (
+              <div className="col-span-full text-center py-8 text-red-500">
+                Error loading suppliers: {suppliersError}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredSuppliers.length > 0 ? (
+                  filteredSuppliers.map(supplier => (
                   <div 
                     key={supplier.id} 
                     className="border rounded-lg p-4 hover:shadow-md transition-shadow"
@@ -572,12 +684,13 @@ const SupplierDirectory: React.FC = () => {
                     </div>
                   </div>
                 ))
-              ) : (
-                <div className="col-span-full text-center py-8 text-gray-500">
-                  No suppliers match your search criteria
+                  ) : (
+                    <div className="col-span-full text-center py-8 text-gray-500">
+                      No suppliers match your search criteria
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
           </div>
         </RailLayout>
       </PageLayout>

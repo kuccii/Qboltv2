@@ -225,29 +225,12 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
           {/* Center: Desktop Navigation */}
           <nav ref={dropdownRef} className="hidden lg:flex items-center gap-1">
             <NavItem to="/app" icon={LayoutDashboard} label="Dashboard" end />
-
-            <Dropdown icon={BarChart2} label="Market" dropdownKey="market">
-              <DropdownItem to="/app/prices" icon={TrendingUp} label="Price Tracking" />
-              <DropdownItem to="/app/price-reporting" icon={MessageSquare} label="Price Reporting" />
-              <DropdownItem to="/app/demand" icon={Map} label="Demand Mapping" />
-            </Dropdown>
-
-            <Dropdown icon={Package} label="Supply" dropdownKey="supply">
-              <DropdownItem to="/app/suppliers" icon={Users} label="Supplier Scores" />
-              <DropdownItem to="/app/supplier-directory" icon={Building2} label="Supplier Directory" />
-              <DropdownItem to="/app/agents" icon={UserCog} label="Agents Directory" />
-              <DropdownItem to="/app/logistics" icon={Truck} label="Logistics" />
-              <DropdownItem to="/app/rwanda" icon={MapPin} label="Rwanda Logistics" />
-            </Dropdown>
-
-            <Dropdown icon={Shield} label="Risk" dropdownKey="risk">
-              <DropdownItem to="/app/risk" icon={AlertTriangle} label="Risk Mitigation" />
-              <DropdownItem to="/app/documents" icon={FileText} label="Document Vault" />
-            </Dropdown>
-
-            <Dropdown icon={CreditCard} label="Finance" dropdownKey="finance">
-              <DropdownItem to="/app/financing" icon={Wallet} label="Financing" />
-            </Dropdown>
+            <NavItem to="/app/demand" icon={Map} label="Demand Mapping" />
+            {/* Keep Countries only once via quick switch on the right */}
+            <NavItem to="/app/financing" icon={Wallet} label="Financing Hub" />
+            <NavItem to="/app/documents" icon={FileText} label="Documents" />
+            <NavItem to="/app/analytics" icon={BarChart2} label="Analytics" />
+            <NavItem to="/app/risk" icon={Shield} label="Risk" />
 
             {currentUser?.role === 'admin' && (
               <Dropdown icon={Settings2} label="Admin" dropdownKey="admin">
@@ -266,6 +249,21 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
             >
               <Search size={20} />
             </button>
+
+            {/* Country Quick Switch */}
+            <NavLink 
+              to="/app/countries" 
+              className={({ isActive }) => `
+                hidden md:inline-flex items-center gap-2 py-1.5 px-2.5 rounded-md text-xs font-medium transition-colors border
+                ${isActive 
+                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700' 
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700'}
+              `}
+              onClick={closeDropdown}
+            >
+              <MapPin size={14} />
+              <span>Countries</span>
+            </NavLink>
 
             {/* Notifications */}
             <div className="relative">

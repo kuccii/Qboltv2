@@ -27,6 +27,8 @@ import StatusBadge from '../components/StatusBadge';
 import { logisticsData, LogisticsItem } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
+import { useShipments } from '../hooks/useData';
+import { unifiedApi } from '../services/unifiedApi';
 import {
   AppLayout,
   PageHeader,
@@ -65,13 +67,40 @@ interface CostBreakdown {
 }
 
 const Logistics: React.FC = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, authState } = useAuth();
   const { currentIndustry, industryConfig, getIndustryTerm } = useIndustry();
   
   const [activeTab, setActiveTab] = useState<'overview' | 'planner' | 'calculator' | 'routes'>('overview');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<Status | 'all'>('all');
+  
+  // Fetch real logistics routes and shipments
+  const [routes, setRoutes] = useState<any[]>([]);
+  const [routesLoading, setRoutesLoading] = useState(true);
+  
+  const {
+    shipments: realShipments,
+    loading: shipmentsLoading,
+    refetch: refetchShipments
+  } = useShipments({ limit: 50 });
+
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      try {
+        setRoutesLoading(true);
+        const data = await unifiedApi.logistics.getRoutes({
+          origin_country: selectedRegion !== 'all' ? selectedRegion : undefined
+        });
+        setRoutes(data);
+      } catch (err) {
+        console.error('Failed to fetch routes:', err);
+      } finally {
+        setRoutesLoading(false);
+      }
+    };
+    fetchRoutes();
+  }, [selectedRegion]);
   
   // Route Planner State
   const [origin, setOrigin] = useState<string>('');
@@ -135,8 +164,22 @@ const Logistics: React.FC = () => {
 
   const cities = ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Kigali', 'Kampala', 'Dar es Salaam', 'Arusha', 'Dodoma'];
   
-  // Filter logistics data
-  const filteredLogistics = logisticsData
+  // Filter logistics data - Use real routes if available
+  const filteredLogistics = routes.length > 0
+    ? routes.map((route: any) => ({
+        id: route.id,
+        route: `${route.origin} → ${route.destination}`,
+        origin: route.origin,
+        destination: route.destination,
+        distance: route.distance_km || 0,
+        duration: route.estimated_days || 0,
+        cost: route.cost_per_kg || 0,
+        industry: currentIndustry,
+        region: route.origin_country,
+        status: route.status === 'active' ? 'normal' : 'delayed',
+        description: `Route from ${route.origin} to ${route.destination}`
+      }))
+    : logisticsData
     .filter((item: LogisticsItem) => item.industry === currentIndustry)
     .filter((item: LogisticsItem) => 
       searchTerm === '' || 

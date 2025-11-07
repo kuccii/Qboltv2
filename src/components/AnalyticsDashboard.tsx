@@ -1,21 +1,25 @@
 // Advanced analytics dashboard with comprehensive metrics
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   TrendingUp, 
   TrendingDown, 
   BarChart3, 
-  PieChart, 
   Activity, 
   Users, 
   Package, 
   DollarSign,
-  Calendar,
   Download,
-  Filter,
   RefreshCw
 } from 'lucide-react';
 import EnhancedChart, { ChartTypeSelector } from './EnhancedChart';
 import { usePWA } from '../utils/pwa';
+import { unifiedApi } from '../services/unifiedApi';
+import { useAuth } from '../contexts/AuthContext';
+import HeaderStrip from './HeaderStrip';
+import {
+  AppLayout,
+  PageLayout,
+} from '../design-system';
 
 interface AnalyticsData {
   totalRevenue: number;
@@ -28,12 +32,10 @@ interface AnalyticsData {
   orderValueGrowth: number;
   priceTrends: Array<{
     date: string;
-    cement: number;
-    steel: number;
-    timber: number;
-    sand: number;
+    [key: string]: any;
   }>;
   supplierPerformance: Array<{
+    id: string;
     name: string;
     orders: number;
     revenue: number;
@@ -54,57 +56,126 @@ interface AnalyticsData {
 
 const AnalyticsDashboard: React.FC = () => {
   const { isOnline } = usePWA();
+  const { authState } = useAuth();
   const [selectedPeriod, setSelectedPeriod] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
   const [selectedChartType, setSelectedChartType] = useState<'line' | 'bar' | 'area'>('line');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
 
-  // Mock analytics data - in real app, this would come from API
-  const analyticsData: AnalyticsData = useMemo(() => ({
-    totalRevenue: 2450000,
-    revenueGrowth: 12.5,
-    totalOrders: 1847,
-    orderGrowth: 8.3,
-    activeSuppliers: 156,
-    supplierGrowth: 15.2,
-    avgOrderValue: 1326,
-    orderValueGrowth: 4.1,
-    priceTrends: [
-      { date: '2024-01-01', cement: 750, steel: 45000, timber: 1200, sand: 150 },
-      { date: '2024-01-08', cement: 780, steel: 46000, timber: 1250, sand: 155 },
-      { date: '2024-01-15', cement: 760, steel: 45500, timber: 1230, sand: 152 },
-      { date: '2024-01-22', cement: 790, steel: 47000, timber: 1280, sand: 158 },
-      { date: '2024-01-29', cement: 800, steel: 47500, timber: 1300, sand: 160 },
-    ],
-    supplierPerformance: [
-      { name: 'ABC Construction', orders: 245, revenue: 325000, rating: 4.8 },
-      { name: 'XYZ Materials', orders: 189, revenue: 289000, rating: 4.6 },
-      { name: 'BuildCorp Ltd', orders: 156, revenue: 234000, rating: 4.4 },
-      { name: 'SteelWorks Inc', orders: 134, revenue: 198000, rating: 4.2 },
-      { name: 'Timber Solutions', orders: 98, revenue: 156000, rating: 4.0 },
-    ],
-    marketShare: [
-      { category: 'Construction Materials', value: 45, color: '#3B82F6' },
-      { category: 'Agricultural Supplies', value: 30, color: '#10B981' },
-      { category: 'Logistics Services', value: 15, color: '#F59E0B' },
-      { category: 'Financial Services', value: 10, color: '#EF4444' },
-    ],
-    regionalData: [
-      { region: 'Nairobi', orders: 892, revenue: 1180000, growth: 15.2 },
-      { region: 'Kampala', orders: 456, revenue: 604000, growth: 8.7 },
-      { region: 'Kigali', orders: 234, revenue: 310000, growth: 12.1 },
-      { region: 'Dar es Salaam', orders: 189, revenue: 250000, growth: 6.3 },
-      { region: 'Other', orders: 76, revenue: 100000, growth: 4.1 },
-    ],
-  }), [selectedPeriod]);
+  // Fetch analytics data from backend
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const [metrics, priceTrends, supplierPerformance, marketShare, regionalData] = await Promise.all([
+          unifiedApi.analytics.getMetrics({
+            period: selectedPeriod,
+            country: authState.user?.country,
+            industry: authState.user?.industry,
+          }),
+          unifiedApi.analytics.getPriceTrends({
+            period: selectedPeriod,
+            country: authState.user?.country,
+            materials: ['cement', 'steel', 'timber', 'sand'],
+          }),
+          unifiedApi.analytics.getSupplierPerformance({
+            period: selectedPeriod,
+            country: authState.user?.country,
+            industry: authState.user?.industry,
+            limit: 5,
+          }),
+          unifiedApi.analytics.getMarketShare({
+            period: selectedPeriod,
+            country: authState.user?.country,
+          }),
+          unifiedApi.analytics.getRegionalData({
+            period: selectedPeriod,
+          }),
+        ]);
+
+        setAnalyticsData({
+          ...metrics,
+          priceTrends: priceTrends || [],
+          supplierPerformance: supplierPerformance || [],
+          marketShare: marketShare || [],
+          regionalData: regionalData || [],
+        } as AnalyticsData);
+      } catch (err: any) {
+        console.error('Failed to fetch analytics:', err);
+        setError('Failed to load analytics data');
+        // Set fallback data
+        setAnalyticsData({
+          totalRevenue: 0,
+          revenueGrowth: 0,
+          totalOrders: 0,
+          orderGrowth: 0,
+          activeSuppliers: 0,
+          supplierGrowth: 0,
+          avgOrderValue: 0,
+          orderValueGrowth: 0,
+          priceTrends: [],
+          supplierPerformance: [],
+          marketShare: [],
+          regionalData: [],
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalytics();
+  }, [selectedPeriod, authState.user?.country, authState.user?.industry]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsRefreshing(false);
+    try {
+      const [metrics, priceTrends, supplierPerformance, marketShare, regionalData] = await Promise.all([
+        unifiedApi.analytics.getMetrics({
+          period: selectedPeriod,
+          country: authState.user?.country,
+          industry: authState.user?.industry,
+        }),
+        unifiedApi.analytics.getPriceTrends({
+          period: selectedPeriod,
+          country: authState.user?.country,
+          materials: ['cement', 'steel', 'timber', 'sand'],
+        }),
+        unifiedApi.analytics.getSupplierPerformance({
+          period: selectedPeriod,
+          country: authState.user?.country,
+          industry: authState.user?.industry,
+          limit: 5,
+        }),
+        unifiedApi.analytics.getMarketShare({
+          period: selectedPeriod,
+          country: authState.user?.country,
+        }),
+        unifiedApi.analytics.getRegionalData({
+          period: selectedPeriod,
+        }),
+      ]);
+
+      setAnalyticsData({
+        ...metrics,
+        priceTrends: priceTrends || [],
+        supplierPerformance: supplierPerformance || [],
+        marketShare: marketShare || [],
+        regionalData: regionalData || [],
+      } as AnalyticsData);
+    } catch (err) {
+      console.error('Failed to refresh analytics:', err);
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   const handleExport = () => {
+    if (!analyticsData) return;
+
     // Export analytics data as CSV
     const csvData = [
       ['Metric', 'Value', 'Growth %'],
@@ -122,6 +193,22 @@ const AnalyticsDashboard: React.FC = () => {
     a.download = `qivook-analytics-${selectedPeriod}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  // Use real data or fallback
+  const data = analyticsData || {
+    totalRevenue: 0,
+    revenueGrowth: 0,
+    totalOrders: 0,
+    orderGrowth: 0,
+    activeSuppliers: 0,
+    supplierGrowth: 0,
+    avgOrderValue: 0,
+    orderValueGrowth: 0,
+    priceTrends: [],
+    supplierPerformance: [],
+    marketShare: [],
+    regionalData: [],
   };
 
   const priceChartConfig = [
@@ -142,147 +229,175 @@ const AnalyticsDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            Analytics Dashboard
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Comprehensive insights into your supply chain performance
-          </p>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          {/* Period Selector */}
-          <select
-            value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(e.target.value as any)}
-            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-          >
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-            <option value="90d">Last 90 days</option>
-            <option value="1y">Last year</option>
-          </select>
-
-          {/* Refresh Button */}
-          <button
-            onClick={handleRefresh}
-            disabled={isRefreshing || !isOnline}
-            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <RefreshCw size={20} className={isRefreshing ? 'animate-spin' : ''} />
-          </button>
-
-          {/* Export Button */}
-          <button
-            onClick={handleExport}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-          >
-            <Download size={20} />
-            Export
-          </button>
-        </div>
-      </div>
-
-      {/* Offline Indicator */}
-      {!isOnline && (
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-          <div className="flex items-center gap-2">
-            <Activity size={20} className="text-yellow-600 dark:text-yellow-400" />
-            <span className="text-yellow-800 dark:text-yellow-200 font-medium">
-              You're offline. Some data may not be up to date.
-            </span>
+    <AppLayout>
+      <HeaderStrip 
+        title="Analytics Dashboard"
+        subtitle="Comprehensive insights into your supply chain performance"
+        chips={[
+          { label: 'Revenue', value: `$${(data.totalRevenue / 1000000).toFixed(1)}M`, variant: 'success' },
+          { label: 'Orders', value: data.totalOrders, variant: 'info' },
+          { label: 'Suppliers', value: data.activeSuppliers, variant: 'info' },
+        ]}
+        right={
+          <div className="flex items-center gap-3">
+            <select
+              value={selectedPeriod}
+              onChange={(e) => setSelectedPeriod(e.target.value as any)}
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
+            >
+              <option value="7d">Last 7 days</option>
+              <option value="30d">Last 30 days</option>
+              <option value="90d">Last 90 days</option>
+              <option value="1y">Last year</option>
+            </select>
+            <button
+              onClick={handleRefresh}
+              disabled={isRefreshing || !isOnline}
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <RefreshCw size={20} className={isRefreshing ? 'animate-spin' : ''} />
+            </button>
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm"
+            >
+              <Download size={20} />
+              Export
+            </button>
           </div>
+        }
+        status={isOnline ? { kind: 'live' } : { kind: 'offline' }}
+      />
+
+      <PageLayout maxWidth="full" padding="none">
+        <div className="px-10 md:px-14 lg:px-20 py-8 space-y-8">
+          {/* Offline Indicator */}
+          {!isOnline && (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+              <div className="flex items-center gap-2">
+                <Activity size={20} className="text-yellow-600 dark:text-yellow-400" />
+                <span className="text-yellow-800 dark:text-yellow-200 font-medium">
+                  You're offline. Some data may not be up to date.
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Loading State */}
+          {loading && (
+            <div className="flex items-center justify-center py-12">
+              <RefreshCw className="h-8 w-8 animate-spin text-primary-600" />
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && !loading && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+              <div className="flex items-center gap-2">
+                <Activity size={20} className="text-red-600 dark:text-red-400" />
+                <span className="text-red-800 dark:text-red-200 font-medium">{error}</span>
+              </div>
+            </div>
+          )}
+
+          {/* Key Metrics */}
+          {!loading && (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <MetricCard
+                  title="Total Revenue"
+                  value={data.totalRevenue}
+                  growth={data.revenueGrowth}
+                  icon={DollarSign}
+                  format="currency"
+                />
+                <MetricCard
+                  title="Total Orders"
+                  value={data.totalOrders}
+                  growth={data.orderGrowth}
+                  icon={Package}
+                  format="number"
+                />
+                <MetricCard
+                  title="Active Suppliers"
+                  value={data.activeSuppliers}
+                  growth={data.supplierGrowth}
+                  icon={Users}
+                  format="number"
+                />
+                <MetricCard
+                  title="Avg Order Value"
+                  value={data.avgOrderValue}
+                  growth={data.orderValueGrowth}
+                  icon={BarChart3}
+                  format="currency"
+                />
+              </div>
+
+              {/* Charts Section */}
+              {data.priceTrends.length > 0 && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Price Trends Chart */}
+                  <EnhancedChart
+                    data={data.priceTrends}
+                    config={priceChartConfig}
+                    type={selectedChartType}
+                    title="Price Trends"
+                    subtitle="Material prices over time"
+                    height={400}
+                    showTrend={true}
+                  />
+
+                  {/* Market Share Chart */}
+                  {data.marketShare.length > 0 && (
+                    <EnhancedChart
+                      data={data.marketShare}
+                      config={[]}
+                      type="pie"
+                      title="Market Share"
+                      subtitle="Distribution by category"
+                      height={400}
+                    />
+                  )}
+                </div>
+              )}
+
+              {/* Supplier Performance */}
+              {data.supplierPerformance.length > 0 && (
+                <EnhancedChart
+                  data={data.supplierPerformance}
+                  config={supplierChartConfig}
+                  type="bar"
+                  title="Supplier Performance"
+                  subtitle="Top performing suppliers by orders and revenue"
+                  height={400}
+                />
+              )}
+
+              {/* Regional Analysis */}
+              {data.regionalData.length > 0 && (
+                <EnhancedChart
+                  data={data.regionalData}
+                  config={regionalChartConfig}
+                  type="bar"
+                  title="Regional Analysis"
+                  subtitle="Performance by region"
+                  height={400}
+                />
+              )}
+
+              {/* Chart Type Selector */}
+              <div className="flex justify-center">
+                <ChartTypeSelector
+                  selectedType={selectedChartType}
+                  onTypeChange={setSelectedChartType}
+                />
+              </div>
+            </>
+          )}
         </div>
-      )}
-
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricCard
-          title="Total Revenue"
-          value={analyticsData.totalRevenue}
-          growth={analyticsData.revenueGrowth}
-          icon={DollarSign}
-          format="currency"
-        />
-        <MetricCard
-          title="Total Orders"
-          value={analyticsData.totalOrders}
-          growth={analyticsData.orderGrowth}
-          icon={Package}
-          format="number"
-        />
-        <MetricCard
-          title="Active Suppliers"
-          value={analyticsData.activeSuppliers}
-          growth={analyticsData.supplierGrowth}
-          icon={Users}
-          format="number"
-        />
-        <MetricCard
-          title="Avg Order Value"
-          value={analyticsData.avgOrderValue}
-          growth={analyticsData.orderValueGrowth}
-          icon={BarChart3}
-          format="currency"
-        />
-      </div>
-
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Price Trends Chart */}
-        <EnhancedChart
-          data={analyticsData.priceTrends}
-          config={priceChartConfig}
-          type={selectedChartType}
-          title="Price Trends"
-          subtitle="Material prices over time"
-          height={400}
-          showTrend={true}
-        />
-
-        {/* Market Share Chart */}
-        <EnhancedChart
-          data={analyticsData.marketShare}
-          config={[]}
-          type="pie"
-          title="Market Share"
-          subtitle="Distribution by category"
-          height={400}
-        />
-      </div>
-
-      {/* Supplier Performance */}
-      <EnhancedChart
-        data={analyticsData.supplierPerformance}
-        config={supplierChartConfig}
-        type="bar"
-        title="Supplier Performance"
-        subtitle="Top performing suppliers by orders and revenue"
-        height={400}
-      />
-
-      {/* Regional Analysis */}
-      <EnhancedChart
-        data={analyticsData.regionalData}
-        config={regionalChartConfig}
-        type="bar"
-        title="Regional Analysis"
-        subtitle="Performance by region"
-        height={400}
-      />
-
-      {/* Chart Type Selector */}
-      <div className="flex justify-center">
-        <ChartTypeSelector
-          selectedType={selectedChartType}
-          onTypeChange={setSelectedChartType}
-        />
-      </div>
-    </div>
+      </PageLayout>
+    </AppLayout>
   );
 };
 
@@ -349,7 +464,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
           ) : (
             <TrendingDown size={14} />
           )}
-          <span>{Math.abs(growth)}%</span>
+          <span>{Math.abs(growth).toFixed(1)}%</span>
         </div>
         <span className="text-sm text-gray-500 dark:text-gray-400">
           vs previous period
@@ -360,4 +475,3 @@ const MetricCard: React.FC<MetricCardProps> = ({
 };
 
 export default AnalyticsDashboard;
-

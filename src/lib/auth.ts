@@ -112,13 +112,91 @@ export const userManager = {
   }
 };
 
+// User storage for registered users (in production, this would be in a database)
+const getStoredUsers = (): Record<string, { password: string; user: AuthUser }> => {
+  const stored = localStorage.getItem('qbolt_registered_users');
+  return stored ? JSON.parse(stored) : {};
+};
+
+const storeUser = (email: string, password: string, user: AuthUser): void => {
+  const users = getStoredUsers();
+  users[email.toLowerCase()] = { password, user };
+  localStorage.setItem('qbolt_registered_users', JSON.stringify(users));
+};
+
+const getUserFromStorage = (email: string): { password: string; user: AuthUser } | null => {
+  const users = getStoredUsers();
+  return users[email.toLowerCase()] || null;
+};
+
 // API simulation for authentication
 export const authAPI = {
+  async register(
+    email: string,
+    password: string,
+    userData: {
+      name: string;
+      company: string;
+      industry: 'construction' | 'agriculture';
+      country: string;
+      phone?: string;
+      role?: string;
+      companySize?: string;
+      interests?: string[];
+    }
+  ): Promise<{ user: AuthUser; token: string }> {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Check if user already exists
+    const existingUser = getUserFromStorage(email);
+    if (existingUser) {
+      throw new AuthError('User with this email already exists', 'USER_EXISTS');
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new AuthError('Invalid email format', 'INVALID_EMAIL');
+    }
+
+    // Validate password
+    if (password.length < 8) {
+      throw new AuthError('Password must be at least 8 characters long', 'WEAK_PASSWORD');
+    }
+
+    // Create new user
+    const newUser: AuthUser = {
+      id: Date.now().toString(),
+      name: userData.name,
+      email: email.toLowerCase(),
+      company: userData.company,
+      industry: userData.industry,
+      country: userData.country,
+      role: 'user' // New registrations are always 'user' role
+    };
+
+    // Store user credentials
+    storeUser(email, password, newUser);
+
+    // Generate JWT token
+    const token = this.generateMockToken(newUser);
+
+    return { user: newUser, token };
+  },
+
   async login(email: string, password: string): Promise<{ user: AuthUser; token: string }> {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Validate credentials (in production, this would be a real API call)
+    // Check registered users first
+    const storedUser = getUserFromStorage(email);
+    if (storedUser && storedUser.password === password) {
+      const token = this.generateMockToken(storedUser.user);
+      return { user: storedUser.user, token };
+    }
+
+    // Fall back to demo users
     const validCredentials = this.validateCredentials(email, password);
     if (!validCredentials) {
       throw new AuthError('Invalid email or password', 'INVALID_CREDENTIALS');

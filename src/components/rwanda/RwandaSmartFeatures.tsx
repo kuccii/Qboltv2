@@ -30,9 +30,12 @@ import {
 import { CountrySupplier, CountryPricing, CountryInfrastructure } from '../../data/countries/types';
 import { getRwandaSuppliers, getRwandaPricing, getRwandaInfrastructure } from '../../data/countries/rwanda/rwandaDataLoader';
 import { useAccessibility } from '../../hooks/useAccessibility';
+import CountryDemandMapping from '../countries/CountryDemandMapping';
+import { useIndustry } from '../../contexts/IndustryContext';
 
 interface SmartFeaturesProps {
   className?: string;
+  countryCode?: string; // Optional: defaults to 'RW' for backward compatibility
 }
 
 interface Recommendation {
@@ -65,7 +68,8 @@ interface Alert {
   action?: string;
 }
 
-const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '' }) => {
+const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '', countryCode = 'RW' }) => {
+  const { currentIndustry } = useIndustry();
   const [suppliers, setSuppliers] = useState<CountrySupplier[]>([]);
   const [pricing, setPricing] = useState<CountryPricing[]>([]);
   const [infrastructure, setInfrastructure] = useState<CountryInfrastructure[]>([]);
@@ -73,7 +77,7 @@ const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '' }) =
   const [costComparisons, setCostComparisons] = useState<CostComparison[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState<'recommendations' | 'comparisons' | 'alerts'>('recommendations');
+  const [selectedTab, setSelectedTab] = useState<'recommendations' | 'comparisons' | 'alerts' | 'demand'>('recommendations');
   
   const { announce } = useAccessibility();
 
@@ -333,7 +337,8 @@ const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '' }) =
           {[
             { id: 'recommendations', label: 'Recommendations', icon: Lightbulb, count: recommendations.length },
             { id: 'comparisons', label: 'Cost Analysis', icon: Calculator, count: costComparisons.length },
-            { id: 'alerts', label: 'Alerts', icon: Bell, count: alerts.length }
+            { id: 'alerts', label: 'Alerts', icon: Bell, count: alerts.length },
+            { id: 'demand', label: 'Demand Mapping', icon: MapPin, count: 0 }
           ].map((tab) => {
             const Icon = tab.icon;
             return (
@@ -529,6 +534,10 @@ const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '' }) =
               </div>
             )}
           </div>
+        )}
+
+        {selectedTab === 'demand' && (
+          <CountryDemandMapping countryCode={countryCode} />
         )}
       </div>
 

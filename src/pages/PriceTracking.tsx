@@ -16,6 +16,7 @@ import StatusBadge from '../components/StatusBadge';
 import { priceData, agriculturePriceData, priceChanges, riskAdjustedPricing } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
+import { usePrices } from '../hooks/useData';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   AppLayout,
@@ -31,7 +32,7 @@ import {
 } from '../design-system';
 
 const PriceTracking: React.FC = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, authState } = useAuth();
   const { currentIndustry, industryConfig, getIndustryTerm, getIndustryMaterial } = useIndustry();
   const navigate = useNavigate();
   const location = useLocation();
@@ -45,6 +46,18 @@ const PriceTracking: React.FC = () => {
     return saved ? saved.split(',').filter(Boolean) : [];
   });
   const [savedViewName, setSavedViewName] = useState<string>('');
+  
+  // Fetch real prices from Supabase
+  const { 
+    prices: realPrices, 
+    loading: pricesLoading, 
+    error: pricesError,
+    isConnected,
+    refetch: refetchPrices
+  } = usePrices({
+    country: region !== 'All Regions' ? region : undefined,
+    limit: 100
+  });
   
   // Simulated last updated time
   const lastUpdated = new Date();
@@ -65,7 +78,25 @@ const PriceTracking: React.FC = () => {
         { key: 'equipment', color: '#374151', name: 'Equipment (rental per day)' }
       ];
       
-  const priceDataToUse = currentIndustry === 'construction' ? priceData : agriculturePriceData;
+  // Use real data if available, otherwise fallback to mock data
+  const priceDataToUse = useMemo(() => {
+    if (realPrices && realPrices.length > 0) {
+      // Transform real prices to chart format
+      // Group by date and material
+      const grouped = realPrices.reduce((acc: any, price: any) => {
+        const date = new Date(price.created_at).toLocaleDateString();
+        if (!acc[date]) {
+          acc[date] = { date };
+        }
+        acc[date][price.material] = price.price;
+        return acc;
+      }, {});
+      return Object.values(grouped);
+    }
+    // Fallback to mock data
+    return currentIndustry === 'construction' ? priceData : agriculturePriceData;
+  }, [realPrices, currentIndustry]);
+  
   const priceChangeData = priceChanges[currentIndustry];
   
   // Define regions for the filter
@@ -200,7 +231,7 @@ const PriceTracking: React.FC = () => {
       label: 'Refresh Data',
       icon: <RefreshCw className="h-4 w-4" />,
       description: 'Reload latest pricing data',
-      onClick: () => console.log('Refresh')
+      onClick: () => refetchPrices()
     }
   ];
   
@@ -250,6 +281,36 @@ const PriceTracking: React.FC = () => {
           }
         >
         <div className="px-6 py-6 space-y-6">
+          {/* Real-time Connection Status */}
+          {isConnected && (
+            <div className="bg-green-50 border border-green-200 rounded-md p-3 flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm text-green-800">Connected to real-time price updates</span>
+            </div>
+          )}
+
+          {/* Loading State */}
+          {pricesLoading && (
+            <div className="bg-blue-50 border border-blue-200 rounded-md p-3 flex items-center gap-2">
+              <RefreshCw className="h-4 w-4 text-blue-600 animate-spin" />
+              <span className="text-sm text-blue-800">Loading price data...</span>
+            </div>
+          )}
+
+          {/* Error State */}
+          {pricesError && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-3 flex items-center gap-2">
+              <AlertCircle className="h-4 w-4 text-red-600" />
+              <span className="text-sm text-red-800">{pricesError}</span>
+              <button
+                onClick={() => refetchPrices()}
+                className="ml-auto text-sm text-red-800 underline hover:no-underline"
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
           {/* Controls */}
           <SectionLayout title="Controls" subtitle="Adjust the time range and region">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

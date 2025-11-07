@@ -8,7 +8,7 @@ export default defineConfig({
     'process.env': process.env,
   },
   optimizeDeps: {
-    exclude: ['lucide-react'],
+    include: ['lucide-react'],
   },
   build: {
     rollupOptions: {

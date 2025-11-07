@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useIndustry } from '../contexts/IndustryContext';
 import { AlertTriangle, Shield } from 'lucide-react';
 
 interface ProtectedRouteProps {
@@ -16,10 +17,25 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requiredPermission,
   fallbackPath = '/app'
 }) => {
-  const { isAuthenticated, loading, isAdmin, hasPermission, error } = useAuth();
+  const { isAuthenticated, loading, isAdmin, hasPermission, error, authState } = useAuth();
+  const { isIndustrySelected } = useIndustry();
   const location = useLocation();
 
+  // Debug logging
+  useEffect(() => {
+    console.log('ProtectedRoute check:', {
+      isAuthenticated,
+      loading,
+      hasUser: !!authState.user,
+      userId: authState.user?.id,
+      isIndustrySelected,
+      error,
+      path: location.pathname
+    });
+  }, [isAuthenticated, loading, authState.user, isIndustrySelected, error, location.pathname]);
+
   if (loading) {
+    console.log('ProtectedRoute: Still loading...');
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">
@@ -31,6 +47,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   if (error) {
+    console.log('ProtectedRoute: Auth error detected:', error);
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center max-w-md mx-auto p-6">
@@ -48,8 +65,22 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
+  // Check authentication - redirect to login if not authenticated
   if (!isAuthenticated) {
+    console.log('ProtectedRoute: Not authenticated, redirecting to login');
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Allow access to /select-industry if authenticated (even if industry not selected)
+  if (location.pathname === '/select-industry') {
+    console.log('ProtectedRoute: Allowing access to industry selection');
+    return <>{children}</>;
+  }
+
+  // Check if user has selected an industry (only for /app routes)
+  if (!isIndustrySelected && location.pathname.startsWith('/app')) {
+    console.log('ProtectedRoute: No industry selected, redirecting to industry selection');
+    return <Navigate to="/select-industry" replace />;
   }
 
   if (adminOnly && !isAdmin) {

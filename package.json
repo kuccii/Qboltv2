@@ -13,7 +13,8 @@
     "type-check": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "coverage": "vitest --coverage"
+    "coverage": "vitest --coverage",
+    "sync-logcluster": "node scripts/sync-logcluster-data.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

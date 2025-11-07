@@ -22,13 +22,15 @@ const Register = React.lazy(() => import('./pages/Register'));
 const AnalyticsDashboard = React.lazy(() => import('./components/AnalyticsDashboard'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 const PriceTracking = React.lazy(() => import('./pages/PriceTracking'));
+const PriceAlerts = React.lazy(() => import('./pages/PriceAlerts'));
 const DemandMapping = React.lazy(() => import('./pages/DemandMapping'));
 const SupplierScores = React.lazy(() => import('./pages/SupplierScores'));
 const SupplierDirectory = React.lazy(() => import('./pages/SupplierDirectory'));
+const SupplierDetail = React.lazy(() => import('./pages/SupplierDetail'));
 const AgentsDirectory = React.lazy(() => import('./pages/AgentsDirectory'));
 const Financing = React.lazy(() => import('./pages/Financing'));
 const PriceReporting = React.lazy(() => import('./components/PriceReporting'));
-const RiskMitigation = React.lazy(() => import('./components/RiskMitigation'));
+const RiskMitigation = React.lazy(() => import('./pages/RiskMitigation'));
 const Logistics = React.lazy(() => import('./pages/Logistics'));
 const DocumentVault = React.lazy(() => import('./pages/DocumentVault'));
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
@@ -42,13 +44,9 @@ const Notifications = React.lazy(() => import('./pages/Notifications'));
 const Billing = React.lazy(() => import('./pages/Billing'));
 const HelpCenter = React.lazy(() => import('./pages/HelpCenter'));
 
-// Rwanda components
-const RwandaLogistics = React.lazy(() => import('./pages/RwandaLogistics'));
-const RwandaOverview = React.lazy(() => import('./components/rwanda/RwandaOverview'));
-const RwandaContactDirectory = React.lazy(() => import('./components/rwanda/RwandaContactDirectory'));
-const RwandaPricingIntelligence = React.lazy(() => import('./components/rwanda/RwandaPricingIntelligence'));
-const RwandaInfrastructureOverview = React.lazy(() => import('./components/rwanda/RwandaInfrastructureOverview'));
-const RwandaSmartFeatures = React.lazy(() => import('./components/rwanda/RwandaSmartFeatures'));
+// Country Profile (unified)
+const CountryProfile = React.lazy(() => import('./pages/CountryProfile'));
+const CountrySelector = React.lazy(() => import('./pages/CountrySelector'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -84,13 +82,23 @@ function App() {
                           </ProtectedRoute>
                         }>
                           <Route index element={<Dashboard />} />
-                          <Route path="prices" element={<PriceTracking />} />
-                          <Route path="price-reporting" element={<PriceReporting />} />
+                          {/* Unified Country Profiles - consolidates suppliers, pricing, infrastructure, logistics, demand */}
+                          <Route path="countries" element={<CountrySelector />} />
+                          <Route path="countries/:countryCode" element={<CountryProfile />} />
+                          <Route path="countries/:countryCode/:tab" element={<CountryProfile />} />
+                          {/* Legacy routes - redirect to country profiles */}
+                          <Route path="rwanda" element={<Navigate to="/app/countries/rw" replace />} />
+                          <Route path="rwanda/:tab" element={<Navigate to="/app/countries/rw/:tab" replace />} />
+                          <Route path="prices" element={<Navigate to="/app/countries/rw/pricing" replace />} />
+                          <Route path="suppliers" element={<Navigate to="/app/countries/rw/contacts" replace />} />
+                          <Route path="supplier-directory" element={<Navigate to="/app/countries/rw/contacts" replace />} />
+                          <Route path="supplier-directory/:id" element={<SupplierDetail />} />
                           <Route path="demand" element={<DemandMapping />} />
-                          <Route path="suppliers" element={<SupplierScores />} />
-                          <Route path="supplier-directory" element={<SupplierDirectory />} />
+                          <Route path="logistics" element={<Navigate to="/app/countries/rw/infrastructure" replace />} />
+                          {/* Keep separate pages */}
+                          <Route path="price-alerts" element={<PriceAlerts />} />
+                          <Route path="price-reporting" element={<PriceReporting />} />
                           <Route path="agents" element={<AgentsDirectory />} />
-                          <Route path="logistics" element={<Logistics />} />
                           <Route path="financing" element={<Financing />} />
                           <Route path="risk" element={<RiskMitigation />} />
                           <Route path="documents" element={<DocumentVault />} />
@@ -100,18 +108,6 @@ function App() {
                           <Route path="notifications" element={<Notifications />} />
                           <Route path="billing" element={<Billing />} />
                           <Route path="help" element={<HelpCenter />} />
-                          <Route path="rwanda" element={
-                            <ProtectedRoute>
-                              <RwandaLogistics />
-                            </ProtectedRoute>
-                          }>
-                            <Route index element={<RwandaOverview />} />
-                            <Route path="profile" element={<RwandaOverview />} />
-                            <Route path="infrastructure" element={<RwandaInfrastructureOverview />} />
-                            <Route path="services" element={<RwandaPricingIntelligence />} />
-                            <Route path="contacts" element={<RwandaContactDirectory />} />
-                            <Route path="intelligence" element={<RwandaSmartFeatures />} />
-                          </Route>
                           <Route path="admin" element={
                             <ProtectedRoute adminOnly requiredPermission="settings:read">
                               <AdminDashboard />

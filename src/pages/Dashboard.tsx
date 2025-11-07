@@ -17,16 +17,19 @@ import {
   XCircle,
   AlertCircle,
   Plus,
-  Settings,
   Bell,
   MapPin,
   Calendar,
   Shield,
-  Briefcase
+  Briefcase,
+  Wifi,
+  WifiOff
 } from 'lucide-react';
 import { useIndustry } from '../contexts/IndustryContext';
 import { useExport } from '../hooks/useExport';
 import { useNotifications } from '../hooks/useNotifications';
+import { useDashboard, usePrices, useSuppliers, useShipments, useRiskAlerts } from '../hooks/useData';
+import { useAuth } from '../contexts/AuthContext';
 import IndustryDashboard from '../components/IndustryDashboard';
 import PriceChart from '../components/PriceChart';
 import StatusBadge from '../components/StatusBadge';
@@ -42,18 +45,31 @@ import {
   recentActivity,
   tradeOpportunities
 } from '../data/mockData';
-import {
+import { 
   AppLayout,
-  PageHeader,
   PageLayout,
   SectionLayout,
   SelectInput,
-  ActionMenu,
   RailLayout
 } from '../design-system';
 
 const Dashboard: React.FC = () => {
   const { currentIndustry, getIndustryTerm } = useIndustry();
+  const { authState } = useAuth();
+  
+  // Real-time data hooks
+  const { metrics: dashboardMetricsData, loading: metricsLoading, refetch: refetchMetrics } = useDashboard();
+  const { prices: realPrices, loading: pricesLoading, isConnected: pricesConnected, refetch: refetchPrices } = usePrices({
+    country: authState.user?.country,
+    limit: 10,
+  });
+  const { suppliers: realSuppliers, loading: suppliersLoading, isConnected: suppliersConnected, refetch: refetchSuppliers } = useSuppliers({
+    country: authState.user?.country,
+    industry: authState.user?.industry || currentIndustry,
+    limit: 10,
+  });
+  const { shipments: realShipments, loading: shipmentsLoading, isConnected: shipmentsConnected } = useShipments({ limit: 5 });
+  const { alerts: realAlerts, loading: alertsLoading } = useRiskAlerts({ resolved: false });
   
   // State management
   const [selectedTab, setSelectedTab] = useState<'overview' | 'insights' | 'alerts'>('overview');
@@ -64,8 +80,18 @@ const Dashboard: React.FC = () => {
   // New hooks for enhanced functionality
   const { exportData } = useExport();
   const { notifications, addNotification, markAsRead } = useNotifications();
+  // Auto-dismiss dashboard notifications shown in the corner
+  useEffect(() => {
+    if (!notifications || notifications.length === 0) return;
+    const timers = notifications.slice(0, 3).map(n => setTimeout(() => {
+      markAsRead(n.id);
+    }, 6000));
+    return () => { timers.forEach(t => clearTimeout(t)); };
+  }, [notifications, markAsRead]);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  // Check if real-time is connected
+  const isRealTimeConnected = pricesConnected || suppliersConnected || shipmentsConnected;
   
   // URL synchronization
   useEffect(() => {
@@ -89,11 +115,17 @@ const Dashboard: React.FC = () => {
     window.history.replaceState({}, '', newUrl);
   }, [selectedTab, selectedCountries, timeRange]);
 
-  // Data preparation
-  const metrics = dashboardMetrics[currentIndustry];
+  // Data preparation - Use real data if available, fallback to mock data
+  const metrics = dashboardMetricsData?.metrics || dashboardMetrics[currentIndustry];
   const description = industryDescriptions[currentIndustry];
   const priceChangeData = priceChanges[currentIndustry];
   const priceChartData = currentIndustry === 'construction' ? priceData : agriculturePriceData;
+  
+  // Use real data when available
+  // Using runtime hooks and mock fallbacks directly below
+  
+  // Loading state
+  const isLoading = metricsLoading || pricesLoading || suppliersLoading || shipmentsLoading || alertsLoading;
   
   // Prepare chart data based on industry
   const dataKeys = currentIndustry === 'construction' 
@@ -166,17 +198,27 @@ const Dashboard: React.FC = () => {
   };
 
   const handleRefresh = async () => {
-    setIsRefreshing(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setLastUpdated(new Date());
-    setIsRefreshing(false);
-    
-    addNotification({
-      type: 'success',
-      title: 'Data Refreshed',
-      message: 'Dashboard data has been updated'
-    });
+    try {
+      // Refresh all real data
+      await Promise.all([
+        refetchMetrics(),
+        refetchPrices(),
+        refetchSuppliers(),
+      ]);
+      setLastUpdated(new Date());
+      addNotification({
+        type: 'success',
+        title: 'Data Refreshed',
+        message: 'Dashboard data has been updated'
+      });
+    } catch (error) {
+      addNotification({
+        type: 'error',
+        title: 'Refresh Failed',
+        message: 'Failed to refresh dashboard data'
+      });
+    } finally {
+    }
   };
 
   const renderPriceChange = (name: string, value: number) => {
@@ -196,28 +238,78 @@ const Dashboard: React.FC = () => {
 
   return (
     <AppLayout>
-      <PageHeader
-        title={description.title}
-        subtitle={description.subtitle}
-        breadcrumbs={[{ label: 'Dashboard' }]}
-        actions={
-          <div className="flex items-center gap-3">
-            <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-              <Clock size={14} className="mr-1" />
-              Updated: {formatDate(lastUpdated)}
+      {/* New compact header strip */}
+      <div className="px-6 pt-5">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 md:p-5 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-xl md:text-2xl font-semibold text-gray-900 dark:text-white">{description.title}</h1>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{description.subtitle}</p>
             </div>
-            <ActionMenu
-              items={[
-                { id: 'refresh', label: 'Refresh Data', icon: <RefreshCw className="h-4 w-4" />, description: 'Update all dashboard data', onClick: () => handleRefresh() },
-                { id: 'export', label: 'Export Report', icon: <Download className="h-4 w-4" />, description: 'Download dashboard data', onClick: () => handleExport() },
-                { id: 'tour', label: 'Take Tour', icon: <Plus className="h-4 w-4" />, description: 'Learn about dashboard features', onClick: () => setShowOnboarding(true) },
-                { id: 'settings', label: 'Dashboard Settings', icon: <Settings className="h-4 w-4" />, description: 'Customize dashboard layout', onClick: () => console.log('Settings clicked') }
-              ]}
-              size="sm"
-            />
+            <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+              {authState.user?.country && (
+                <div className="text-xs px-2 py-1 rounded border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800">
+                  <span className="mr-1">Country:</span>
+                  <span className="font-medium">{authState.user.country}</span>
+                </div>
+              )}
+              {isRealTimeConnected ? (
+                <div className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">
+                  <Wifi size={12} />
+                  <span>Live</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 px-2 py-1 rounded">
+                  <WifiOff size={12} />
+                  <span>Offline</span>
+                </div>
+              )}
+              <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                <Clock size={14} className="mr-1" />
+                Updated: {formatDate(lastUpdated)}
+              </div>
+              {Array.isArray(realSuppliers) && realSuppliers.length > 0 && (
+                <div className="text-xs px-2 py-1 rounded border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800">
+                  Suppliers: <span className="font-medium ml-1">{realSuppliers.length}</span>
+                </div>
+              )}
+              {Array.isArray(realPrices) && realPrices.length > 0 && (
+                <div className="text-xs px-2 py-1 rounded border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800">
+                  Prices: <span className="font-medium ml-1">{realPrices.length}</span>
+                </div>
+              )}
+              {Array.isArray(realAlerts) && realAlerts.length > 0 && (
+                <div className="text-xs px-2 py-1 rounded border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800">
+                  Alerts: <span className="font-medium ml-1">{realAlerts.length}</span>
+                </div>
+              )}
+              {Array.isArray(realShipments) && realShipments.length > 0 && (
+                <div className="text-xs px-2 py-1 rounded border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800">
+                  Shipments: <span className="font-medium ml-1">{realShipments.length}</span>
+                </div>
+              )}
+              <button
+                onClick={handleRefresh}
+                className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-md border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                <RefreshCw className="h-4 w-4" /> Refresh
+              </button>
+              <button
+                onClick={handleExport}
+                className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-md border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                <Download className="h-4 w-4" /> Export
+              </button>
+              <button
+                onClick={() => setShowOnboarding(true)}
+                className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+              >
+                <Plus className="h-4 w-4" /> Tour
+              </button>
+            </div>
           </div>
-        }
-      />
+        </div>
+      </div>
 
       <PageLayout maxWidth="full" padding="none">
         <RailLayout
@@ -267,6 +359,9 @@ const Dashboard: React.FC = () => {
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Top Suppliers</h3>
                 <div className="space-y-3">
+                  {topSuppliers.length === 0 && (
+                    <div className="text-sm text-gray-500 dark:text-gray-400">No suppliers to show.</div>
+                  )}
                   {topSuppliers.map((supplier) => (
                     <div key={supplier.id} className="flex items-center justify-between">
                       <div>
@@ -402,11 +497,15 @@ const Dashboard: React.FC = () => {
                         <BarChart3 size={20} className="text-gray-400" />
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Price Trends</h3>
                       </div>
-                      <PriceChart 
-                        data={priceChartData} 
-                        dataKeys={dataKeys} 
-                        height={300}
-                      />
+                      {isLoading ? (
+                        <div className="h-[300px] animate-pulse bg-gray-100 dark:bg-gray-900/40 rounded" />
+                      ) : (
+                        <PriceChart 
+                          data={priceChartData} 
+                          dataKeys={dataKeys} 
+                          height={300}
+                        />
+                      )}
                     </div>
                     
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -415,9 +514,11 @@ const Dashboard: React.FC = () => {
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Price Changes</h3>
                       </div>
                       <div className="space-y-1 mt-2">
-                        {Object.entries(priceChangeData).map(([key, value]) => 
-                          renderPriceChange(key.charAt(0).toUpperCase() + key.slice(1), value as number)
-                        )}
+                        {Object.entries(priceChangeData).map(([key, value]) => (
+                          <div key={`price-change-${key}`}>
+                            {renderPriceChange(key.charAt(0).toUpperCase() + key.slice(1), value as number)}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -432,7 +533,7 @@ const Dashboard: React.FC = () => {
                     </div>
                     <div className="space-y-4 mt-2">
                       {metrics.materialShortages.map((shortage: any, index: number) => (
-                        <div key={index} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div key={`shortage-${index}-${shortage.material || shortage.id || index}`} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                           <div className="mt-0.5">
                             <AlertTriangle 
                               size={18} 
@@ -521,7 +622,7 @@ const Dashboard: React.FC = () => {
                               <div className="flex flex-wrap gap-1">
                                 {opportunity.materials.map((material, index) => (
                                   <span 
-                                    key={index} 
+                                    key={`material-${index}-${material}`}
                                     className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800"
                                   >
                                     {material}
@@ -713,38 +814,52 @@ const Dashboard: React.FC = () => {
 
       {/* Notifications Display */}
       {notifications.length > 0 && (
-        <div className="fixed bottom-4 right-4 z-50 space-y-2">
-          {notifications.slice(0, 3).map((notification) => (
-            <div
-              key={notification.id}
-              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4 max-w-sm"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900 dark:text-white text-sm">
-                    {notification.title}
-                  </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {notification.message}
-                  </p>
+        <div className="fixed top-4 right-4 z-50 space-y-3">
+          {notifications.slice(0, 3).map((notification) => {
+            const kind = notification.type || 'info';
+            const kindClasses = kind === 'success'
+              ? 'border-green-200 dark:border-green-800/60 bg-green-50 dark:bg-green-900/20'
+              : kind === 'error'
+                ? 'border-red-200 dark:border-red-800/60 bg-red-50 dark:bg-red-900/20'
+                : kind === 'warning'
+                  ? 'border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-900/20'
+                  : 'border-blue-200 dark:border-blue-800/60 bg-white dark:bg-gray-800';
+            const Icon = kind === 'success' ? CheckCircle : kind === 'error' ? XCircle : kind === 'warning' ? AlertTriangle : Bell;
+            return (
+              <div
+                key={notification.id}
+                className={`border rounded-lg shadow-lg p-4 max-w-sm transform transition-all duration-200 animate-slide-in ${kindClasses}`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 pr-3">
+                    <div className="flex items-center gap-2">
+                      <Icon size={16} className={kind === 'success' ? 'text-green-600' : kind === 'error' ? 'text-red-600' : kind === 'warning' ? 'text-amber-600' : 'text-blue-600'} />
+                      <h4 className="font-medium text-gray-900 dark:text-white text-sm">
+                        {notification.title}
+                      </h4>
+                    </div>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                      {notification.message}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => markAsRead(notification.id)}
+                    className="ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  >
+                    <XCircle size={16} />
+                  </button>
                 </div>
-                <button
-                  onClick={() => markAsRead(notification.id)}
-                  className="ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                >
-                  <XCircle size={16} />
-                </button>
+                {notification.action && (
+                  <button
+                    onClick={notification.action.onClick}
+                    className="mt-2 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-300 hover:underline"
+                  >
+                    {notification.action.label}
+                  </button>
+                )}
               </div>
-              {notification.action && (
-                <button
-                  onClick={notification.action.onClick}
-                  className="mt-2 text-sm text-primary-600 dark:text-primary-400 hover:underline"
-                >
-                  {notification.action.label}
-                </button>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </AppLayout>

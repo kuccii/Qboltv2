@@ -25,15 +25,17 @@ import {
 } from 'lucide-react';
 import { CountryInfrastructure } from '../../data/countries/types';
 import { getRwandaInfrastructure } from '../../data/countries/rwanda/rwandaDataLoader';
+import { unifiedApi } from '../../services/unifiedApi';
 
 interface InfrastructureOverviewProps {
   className?: string;
+  countryCode?: string; // Optional: defaults to 'RW' for backward compatibility
 }
 
 type InfrastructureType = 'all' | 'airport' | 'storage' | 'milling' | 'port' | 'road' | 'rail' | 'warehouse';
 type ViewMode = 'list' | 'map' | 'grid';
 
-const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ className = '' }) => {
+const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ className = '', countryCode = 'RW' }) => {
   const [infrastructure, setInfrastructure] = useState<CountryInfrastructure[]>([]);
   const [selectedType, setSelectedType] = useState<InfrastructureType>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -44,15 +46,60 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
 
   useEffect(() => {
     loadInfrastructureData();
-  }, []);
+  }, [countryCode, selectedType, searchTerm]);
 
   const loadInfrastructureData = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      const infrastructureData = await getRwandaInfrastructure();
-      setInfrastructure(infrastructureData);
+      // Fetch from database first, fallback to JSON files
+      try {
+        const dbInfrastructure = await unifiedApi.countries.getInfrastructure('RW', {
+          type: selectedType !== 'all' ? selectedType : undefined,
+          search: searchTerm || undefined
+        });
+
+        if (dbInfrastructure.length > 0) {
+          setInfrastructure(dbInfrastructure.map((infra: any) => ({
+            id: infra.id,
+            countryCode: countryCode as any,
+            type: infra.type,
+            name: infra.name,
+            location: infra.location,
+            coordinates: infra.latitude && infra.longitude ? [infra.latitude, infra.longitude] : undefined,
+            capacity: infra.capacity || '',
+            services: infra.services || [],
+            operatingHours: infra.operating_hours,
+            contact: {
+              email: infra.email || '',
+              phone: infra.phone || '',
+              website: infra.website,
+              address: infra.address
+            },
+            seasonalNotes: infra.seasonal_notes,
+            status: infra.status,
+            lastUpdated: infra.last_updated
+          })));
+        } else {
+          // Fallback to JSON files (only for Rwanda)
+          if (countryCode === 'RW') {
+            const infrastructureData = await getRwandaInfrastructure();
+            setInfrastructure(infrastructureData);
+          } else {
+            setInfrastructure([]);
+          }
+        }
+      } catch (dbError) {
+        // Fallback to JSON files (only for Rwanda)
+        console.log('Database fetch failed, using JSON files:', dbError);
+        if (countryCode === 'RW') {
+          const infrastructureData = await getRwandaInfrastructure();
+          setInfrastructure(infrastructureData);
+        } else {
+          setInfrastructure([]);
+        }
+      }
     } catch (err) {
       setError('Failed to load infrastructure data');
       console.error('Error loading infrastructure data:', err);

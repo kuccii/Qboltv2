@@ -19,16 +19,18 @@ import {
 } from 'lucide-react';
 import { CountryPricing } from '../../data/countries/types';
 import { getRwandaPricing } from '../../data/countries/rwanda/rwandaDataLoader';
+import { unifiedApi } from '../../services/unifiedApi';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Cell } from 'recharts';
 
 interface PricingIntelligenceProps {
   className?: string;
+  countryCode?: string; // Optional: defaults to 'RW'
 }
 
 type PricingCategory = 'fuel' | 'labor' | 'transport' | 'storage' | 'materials';
 type ViewMode = 'table' | 'chart' | 'trends';
 
-const RwandaPricingIntelligence: React.FC<PricingIntelligenceProps> = ({ className = '' }) => {
+const RwandaPricingIntelligence: React.FC<PricingIntelligenceProps> = ({ className = '', countryCode = 'RW' }) => {
   const [pricing, setPricing] = useState<CountryPricing[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<PricingCategory>('fuel');
   const [viewMode, setViewMode] = useState<ViewMode>('table');
@@ -38,16 +40,58 @@ const RwandaPricingIntelligence: React.FC<PricingIntelligenceProps> = ({ classNa
 
   useEffect(() => {
     loadPricingData();
-  }, []);
+  }, [countryCode, selectedCategory]);
 
   const loadPricingData = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      const pricingData = await getRwandaPricing();
-      setPricing(pricingData);
-      setLastUpdated(new Date().toISOString());
+      // Fetch from database first, fallback to JSON files
+      try {
+        const dbPricing = await unifiedApi.countries.getPricing(countryCode, {
+          category: selectedCategory
+        });
+
+        if (dbPricing.length > 0) {
+          setPricing(dbPricing.map((p: any) => ({
+            countryCode: countryCode as any,
+            category: p.category,
+            item: p.item,
+            price: parseFloat(p.price),
+            currency: p.currency,
+            unit: p.unit,
+            region: p.region,
+            trend: p.trend,
+            previousPrice: p.previous_price ? parseFloat(p.previous_price) : undefined,
+            notes: p.notes,
+            source: p.source,
+            lastUpdated: p.last_updated
+          })));
+          setLastUpdated(dbPricing[0]?.last_updated || new Date().toISOString());
+        } else {
+          // Fallback to JSON files (only for Rwanda)
+          if (countryCode === 'RW') {
+            const pricingData = await getRwandaPricing();
+            setPricing(pricingData);
+            setLastUpdated(new Date().toISOString());
+          } else {
+            setPricing([]);
+            setLastUpdated(new Date().toISOString());
+          }
+        }
+      } catch (dbError) {
+        // Fallback to JSON files (only for Rwanda)
+        if (countryCode === 'RW') {
+          console.log('Database fetch failed, using JSON files:', dbError);
+          const pricingData = await getRwandaPricing();
+          setPricing(pricingData);
+          setLastUpdated(new Date().toISOString());
+        } else {
+          setPricing([]);
+          setLastUpdated(new Date().toISOString());
+        }
+      }
     } catch (err) {
       setError('Failed to load pricing data');
       console.error('Error loading pricing data:', err);

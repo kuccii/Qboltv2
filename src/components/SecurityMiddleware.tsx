@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { tokenManager } from '../lib/auth';
+import { supabase } from '../lib/supabase';
 
 interface SecurityMiddlewareProps {
   children: React.ReactNode;
@@ -11,34 +12,18 @@ const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children }) => 
   const { isAuthenticated, refreshToken, logout } = useAuth();
   const [isChecking, setIsChecking] = useState(false);
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
-
-    const checkTokenValidity = async () => {
-      const token = tokenManager.getToken();
-      if (!token) {
-        await logout();
-        return;
-      }
-
-      if (tokenManager.isTokenExpired(token)) {
-        try {
-          await refreshToken();
-        } catch (error) {
-          console.warn('Token refresh failed, logging out:', error);
-          await logout();
-        }
-      }
-    };
-
-    // Check token validity on mount
-    checkTokenValidity();
-
-    // Set up periodic token checks
-    const interval = setInterval(checkTokenValidity, 5 * 60 * 1000); // Every 5 minutes
-
-    return () => clearInterval(interval);
-  }, [isAuthenticated, refreshToken, logout]);
+  // DISABLED: Auth checking handled by Supabase and ProtectedRoute
+  // SecurityMiddleware was interfering with Supabase's session management
+  // useEffect(() => {
+  //   if (!isAuthenticated) return;
+  //   const checkTokenValidity = async () => { ... };
+  //   const timeoutId = setTimeout(checkTokenValidity, 3000);
+  //   const interval = setInterval(checkTokenValidity, 5 * 60 * 1000);
+  //   return () => {
+  //     clearTimeout(timeoutId);
+  //     clearInterval(interval);
+  //   };
+  // }, [isAuthenticated, refreshToken, logout]);
 
   // Detect suspicious activity
   useEffect(() => {

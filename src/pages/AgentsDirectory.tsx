@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Users, 
   Search, 
@@ -14,6 +14,7 @@ import {
 import DashboardCard from '../components/DashboardCard';
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
+import { unifiedApi } from '../services/unifiedApi';
 
 interface Agent {
   id: number;
@@ -38,9 +39,46 @@ const AgentsDirectory: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
+  const [agents, setAgents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data for agents
-  const agents: Agent[] = [
+  // Fetch real agents from Supabase
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        setLoading(true);
+        const data = await unifiedApi.agents.get({
+          country: selectedLocation !== 'all' ? selectedLocation : undefined,
+          service_type: selectedType !== 'all' ? selectedType : undefined
+        });
+        setAgents(data.map((agent: any) => ({
+          id: agent.id,
+          name: agent.name || agent.company_name,
+          type: agent.service_type || 'customs',
+          location: agent.location || agent.country,
+          expertise: agent.expertise || [],
+          rating: agent.rating || 0,
+          reviews: agent.total_reviews || 0,
+          services: agent.services || [],
+          associatedSuppliers: [],
+          performance: {
+            reliability: agent.rating || 0,
+            efficiency: agent.rating || 0,
+            serviceQuality: agent.rating || 0
+          }
+        })));
+      } catch (err) {
+        console.error('Failed to fetch agents:', err);
+        setAgents([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAgents();
+  }, [selectedType, selectedLocation]);
+
+  // Mock data for agents (fallback)
+  const mockAgents: Agent[] = [
     {
       id: 1,
       name: 'Kenya Customs Solutions',
@@ -78,7 +116,10 @@ const AgentsDirectory: React.FC = () => {
   const agentTypes = ['all', 'customs', 'logistics', 'broker', 'regulatory'];
   const locations = ['all', 'Nairobi', 'Mombasa', 'Kisumu', 'Eldoret'];
 
-  const filteredAgents = agents.filter(agent => {
+  // Use real agents if available, fallback to mock
+  const agentsToUse = agents.length > 0 ? agents : mockAgents;
+
+  const filteredAgents = agentsToUse.filter(agent => {
     const searchMatch = agent.name.toLowerCase().includes(searchTerm.toLowerCase());
     const typeMatch = selectedType === 'all' || agent.type === selectedType;
     const locationMatch = selectedLocation === 'all' || agent.location === selectedLocation;

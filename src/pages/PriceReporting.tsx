@@ -28,6 +28,7 @@ import StatusBadge from '../components/StatusBadge';
 import { priceData, agriculturePriceData, priceChanges } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
+import { unifiedApi } from '../services/unifiedApi';
 import {
   AppLayout,
   PageHeader,
@@ -135,20 +136,49 @@ const PriceReporting: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    if (!region || !material || !priceValue || !agree) {
+      alert('Please fill all required fields');
+      return;
+    }
+
     setSubmitting(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setSubmitting(false);
-    
-    // Clear form
-    setRegion('');
-    setMaterial('');
-    setPriceValue('');
-    setDate('');
-    setNotes('');
-    setEvidenceFiles([]);
-    setAgree(false);
-    setCurrentStep(1);
+    try {
+      // Extract country from region (assuming format like "Nairobi, Kenya")
+      const country = region.includes(',') ? region.split(',')[1].trim() : region.split(' ')[0];
+      
+      // Upload evidence files to Supabase Storage if needed
+      const evidenceUrls: string[] = [];
+      // TODO: Implement file upload to Supabase Storage
+      // For now, store file names
+      const evidenceFileNames = evidenceFiles.map(f => f.name);
+
+      await unifiedApi.prices.submitReport({
+        material: material,
+        location: region,
+        country: country,
+        price: parseFloat(priceValue),
+        currency: currency,
+        unit: 'per ton', // Default unit
+        evidence_url: evidenceUrls // Will be populated after file upload
+      });
+
+      // Success - clear form
+      setRegion('');
+      setMaterial('');
+      setPriceValue('');
+      setDate('');
+      setNotes('');
+      setEvidenceFiles([]);
+      setAgree(false);
+      setCurrentStep(1);
+      
+      alert('Price report submitted successfully! It will be reviewed before publishing.');
+    } catch (err) {
+      console.error('Failed to submit report:', err);
+      alert(err instanceof Error ? err.message : 'Failed to submit report. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const renderStepContent = () => {

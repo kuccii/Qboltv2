@@ -5,8 +5,6 @@ import {
   User, 
   Mail, 
   Lock, 
-  Building, 
-  Map, 
   ArrowRight, 
   CheckCircle, 
   Eye, 
@@ -14,15 +12,14 @@ import {
   AlertCircle,
   ArrowLeft,
   Shield,
-  Zap,
-  Target,
   Globe,
   Phone,
-  Calendar,
-  FileText,
-  CreditCard,
   Users,
-  TrendingUp
+  TrendingUp,
+  Sparkles,
+  CheckCircle2,
+  XCircle,
+  AlertTriangle
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
@@ -73,7 +70,7 @@ const Register: React.FC = () => {
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   
-  const { register } = useAuth();
+  const { register, loading: authLoading } = useAuth();
   const { setIndustry } = useIndustry();
   const navigate = useNavigate();
 
@@ -183,10 +180,12 @@ const Register: React.FC = () => {
         interests: formData.interests
       });
       
+      // Set industry and navigate after successful registration
       setIndustry(formData.industry);
-      navigate('/select-industry');
+      navigate('/app');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed');
+      const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please try again.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -196,109 +195,157 @@ const Register: React.FC = () => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Full Name *
+          <div className="space-y-6 animate-fade-in">
+            <div className="group">
+              <label htmlFor="name" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Full Name <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                 <input
                   type="text"
                   id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                   placeholder="Enter your full name"
                 />
               </div>
             </div>
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email Address *
+            <div className="group">
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Email Address <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                 <input
                   type="email"
                   id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
-                  placeholder="Enter your email address"
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                  placeholder="you@company.com"
                 />
               </div>
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Password *
+            <div className="group">
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Password <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                  className="w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                   placeholder="Create a strong password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
               
               {formData.password && (
-                <div className="mt-2">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
                       <div
-                        className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor(passwordStrength)}`}
+                        className={`h-full rounded-full transition-all duration-500 ${getPasswordStrengthColor(passwordStrength)}`}
                         style={{ width: `${(passwordStrength / 5) * 100}%` }}
                       />
                     </div>
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    <span className={`text-sm font-semibold min-w-[60px] text-right ${
+                      passwordStrength <= 2 ? 'text-red-600' :
+                      passwordStrength <= 3 ? 'text-orange-600' :
+                      passwordStrength <= 4 ? 'text-yellow-600' :
+                      'text-green-600'
+                    }`}>
                       {getPasswordStrengthText(passwordStrength)}
                     </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {[
+                      { check: formData.password.length >= 8, text: '8+ characters' },
+                      { check: /[a-z]/.test(formData.password), text: 'Lowercase' },
+                      { check: /[A-Z]/.test(formData.password), text: 'Uppercase' },
+                      { check: /[0-9]/.test(formData.password), text: 'Number' },
+                      { check: /[^A-Za-z0-9]/.test(formData.password), text: 'Special' }
+                    ].map((req, i) => (
+                      <span
+                        key={i}
+                        className={`flex items-center gap-1 px-2 py-1 rounded-lg ${
+                          req.check
+                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                            : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400'
+                        }`}
+                      >
+                        {req.check ? (
+                          <CheckCircle2 className="h-3 w-3" />
+                        ) : (
+                          <XCircle className="h-3 w-3" />
+                        )}
+                        {req.text}
+                      </span>
+                    ))}
                   </div>
                 </div>
               )}
             </div>
 
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Confirm Password *
+            <div className="group">
+              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Confirm Password <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   id="confirmPassword"
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                  className={`w-full pl-12 pr-12 py-3.5 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm ${
+                    formData.confirmPassword && formData.password === formData.confirmPassword
+                      ? 'border-green-500 focus:border-green-500'
+                      : formData.confirmPassword && formData.password !== formData.confirmPassword
+                      ? 'border-red-500 focus:border-red-500'
+                      : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 hover:border-gray-300 dark:hover:border-gray-600'
+                  }`}
                   placeholder="Confirm your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 >
                   {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
+                {formData.confirmPassword && formData.password === formData.confirmPassword && (
+                  <CheckCircle2 className="absolute right-12 top-1/2 transform -translate-y-1/2 h-5 w-5 text-green-500" />
+                )}
               </div>
               {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                <p className="mt-1 text-sm text-red-600">Passwords do not match</p>
+                <p className="mt-2 flex items-center gap-1 text-sm text-red-600 dark:text-red-400">
+                  <XCircle className="h-4 w-4" />
+                  Passwords do not match
+                </p>
+              )}
+              {formData.confirmPassword && formData.password === formData.confirmPassword && (
+                <p className="mt-2 flex items-center gap-1 text-sm text-green-600 dark:text-green-400">
+                  <CheckCircle2 className="h-4 w-4" />
+                  Passwords match
+                </p>
               )}
             </div>
           </div>
@@ -306,72 +353,77 @@ const Register: React.FC = () => {
 
       case 2:
         return (
-          <div className="space-y-6">
-            <div>
-              <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Company Name *
+          <div className="space-y-6 animate-fade-in">
+            <div className="group">
+              <label htmlFor="company" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Company Name <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Building2 className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                 <input
                   type="text"
                   id="company"
                   name="company"
                   value={formData.company}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                   placeholder="Enter your company name"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="industry" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Industry *
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                Industry <span className="text-red-500">*</span>
               </label>
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, industry: 'construction' }))}
-                  className={`p-4 border-2 rounded-lg text-left transition-colors ${
+                  className={`group p-5 border-2 rounded-xl text-left transition-all duration-200 ${
                     formData.industry === 'construction'
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
+                      ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 shadow-lg scale-105'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md'
                   }`}
                 >
-                  <Building2 className="h-6 w-6 text-blue-600 mb-2" />
-                  <div className="font-medium text-gray-900 dark:text-white">Construction</div>
+                  <Building2 className={`h-8 w-8 mb-3 transition-colors ${
+                    formData.industry === 'construction' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 group-hover:text-blue-500'
+                  }`} />
+                  <div className="font-semibold text-gray-900 dark:text-white mb-1">Construction</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Building materials, equipment</div>
                 </button>
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, industry: 'agriculture' }))}
-                  className={`p-4 border-2 rounded-lg text-left transition-colors ${
+                  className={`group p-5 border-2 rounded-xl text-left transition-all duration-200 ${
                     formData.industry === 'agriculture'
-                      ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
+                      ? 'border-green-500 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 shadow-lg scale-105'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md'
                   }`}
                 >
-                  <TrendingUp className="h-6 w-6 text-green-600 mb-2" />
-                  <div className="font-medium text-gray-900 dark:text-white">Agriculture</div>
+                  <TrendingUp className={`h-8 w-8 mb-3 transition-colors ${
+                    formData.industry === 'agriculture' ? 'text-green-600 dark:text-green-400' : 'text-gray-400 group-hover:text-green-500'
+                  }`} />
+                  <div className="font-semibold text-gray-900 dark:text-white mb-1">Agriculture</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Farming inputs, equipment</div>
                 </button>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="country" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Country *
+              <div className="group">
+                <label htmlFor="country" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Country <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Globe className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                   <select
                     id="country"
                     name="country"
                     value={formData.country}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                    className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600 appearance-none bg-no-repeat bg-right pr-10"
+                    style={{ backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundPosition: 'right 0.75rem center', backgroundSize: '1em 1em' }}
                   >
                     <option value="Kenya">Kenya</option>
                     <option value="Uganda">Uganda</option>
@@ -381,19 +433,19 @@ const Register: React.FC = () => {
                 </div>
               </div>
               
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Phone Number *
+              <div className="group">
+                <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Phone Number <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                   <input
                     type="tel"
                     id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                    className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                     placeholder="+254 700 000 000"
                   />
                 </div>
@@ -404,19 +456,20 @@ const Register: React.FC = () => {
 
       case 3:
         return (
-          <div className="space-y-6">
-            <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Your Role *
+          <div className="space-y-6 animate-fade-in">
+            <div className="group">
+              <label htmlFor="role" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Your Role <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                 <select
                   id="role"
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600 appearance-none"
+                  style={{ backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundPosition: 'right 0.75rem center', backgroundSize: '1em 1em' }}
                 >
                   <option value="">Select your role</option>
                   <option value="procurement">Procurement Manager</option>
@@ -429,58 +482,81 @@ const Register: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="companySize" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Company Size *
+              <label htmlFor="companySize" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                Company Size <span className="text-red-500">*</span>
               </label>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { value: '1-10', label: '1-10 employees' },
-                  { value: '11-50', label: '11-50 employees' },
-                  { value: '51-200', label: '51-200 employees' },
-                  { value: '200+', label: '200+ employees' }
-                ].map((size) => (
-                  <button
-                    key={size.value}
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, companySize: size.value }))}
-                    className={`p-3 border rounded-lg text-left transition-colors ${
-                      formData.companySize === size.value
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                        : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
-                    }`}
-                  >
-                    <div className="font-medium text-gray-900 dark:text-white">{size.label}</div>
-                  </button>
-                ))}
+                  { value: '1-10', label: '1-10 employees', icon: Users },
+                  { value: '11-50', label: '11-50 employees', icon: Building2 },
+                  { value: '51-200', label: '51-200 employees', icon: Building2 },
+                  { value: '200+', label: '200+ employees', icon: Building2 }
+                ].map((size) => {
+                  const IconComponent = size.icon;
+                  return (
+                    <button
+                      key={size.value}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, companySize: size.value }))}
+                      className={`group p-4 border-2 rounded-xl text-left transition-all duration-200 ${
+                        formData.companySize === size.value
+                          ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 shadow-lg scale-105'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md'
+                      }`}
+                    >
+                      <IconComponent className={`h-6 w-6 mb-2 transition-colors ${
+                        formData.companySize === size.value ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 group-hover:text-blue-500'
+                      }`} />
+                      <div className="font-semibold text-gray-900 dark:text-white">{size.label}</div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Areas of Interest
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                Areas of Interest <span className="text-gray-500 text-xs font-normal">(optional)</span>
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 {[
-                  'Price Tracking',
-                  'Supplier Discovery',
-                  'Logistics Planning',
-                  'Risk Management',
-                  'Trade Financing',
-                  'Market Analysis'
-                ].map((interest) => (
-                  <button
-                    key={interest}
-                    type="button"
-                    onClick={() => handleInterestToggle(interest)}
-                    className={`p-2 border rounded-lg text-left transition-colors ${
-                      formData.interests.includes(interest)
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                        : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
-                    }`}
-                  >
-                    <div className="text-sm font-medium text-gray-900 dark:text-white">{interest}</div>
-                  </button>
-                ))}
+                  { name: 'Price Tracking', icon: TrendingUp },
+                  { name: 'Supplier Discovery', icon: Users },
+                  { name: 'Logistics Planning', icon: Globe },
+                  { name: 'Risk Management', icon: Shield },
+                  { name: 'Trade Financing', icon: TrendingUp },
+                  { name: 'Market Analysis', icon: TrendingUp }
+                ].map((interest) => {
+                  const IconComponent = interest.icon;
+                  return (
+                    <button
+                      key={interest.name}
+                      type="button"
+                      onClick={() => handleInterestToggle(interest.name)}
+                      className={`group p-4 border-2 rounded-xl text-left transition-all duration-200 ${
+                        formData.interests.includes(interest.name)
+                          ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 shadow-md'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-sm'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <IconComponent className={`h-5 w-5 transition-colors ${
+                          formData.interests.includes(interest.name) ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 group-hover:text-blue-500'
+                        }`} />
+                        {formData.interests.includes(interest.name) && (
+                          <CheckCircle2 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                        )}
+                      </div>
+                      <div className={`text-sm font-medium ${
+                        formData.interests.includes(interest.name)
+                          ? 'text-gray-900 dark:text-white'
+                          : 'text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {interest.name}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -488,15 +564,19 @@ const Register: React.FC = () => {
 
       case 4:
         return (
-          <div className="space-y-6">
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-              <div className="flex items-start">
-                <Shield className="h-6 w-6 text-blue-600 dark:text-blue-400 mt-0.5 mr-3" />
+          <div className="space-y-6 animate-fade-in">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-2xl border-2 border-blue-200 dark:border-blue-800">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <Shield className="h-6 w-6 text-white" />
+                  </div>
+                </div>
                 <div>
-                  <h4 className="text-lg font-medium text-blue-800 dark:text-blue-200 mb-2">
-                    Almost There!
+                  <h4 className="text-xl font-bold text-blue-900 dark:text-blue-100 mb-2">
+                    Almost There! 🎉
                   </h4>
-                  <p className="text-blue-700 dark:text-blue-300">
+                  <p className="text-blue-800 dark:text-blue-200 leading-relaxed">
                     By creating an account, you'll get access to real-time market data, supplier networks, 
                     and tools to optimize your business operations.
                   </p>
@@ -505,56 +585,60 @@ const Register: React.FC = () => {
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-start">
+              <div className="flex items-start gap-4 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-200 bg-gray-50 dark:bg-gray-800/50">
                 <input
                   type="checkbox"
                   id="agreeTerms"
                   checked={formData.agreeTerms}
                   onChange={(e) => handleCheckboxChange('agreeTerms', e.target.checked)}
-                  className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="mt-1 h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-offset-2 cursor-pointer transition-all"
                 />
-                <label htmlFor="agreeTerms" className="ml-3 text-sm text-gray-700 dark:text-gray-300">
+                <label htmlFor="agreeTerms" className="flex-1 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
                   I agree to the{' '}
-                  <Link to="/terms" className="text-blue-600 hover:text-blue-700 dark:text-blue-400">
+                  <Link to="/terms" className="font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline decoration-2 underline-offset-2 transition-colors">
                     Terms of Service
                   </Link>{' '}
                   and{' '}
-                  <Link to="/privacy" className="text-blue-600 hover:text-blue-700 dark:text-blue-400">
+                  <Link to="/privacy" className="font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline decoration-2 underline-offset-2 transition-colors">
                     Privacy Policy
                   </Link>
-                  *
+                  <span className="text-red-500 ml-1">*</span>
                 </label>
               </div>
 
-              <div className="flex items-start">
+              <div className="flex items-start gap-4 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200">
                 <input
                   type="checkbox"
                   id="agreeMarketing"
                   checked={formData.agreeMarketing}
                   onChange={(e) => handleCheckboxChange('agreeMarketing', e.target.checked)}
-                  className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="mt-1 h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-offset-2 cursor-pointer transition-all"
                 />
-                <label htmlFor="agreeMarketing" className="ml-3 text-sm text-gray-700 dark:text-gray-300">
+                <label htmlFor="agreeMarketing" className="flex-1 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
                   I'd like to receive updates about new features and market insights
+                  <span className="text-gray-500 text-xs ml-2">(optional)</span>
                 </label>
               </div>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-              <h5 className="font-medium text-gray-900 dark:text-white mb-2">What happens next?</h5>
-              <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <div className="flex items-center">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                  Verify your email address
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                  Complete your industry profile
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                  Access your personalized dashboard
-                </div>
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-700">
+              <h5 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-yellow-500" />
+                What happens next?
+              </h5>
+              <div className="space-y-3">
+                {[
+                  { icon: Mail, text: 'Verify your email address', bgClass: 'bg-blue-50 dark:bg-blue-900/30', iconClass: 'text-blue-600 dark:text-blue-400' },
+                  { icon: User, text: 'Complete your industry profile', bgClass: 'bg-purple-50 dark:bg-purple-900/30', iconClass: 'text-purple-600 dark:text-purple-400' },
+                  { icon: TrendingUp, text: 'Access your personalized dashboard', bgClass: 'bg-green-50 dark:bg-green-900/30', iconClass: 'text-green-600 dark:text-green-400' }
+                ].map((step, index) => (
+                  <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700">
+                    <div className={`flex-shrink-0 w-8 h-8 rounded-lg ${step.bgClass} flex items-center justify-center`}>
+                      <step.icon className={`h-5 w-5 ${step.iconClass}`} />
+                    </div>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{step.text}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -566,117 +650,214 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Create Your Account
-          </h2>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Join thousands of businesses optimizing their supply chain
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {/* Progress Steps */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between">
-              {steps.map((step, index) => (
-                <div key={step.id} className="flex items-center">
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
-                    currentStep >= step.id
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-                  }`}>
-                    {step.id}
-                  </div>
-                  <div className="ml-2 hidden sm:block">
-                    <div className={`text-sm font-medium ${
-                      currentStep >= step.id
-                        ? 'text-blue-600 dark:text-blue-400'
-                        : 'text-gray-500 dark:text-gray-400'
-                    }`}>
-                      {step.title}
-                    </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                      {step.description}
-                    </div>
-                  </div>
-                  {index < steps.length - 1 && (
-                    <div className={`w-8 h-0.5 mx-2 ${
-                      currentStep > step.id
-                        ? 'bg-blue-600'
-                        : 'bg-gray-200 dark:bg-gray-700'
-                    }`} />
-                  )}
+    <div className="min-h-screen bg-white dark:bg-gray-900 flex">
+      {/* Left side - Registration Form */}
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 overflow-y-auto">
+        <div className="w-full max-w-2xl">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <div className="relative">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Building2 className="text-white" size={32} />
                 </div>
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center animate-pulse">
+                  <Sparkles className="w-4 h-4 text-yellow-800" />
+                </div>
+              </div>
+            </div>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+              Create Your Account
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              Join thousands of businesses optimizing their supply chain
+            </p>
+          </div>
+
+          {/* Progress Steps */}
+          <div className="mb-8 bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between mb-4">
+              {steps.map((step, index) => (
+                <React.Fragment key={step.id}>
+                  <div className="flex items-center flex-1">
+                    <div className="flex flex-col items-center flex-1">
+                      <div className={`relative flex items-center justify-center w-12 h-12 rounded-full text-sm font-semibold transition-all duration-300 ${
+                        currentStep > step.id
+                          ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg scale-110'
+                          : currentStep === step.id
+                          ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-lg scale-110 ring-4 ring-blue-200 dark:ring-blue-900'
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                      }`}>
+                        {currentStep > step.id ? (
+                          <CheckCircle2 className="w-6 h-6" />
+                        ) : (
+                          <span>{step.id}</span>
+                        )}
+                      </div>
+                      <div className="mt-2 text-center hidden sm:block">
+                        <div className={`text-xs font-medium ${
+                          currentStep >= step.id
+                            ? 'text-blue-600 dark:text-blue-400'
+                            : 'text-gray-500 dark:text-gray-400'
+                        }`}>
+                          {step.title}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          {step.description}
+                        </div>
+                      </div>
+                    </div>
+                    {index < steps.length - 1 && (
+                      <div className={`flex-1 h-1 mx-2 rounded-full transition-all duration-500 ${
+                        currentStep > step.id
+                          ? 'bg-gradient-to-r from-green-500 to-emerald-600'
+                          : 'bg-gray-200 dark:bg-gray-700'
+                      }`} />
+                    )}
+                  </div>
+                </React.Fragment>
               ))}
             </div>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-              <div className="flex items-center">
-                <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 mr-2" />
-                <span className="text-sm text-red-700 dark:text-red-300">{error}</span>
+          {/* Form Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
+            {/* Error Message */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-lg animate-slide-in">
+                <div className="flex items-start gap-3">
+                  <XCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-red-800 dark:text-red-200">Error</p>
+                    <p className="text-sm text-red-700 dark:text-red-300 mt-1">{error}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step Indicator */}
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {steps[currentStep - 1].title}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 mt-1">
+                  {steps[currentStep - 1].description}
+                </p>
+              </div>
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                Step {currentStep} of {steps.length}
               </div>
             </div>
-          )}
 
-          {/* Form Content */}
-          {renderStepContent()}
+            {/* Form Content */}
+            <div className="animate-fade-in">
+              {renderStepContent()}
+            </div>
 
-          {/* Navigation */}
-          <div className="mt-8 flex justify-between">
-            <button
-              onClick={handlePrevious}
-              disabled={currentStep === 1}
-              className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Previous
-            </button>
-
-            {currentStep < 4 ? (
+            {/* Navigation */}
+            <div className="mt-8 flex justify-between items-center pt-6 border-t border-gray-200 dark:border-gray-700">
               <button
-                onClick={handleNext}
-                disabled={!validateStep(currentStep)}
-                className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handlePrevious}
+                disabled={currentStep === 1}
+                className="flex items-center gap-2 px-6 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
               >
-                Next
-                <ArrowRight className="h-4 w-4 ml-2" />
+                <ArrowLeft className="h-4 w-4" />
+                Previous
               </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                disabled={!validateStep(4) || isLoading}
-                className="flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Creating Account...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Create Account
-                  </>
-                )}
-              </button>
-            )}
+
+              {currentStep < 4 ? (
+                <button
+                  onClick={handleNext}
+                  disabled={!validateStep(currentStep)}
+                  className="flex items-center gap-2 px-8 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:hover:scale-100"
+                >
+                  Next Step
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  disabled={!validateStep(4) || isLoading || authLoading}
+                  className="flex items-center gap-2 px-8 py-3 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:hover:scale-100"
+                >
+                  {(isLoading || authLoading) ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                      Creating Account...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="h-5 w-5" />
+                      Create Account
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Login Link */}
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Already have an account?{' '}
-              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+              <Link 
+                to="/login" 
+                className="font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              >
                 Sign in here
               </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Right side - Hero Section */}
+      <div className="hidden lg:flex lg:flex-1 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 items-center justify-center p-12 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
+          }}></div>
+        </div>
+        
+        <div className="relative z-10 text-center text-white max-w-lg">
+          <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl">
+            <Building2 size={48} className="text-white" />
+          </div>
+          
+          <h2 className="text-4xl font-bold mb-6 leading-tight">
+            Trade Intelligence Platform
+          </h2>
+          
+          <p className="text-blue-100 text-lg leading-relaxed mb-10">
+            Empowering East African businesses with real-time market intelligence, 
+            supplier insights, and trade financing solutions.
+          </p>
+          
+          <div className="space-y-4">
+            {[
+              { icon: CheckCircle, text: 'Real-time price tracking', color: 'bg-green-400' },
+              { icon: Shield, text: 'Verified supplier network', color: 'bg-blue-400' },
+              { icon: TrendingUp, text: 'Trade financing solutions', color: 'bg-purple-400' },
+              { icon: Globe, text: 'Multi-country coverage', color: 'bg-indigo-400' }
+            ].map((feature, index) => (
+              <div 
+                key={index} 
+                className="flex items-center gap-4 text-blue-100 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/20 transition-all duration-200"
+              >
+                <div className={`${feature.color} rounded-lg p-2`}>
+                  <feature.icon className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-lg">{feature.text}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 pt-8 border-t border-white/20">
+            <p className="text-blue-200 text-sm">
+              Trusted by 10,000+ businesses across East Africa
             </p>
           </div>
         </div>

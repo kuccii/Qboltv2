@@ -21,14 +21,16 @@ import {
 } from 'lucide-react';
 import { CountrySupplier, GovernmentContact, CountryData } from '../../data/countries/types';
 import { getRwandaSuppliers, getRwandaGovernment, getRwandaData } from '../../data/countries/rwanda/rwandaDataLoader';
+import { unifiedApi } from '../../services/unifiedApi';
 
 interface ContactDirectoryProps {
   className?: string;
+  countryCode?: string; // Optional: defaults to 'RW' for backward compatibility
 }
 
 type ContactTab = 'government' | 'suppliers' | 'logistics' | 'laboratories' | 'food';
 
-const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '' }) => {
+const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '', countryCode = 'RW' }) => {
   const [activeTab, setActiveTab] = useState<ContactTab>('government');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -39,20 +41,83 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
 
   useEffect(() => {
     loadContactData();
-  }, []);
+  }, [countryCode, selectedCategory, searchTerm]);
 
   const loadContactData = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      const [suppliersData, governmentData] = await Promise.all([
-        getRwandaSuppliers(),
-        getRwandaGovernment()
-      ]);
-      
-      setSuppliers(suppliersData);
-      setGovernment(governmentData);
+      // Fetch from database first, fallback to JSON files
+      try {
+        const [dbSuppliers, dbGovernment] = await Promise.all([
+          unifiedApi.countries.getSuppliers(countryCode, {
+            category: selectedCategory !== 'all' ? selectedCategory : undefined,
+            search: searchTerm || undefined
+          }),
+          unifiedApi.countries.getGovernmentContacts(countryCode)
+        ]);
+
+        if (dbSuppliers.length > 0) {
+          setSuppliers(dbSuppliers.map((s: any) => ({
+            id: s.id,
+            countryCode: countryCode as any,
+            name: s.name,
+            category: s.category,
+            location: s.location,
+            region: s.region || '',
+            contact: {
+              email: s.email || '',
+              phone: s.phone || '',
+              website: s.website,
+              address: s.address
+            },
+            services: s.services || [],
+            materials: s.materials || [],
+            certifications: s.certifications || [],
+            verified: s.verified || false,
+            rating: s.rating,
+            dataSource: s.data_source || 'user_contributed',
+            description: s.description
+          })));
+        }
+
+        if (dbGovernment.length > 0) {
+          setGovernment(dbGovernment.map((g: any) => ({
+            id: g.id,
+            countryCode: countryCode as any,
+            ministry: g.ministry,
+            department: g.department,
+            name: g.name,
+            title: g.title,
+            contact: {
+              email: g.email || '',
+              phone: g.phone || '',
+              website: g.website,
+              address: g.address
+            },
+            services: g.services || [],
+            jurisdiction: g.jurisdiction,
+            lastUpdated: g.last_updated
+          })));
+        }
+      } catch (dbError) {
+        // Fallback to JSON files (only for Rwanda)
+        console.log('Database fetch failed, using JSON files:', dbError);
+        if (countryCode === 'RW') {
+          const [suppliersData, governmentData] = await Promise.all([
+            getRwandaSuppliers(),
+            getRwandaGovernment()
+          ]);
+          
+          setSuppliers(suppliersData);
+          setGovernment(governmentData);
+        } else {
+          // For other countries, just set empty arrays
+          setSuppliers([]);
+          setGovernment([]);
+        }
+      }
     } catch (err) {
       setError('Failed to load contact data');
       console.error('Error loading contact data:', err);

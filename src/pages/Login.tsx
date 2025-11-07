@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Building2, Mail, Lock, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { authConfig } from '../config/auth';
@@ -12,8 +12,17 @@ const Login: React.FC = () => {
   const [isLocked, setIsLocked] = useState(false);
   const [lockoutTime, setLockoutTime] = useState<Date | null>(null);
   
-  const { login, loading, error, clearError } = useAuth();
+  const { login, loading, error, clearError, authState } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Navigate to industry selection when authenticated - but only if we're on login page
+  useEffect(() => {
+    if (authState.user && location.pathname === '/login') {
+      console.log('Login page: User authenticated, navigating to industry selection');
+      navigate('/select-industry', { replace: true });
+    }
+  }, [authState.user, navigate, location.pathname]);
 
   // Check for lockout status on mount
   useEffect(() => {
@@ -46,30 +55,41 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    
+    console.log('Login form submitted', { email, password: password ? '***' : '', isLocked, loading });
+    
     clearError();
     
     // Check if account is locked
     if (isLocked) {
+      console.log('Account is locked');
       return;
     }
     
     // Validate input
     if (!email || !password) {
+      console.log('Email or password missing', { email: !!email, password: !!password });
       return;
     }
     
     if (password.length < authConfig.passwordMinLength) {
+      console.log('Password too short', { passwordLength: password.length, required: authConfig.passwordMinLength });
       return;
     }
     
+    console.log('Attempting login...');
+    
     try {
       await login(email, password);
+      console.log('Login successful');
       // Reset login attempts on successful login
       setLoginAttempts(0);
       localStorage.removeItem('qbolt_login_attempts');
       localStorage.removeItem('qbolt_lockout_time');
-      navigate('/select-industry');
+      // Navigation will happen automatically via useEffect when authState.user is set
     } catch (err) {
+      console.error('Login error:', err);
       const newAttempts = loginAttempts + 1;
       setLoginAttempts(newAttempts);
       localStorage.setItem('qbolt_login_attempts', newAttempts.toString());
@@ -81,8 +101,6 @@ const Login: React.FC = () => {
         setLockoutTime(lockout);
         localStorage.setItem('qbolt_lockout_time', lockout.toISOString());
       }
-      
-      console.error('Login error:', err);
     }
   };
 
@@ -231,6 +249,17 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={loading || isLocked || !email || !password || password.length < authConfig.passwordMinLength}
+              onClick={(e) => {
+                console.log('Button clicked', { 
+                  loading, 
+                  isLocked, 
+                  hasEmail: !!email, 
+                  hasPassword: !!password,
+                  passwordLength: password.length,
+                  minLength: authConfig.passwordMinLength,
+                  disabled: loading || isLocked || !email || !password || password.length < authConfig.passwordMinLength
+                });
+              }}
               className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? (

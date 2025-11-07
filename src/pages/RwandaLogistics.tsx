@@ -26,6 +26,7 @@ import RwandaContactDirectory from '../components/rwanda/RwandaContactDirectory'
 import RwandaPricingIntelligence from '../components/rwanda/RwandaPricingIntelligence';
 import { CountrySupplier, CountryData, CountryStats } from '../data/countries/types';
 import { getRwandaData, getRwandaStats, searchRwandaSuppliers } from '../data/countries/rwanda/rwandaDataLoader';
+import { unifiedApi } from '../services/unifiedApi';
 import { exportRwandaComprehensiveReport } from '../utils/pdfExport';
 
 const RwandaLogistics: React.FC = () => {
@@ -58,13 +59,122 @@ const RwandaLogistics: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      const [data, statsData] = await Promise.all([
-        getRwandaData(),
-        getRwandaStats()
-      ]);
-      
-      setRwandaData(data);
-      setStats(statsData);
+      // Fetch from database first, fallback to JSON files
+      try {
+        const [profile, dbStats] = await Promise.all([
+          unifiedApi.countries.getProfile('RW'),
+          unifiedApi.countries.getStats('RW')
+        ]);
+
+        setStats(dbStats);
+        
+        // Build CountryData object from database
+        const [suppliers, infrastructure, pricing, government] = await Promise.all([
+          unifiedApi.countries.getSuppliers('RW'),
+          unifiedApi.countries.getInfrastructure('RW'),
+          unifiedApi.countries.getPricing('RW'),
+          unifiedApi.countries.getGovernmentContacts('RW')
+        ]);
+
+        setRwandaData({
+          profile: {
+            code: profile.code as any,
+            name: profile.name,
+            flag: profile.flag || '🇷🇼',
+            currency: profile.currency,
+            regions: profile.regions || [],
+            description: profile.description,
+            population: profile.population,
+            gdp: profile.gdp ? parseFloat(profile.gdp.toString()) : undefined,
+            lastUpdated: profile.last_updated,
+            dataSource: profile.data_source || 'database',
+            completeness: profile.completeness || 0
+          },
+          suppliers: suppliers.map((s: any) => ({
+            id: s.id,
+            countryCode: 'RW' as const,
+            name: s.name,
+            category: s.category,
+            location: s.location,
+            region: s.region || '',
+            contact: {
+              email: s.email || '',
+              phone: s.phone || '',
+              website: s.website,
+              address: s.address
+            },
+            services: s.services || [],
+            materials: s.materials || [],
+            certifications: s.certifications || [],
+            verified: s.verified || false,
+            rating: s.rating,
+            dataSource: s.data_source || 'user_contributed',
+            description: s.description
+          })),
+          infrastructure: infrastructure.map((i: any) => ({
+            id: i.id,
+            countryCode: 'RW' as const,
+            type: i.type,
+            name: i.name,
+            location: i.location,
+            coordinates: i.latitude && i.longitude ? [i.latitude, i.longitude] : undefined,
+            capacity: i.capacity || '',
+            services: i.services || [],
+            operatingHours: i.operating_hours,
+            contact: {
+              email: i.email || '',
+              phone: i.phone || '',
+              website: i.website,
+              address: i.address
+            },
+            seasonalNotes: i.seasonal_notes,
+            status: i.status,
+            lastUpdated: i.last_updated
+          })),
+          pricing: pricing.map((p: any) => ({
+            countryCode: 'RW' as const,
+            category: p.category,
+            item: p.item,
+            price: parseFloat(p.price),
+            currency: p.currency,
+            unit: p.unit,
+            region: p.region,
+            trend: p.trend,
+            previousPrice: p.previous_price ? parseFloat(p.previous_price) : undefined,
+            notes: p.notes,
+            source: p.source,
+            lastUpdated: p.last_updated
+          })),
+          government: government.map((g: any) => ({
+            id: g.id,
+            countryCode: 'RW' as const,
+            ministry: g.ministry,
+            department: g.department,
+            name: g.name,
+            title: g.title,
+            contact: {
+              email: g.email || '',
+              phone: g.phone || '',
+              website: g.website,
+              address: g.address
+            },
+            services: g.services || [],
+            jurisdiction: g.jurisdiction,
+            lastUpdated: g.last_updated
+          })),
+          lastProcessed: new Date().toISOString()
+        });
+      } catch (dbError) {
+        // Fallback to JSON files
+        console.log('Database fetch failed, using JSON files:', dbError);
+        const [data, statsData] = await Promise.all([
+          getRwandaData(),
+          getRwandaStats()
+        ]);
+        
+        setRwandaData(data);
+        setStats(statsData);
+      }
     } catch (err) {
       setError('Failed to load Rwanda data');
       console.error('Error loading Rwanda data:', err);

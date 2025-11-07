@@ -17,8 +17,13 @@ import {
 import RwandaSupplierCard from './RwandaSupplierCard';
 import { CountrySupplier, CountryData, CountryPricing } from '../../data/countries/types';
 import { getRwandaSuppliers, getRwandaPricing, getRwandaStats } from '../../data/countries/rwanda/rwandaDataLoader';
+import { unifiedApi } from '../../services/unifiedApi';
 
-const RwandaOverview: React.FC = () => {
+interface RwandaOverviewProps {
+  countryCode?: string; // Optional: defaults to 'RW' for backward compatibility
+}
+
+const RwandaOverview: React.FC<RwandaOverviewProps> = ({ countryCode = 'RW' }) => {
   const [suppliers, setSuppliers] = useState<CountrySupplier[]>([]);
   const [pricing, setPricing] = useState<CountryPricing[]>([]);
   const [stats, setStats] = useState<any>(null);
@@ -26,20 +31,95 @@ const RwandaOverview: React.FC = () => {
 
   useEffect(() => {
     loadOverviewData();
-  }, []);
+  }, [countryCode]);
 
   const loadOverviewData = async () => {
     try {
       setLoading(true);
-      const [suppliersData, pricingData, statsData] = await Promise.all([
-        getRwandaSuppliers(),
-        getRwandaPricing(),
-        getRwandaStats()
-      ]);
       
-      setSuppliers(suppliersData.slice(0, 6)); // Show top 6 suppliers
-      setPricing(pricingData);
-      setStats(statsData);
+      // Fetch from database first, fallback to JSON files
+      try {
+        const [dbSuppliers, dbPricing, dbStats] = await Promise.all([
+          unifiedApi.countries.getSuppliers(countryCode),
+          unifiedApi.countries.getPricing(countryCode),
+          unifiedApi.countries.getStats(countryCode)
+        ]);
+
+        // Transform database data to match expected format
+        if (dbSuppliers.length > 0) {
+          setSuppliers(dbSuppliers.map((s: any) => ({
+            id: s.id,
+            countryCode: countryCode as any,
+            name: s.name,
+            category: s.category,
+            location: s.location,
+            region: s.region || '',
+            contact: {
+              email: s.email || '',
+              phone: s.phone || '',
+              website: s.website,
+              address: s.address
+            },
+            services: s.services || [],
+            materials: s.materials || [],
+            certifications: s.certifications || [],
+            verified: s.verified || false,
+            rating: s.rating,
+            dataSource: s.data_source || 'user_contributed',
+            description: s.description,
+            establishedYear: s.established_year,
+            employeeCount: s.employee_count
+          })));
+        }
+
+        if (dbPricing.length > 0) {
+          setPricing(dbPricing.map((p: any) => ({
+            countryCode: countryCode as any,
+            category: p.category,
+            item: p.item,
+            price: parseFloat(p.price),
+            currency: p.currency,
+            unit: p.unit,
+            region: p.region,
+            trend: p.trend,
+            previousPrice: p.previous_price ? parseFloat(p.previous_price) : undefined,
+            notes: p.notes,
+            source: p.source,
+            lastUpdated: p.last_updated
+          })));
+        }
+
+        if (dbStats) {
+          setStats(dbStats);
+        }
+      } catch (dbError) {
+        // Fallback to JSON files if database fails (only for Rwanda)
+        if (countryCode === 'RW') {
+          console.log('Database fetch failed, using JSON files:', dbError);
+          const [suppliersData, pricingData, statsData] = await Promise.all([
+            getRwandaSuppliers(),
+            getRwandaPricing(),
+            getRwandaStats()
+          ]);
+          
+          setSuppliers(suppliersData.slice(0, 6));
+          setPricing(pricingData);
+          setStats(statsData);
+        } else {
+          // For other countries, just show empty state
+          setSuppliers([]);
+          setPricing([]);
+          setStats({
+            totalSuppliers: 0,
+            verifiedSuppliers: 0,
+            governmentAgencies: 0,
+            infrastructureFacilities: 0,
+            pricingItems: 0,
+            lastUpdated: new Date().toISOString(),
+            dataCompleteness: 0
+          });
+        }
+      }
     } catch (error) {
       console.error('Error loading overview data:', error);
     } finally {
