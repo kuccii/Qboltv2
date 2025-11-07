@@ -452,14 +452,14 @@ const Dashboard: React.FC = () => {
                     
                     <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg shadow-sm border-2 border-green-200 dark:border-green-700 p-6">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-green-800 dark:text-green-200">{description.metrics.orders}</h3>
+                        <h3 className="text-sm font-medium text-green-800 dark:text-green-200">Average Shipment Value</h3>
                         <DollarSign size={20} className="text-green-600 dark:text-green-400" />
                       </div>
-                      <div className="text-3xl font-bold text-green-900 dark:text-green-100">${metrics.averageOrderValue}</div>
-                      <div className="mt-1 text-sm text-green-700 dark:text-green-300">Average value</div>
-                      <div className="flex items-center mt-2 text-sm text-red-600 dark:text-red-400">
-                        <TrendingDown size={16} className="mr-1" />
-                        -3% from last month
+                      <div className="text-3xl font-bold text-green-900 dark:text-green-100">${metrics.averageOrderValue || 0}</div>
+                      <div className="mt-1 text-sm text-green-700 dark:text-green-300">Per shipment</div>
+                      <div className="flex items-center mt-2 text-sm text-green-600 dark:text-green-400">
+                        <TrendingUp size={16} className="mr-1" />
+                        +5% from last month
                       </div>
                     </div>
                     
