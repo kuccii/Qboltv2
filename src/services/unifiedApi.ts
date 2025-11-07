@@ -2005,6 +2005,116 @@ export const unifiedApi = {
       return result;
     },
   },
+
+  // ============================================
+  // UNIFIED SEARCH
+  // ============================================
+
+  search: {
+    async unified(query: string, types?: ('supplier' | 'price' | 'opportunity' | 'document')[]) {
+      if (!query || query.length < 2) return [];
+
+      const searchTypes = types || ['supplier', 'price', 'opportunity', 'document'];
+      const results: any[] = [];
+
+      // Search suppliers
+      if (searchTypes.includes('supplier')) {
+        const { data } = await supabase
+          .from('suppliers')
+          .select('id, name, country, industry, materials, rating, verified')
+          .or(`name.ilike.%${query}%,materials.cs.{${query}}`)
+          .limit(10);
+        
+        if (data) {
+          results.push(...data.map(s => ({
+            id: s.id,
+            type: 'supplier',
+            title: s.name,
+            subtitle: `${s.country} - ${s.industry}`,
+            description: `Rating: ${s.rating || 'N/A'}`,
+            url: `/app/supplier-directory/${s.id}`,
+            score: (s.rating || 0) / 5,
+            metadata: { verified: s.verified, country: s.country }
+          })));
+        }
+      }
+
+      // Search prices
+      if (searchTypes.includes('price')) {
+        const { data } = await supabase
+          .from('prices')
+          .select('id, material, location, country, price, currency, unit, change_percent')
+          .or(`material.ilike.%${query}%,location.ilike.%${query}%`)
+          .order('created_at', { ascending: false })
+          .limit(10);
+        
+        if (data) {
+          results.push(...data.map(p => ({
+            id: p.id,
+            type: 'price',
+            title: `${p.material} Price`,
+            subtitle: `${p.location}, ${p.country} - ${p.price} ${p.currency}/${p.unit}`,
+            description: `Change: ${p.change_percent || 0}%`,
+            url: `/app/prices`,
+            score: 0.8,
+            metadata: { material: p.material, location: p.location }
+          })));
+        }
+      }
+
+      // Search opportunities
+      if (searchTypes.includes('opportunity')) {
+        const { data } = await supabase
+          .from('trade_opportunities')
+          .select('id, title, description, material, country, status')
+          .or(`title.ilike.%${query}%,description.ilike.%${query}%,material.ilike.%${query}%`)
+          .eq('status', 'active')
+          .limit(10);
+        
+        if (data) {
+          results.push(...data.map(o => ({
+            id: o.id,
+            type: 'opportunity',
+            title: o.title,
+            subtitle: `${o.material} - ${o.country}`,
+            description: o.description,
+            url: `/app/opportunities/${o.id}`,
+            score: 0.7,
+            metadata: { status: o.status }
+          })));
+        }
+      }
+
+      // Search documents (if user is authenticated)
+      if (searchTypes.includes('document')) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data } = await supabase
+            .from('documents')
+            .select('id, name, category, description, created_at')
+            .eq('user_id', user.id)
+            .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
+            .limit(10);
+          
+          if (data) {
+            results.push(...data.map(d => ({
+              id: d.id,
+              type: 'document',
+              title: d.name,
+              subtitle: d.category,
+              description: d.description,
+              url: `/app/documents/${d.id}`,
+              score: 0.6,
+              metadata: { category: d.category }
+            })));
+          }
+        }
+      }
+
+      // Sort by score and return
+      return results.sort((a, b) => b.score - a.score);
+    }
+  },
 };
 
 export default unifiedApi;

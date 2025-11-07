@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDebounce } from './useDebounce';
+import { unifiedApi } from '../services/unifiedApi';
 
 export interface SearchResult {
   id: string;
@@ -138,21 +139,20 @@ export function useSearch() {
     setError(null);
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // Use unified search API
+      const searchTypes = searchFilters.type?.map(t => {
+        if (t === 'logistics') return 'supplier'; // Map logistics to supplier for now
+        if (t === 'agent') return 'supplier'; // Map agent to supplier for now
+        return t as 'supplier' | 'price' | 'opportunity' | 'document';
+      }).filter(Boolean) as ('supplier' | 'price' | 'opportunity' | 'document')[] | undefined;
 
-      // Filter mock data based on query and filters
-      let filteredResults = mockSearchData.filter(item => {
-        const matchesQuery = 
-          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));
+      const apiResults = await unifiedApi.search.unified(searchQuery, searchTypes);
 
-        const matchesType = !searchFilters.type || searchFilters.type.length === 0 || 
-          searchFilters.type.includes(item.type);
-
+      // Apply additional filters
+      let filteredResults = apiResults.filter(item => {
         const matchesRegion = !searchFilters.region || searchFilters.region.length === 0 ||
-          (item.metadata?.region && searchFilters.region.includes(item.metadata.region));
+          (item.metadata?.region && searchFilters.region.includes(item.metadata.region)) ||
+          (item.metadata?.country && searchFilters.region.includes(item.metadata.country));
 
         const matchesIndustry = !searchFilters.industry || searchFilters.industry.length === 0 ||
           (item.metadata?.industry && searchFilters.industry.includes(item.metadata.industry));
@@ -160,7 +160,7 @@ export function useSearch() {
         const matchesVerified = searchFilters.verified === undefined ||
           (item.metadata?.verified === searchFilters.verified);
 
-        return matchesQuery && matchesType && matchesRegion && matchesIndustry && matchesVerified;
+        return matchesRegion && matchesIndustry && matchesVerified;
       });
 
       // Sort results
@@ -172,8 +172,10 @@ export function useSearch() {
             comparison = b.score - a.score;
             break;
           case 'date':
-            // Mock date sorting - in real implementation, use actual dates
-            comparison = Math.random() - 0.5;
+            // Use metadata.created_at if available
+            const aDate = a.metadata?.created_at ? new Date(a.metadata.created_at).getTime() : 0;
+            const bDate = b.metadata?.created_at ? new Date(b.metadata.created_at).getTime() : 0;
+            comparison = bDate - aDate;
             break;
           case 'name':
             comparison = a.title.localeCompare(b.title);

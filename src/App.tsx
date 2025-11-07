@@ -29,7 +29,7 @@ const SupplierDirectory = React.lazy(() => import('./pages/SupplierDirectory'));
 const SupplierDetail = React.lazy(() => import('./pages/SupplierDetail'));
 const AgentsDirectory = React.lazy(() => import('./pages/AgentsDirectory'));
 const Financing = React.lazy(() => import('./pages/Financing'));
-const PriceReporting = React.lazy(() => import('./components/PriceReporting'));
+const PriceReporting = React.lazy(() => import('./pages/PriceReporting'));
 const RiskMitigation = React.lazy(() => import('./pages/RiskMitigation'));
 const Logistics = React.lazy(() => import('./pages/Logistics'));
 const DocumentVault = React.lazy(() => import('./pages/DocumentVault'));

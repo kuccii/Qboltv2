@@ -25,7 +25,7 @@ import {
 import DashboardCard from '../components/DashboardCard';
 import PriceChart from '../components/PriceChart';
 import StatusBadge from '../components/StatusBadge';
-import { priceData, agriculturePriceData, priceChanges } from '../data/mockData';
+// Removed mock data import - using real data from API
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
 import { unifiedApi } from '../services/unifiedApi';
@@ -105,10 +105,39 @@ const PriceReporting: React.FC = () => {
     return () => clearInterval(interval);
   }, [saveDraft]);
 
-  // Load recent prices for context
+  // Load recent prices for context from backend
   useEffect(() => {
-    const currentData = currentIndustry === 'construction' ? priceData : agriculturePriceData;
-    setRecentPrices(currentData.slice(-10).reverse());
+    const fetchRecentPrices = async () => {
+      try {
+        const industryMaterials = currentIndustry === 'construction' 
+          ? ['cement', 'steel', 'timber', 'sand']
+          : ['fertilizer', 'seeds', 'pesticides', 'equipment'];
+        
+        const trends = await unifiedApi.analytics.getPriceTrends({
+          period: '30d',
+          materials: industryMaterials,
+        });
+        
+        if (trends && trends.length > 0) {
+          // Convert trends to price format for display
+          const recent = trends.slice(-10).reverse().map((trend: any) => ({
+            date: trend.date,
+            ...industryMaterials.reduce((acc, mat) => {
+              if (trend[mat]) acc[mat] = trend[mat];
+              return acc;
+            }, {} as any)
+          }));
+          setRecentPrices(recent);
+        } else {
+          setRecentPrices([]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch recent prices:', err);
+        setRecentPrices([]);
+      }
+    };
+    
+    fetchRecentPrices();
   }, [currentIndustry]);
 
   const steps = [

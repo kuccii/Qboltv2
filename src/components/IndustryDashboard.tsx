@@ -46,11 +46,11 @@ const IndustryDashboard: React.FC<IndustryDashboardProps> = ({ className = '' })
         bgColor: 'bg-blue-50'
       },
       {
-        title: 'Material Orders',
-        value: '48',
+        title: 'Price Points Tracked',
+        value: '1,248',
         change: '+15% vs last month',
         trend: 'up',
-        icon: Package,
+        icon: TrendingUp,
         color: 'text-green-600',
         bgColor: 'bg-green-50'
       },
@@ -84,11 +84,11 @@ const IndustryDashboard: React.FC<IndustryDashboardProps> = ({ className = '' })
         bgColor: 'bg-green-50'
       },
       {
-        title: 'Input Orders',
-        value: '32',
+        title: 'Price Points Tracked',
+        value: '892',
         change: '+22% vs last season',
         trend: 'up',
-        icon: Package,
+        icon: TrendingUp,
         color: 'text-blue-600',
         bgColor: 'bg-blue-50'
       },
@@ -193,12 +193,12 @@ const IndustryDashboard: React.FC<IndustryDashboardProps> = ({ className = '' })
         href: '/app/projects/new'
       },
       {
-        title: 'Order Materials',
-        description: 'Place material orders',
-        icon: Package,
+        title: 'Track Prices',
+        description: 'Monitor material prices',
+        icon: TrendingUp,
         color: 'text-green-600',
         bgColor: 'bg-green-50',
-        href: '/app/orders/new'
+        href: '/app/prices'
       },
       {
         title: 'Find Suppliers',
@@ -227,12 +227,12 @@ const IndustryDashboard: React.FC<IndustryDashboardProps> = ({ className = '' })
         href: '/app/planning/season'
       },
       {
-        title: 'Order Inputs',
-        description: 'Order seeds, fertilizers, pesticides',
-        icon: Package,
+        title: 'Track Prices',
+        description: 'Monitor input prices',
+        icon: TrendingUp,
         color: 'text-blue-600',
         bgColor: 'bg-blue-50',
-        href: '/app/orders/new'
+        href: '/app/prices'
       },
       {
         title: 'Find Suppliers',

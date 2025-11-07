@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import DashboardCard from '../components/DashboardCard';
 import StatusBadge from '../components/StatusBadge';
-import { logisticsData, LogisticsItem } from '../data/mockData';
+// Removed mock data import - using real data from API
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
 import { useShipments } from '../hooks/useData';
@@ -179,27 +179,13 @@ const Logistics: React.FC = () => {
         status: route.status === 'active' ? 'normal' : 'delayed',
         description: `Route from ${route.origin} to ${route.destination}`
       }))
-    : logisticsData
-    .filter((item: LogisticsItem) => item.industry === currentIndustry)
-    .filter((item: LogisticsItem) => 
-      searchTerm === '' || 
-      item.route.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((item: LogisticsItem) => 
-      selectedRegion === 'all' || 
-      item.region === selectedRegion
-    )
-    .filter((item: LogisticsItem) => 
-      selectedStatus === 'all' || 
-      item.status === selectedStatus
-    );
+    : []; // No fallback - return empty array if no routes from DB
 
   const uniqueRegions = Array.from(
     new Set(
-      logisticsData
-        .filter((item: LogisticsItem) => item.industry === currentIndustry)
-        .map((item: LogisticsItem) => item.region)
+      routes
+        .map((route: any) => route.origin_country || route.destination_country)
+        .filter(Boolean)
     )
   );
 

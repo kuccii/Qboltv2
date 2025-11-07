@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import PriceChart from '../components/PriceChart';
 import StatusBadge from '../components/StatusBadge';
-import { priceData, agriculturePriceData, priceChanges, riskAdjustedPricing } from '../data/mockData';
+// Removed mock data import - using real data from API
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
 import { usePrices } from '../hooks/useData';
@@ -78,7 +78,7 @@ const PriceTracking: React.FC = () => {
         { key: 'equipment', color: '#374151', name: 'Equipment (rental per day)' }
       ];
       
-  // Use real data if available, otherwise fallback to mock data
+  // Use real data from API
   const priceDataToUse = useMemo(() => {
     if (realPrices && realPrices.length > 0) {
       // Transform real prices to chart format
@@ -93,11 +93,29 @@ const PriceTracking: React.FC = () => {
       }, {});
       return Object.values(grouped);
     }
-    // Fallback to mock data
-    return currentIndustry === 'construction' ? priceData : agriculturePriceData;
+    // No fallback - return empty array if no data
+    return [];
   }, [realPrices, currentIndustry]);
   
-  const priceChangeData = priceChanges[currentIndustry];
+  // Calculate price changes from real data
+  const priceChangeData = useMemo(() => {
+    if (!priceDataToUse || priceDataToUse.length < 2) return {};
+    
+    const latest = priceDataToUse[priceDataToUse.length - 1];
+    const previous = priceDataToUse[priceDataToUse.length - 2];
+    const changes: Record<string, number> = {};
+    
+    dataKeys.forEach(({ key }) => {
+      if (latest[key] && previous[key]) {
+        const change = ((latest[key] - previous[key]) / previous[key]) * 100;
+        changes[key] = parseFloat(change.toFixed(2));
+      } else {
+        changes[key] = 0;
+      }
+    });
+    
+    return changes;
+  }, [priceDataToUse, dataKeys]);
   
   // Define regions for the filter
   const regions = ['All Regions', 'Kenya', 'Uganda', 'Rwanda', 'Tanzania'];
@@ -348,8 +366,7 @@ const PriceTracking: React.FC = () => {
             {filteredDataKeys.map((item, index) => {
               const material = item.key as keyof typeof priceChangeData;
               const changePercent = priceChangeData[material] || 0;
-              const latestPrice = (priceDataToUse[priceDataToUse.length - 1] as any)[material] || 0;
-              const riskData = riskAdjustedPricing[currentIndustry][material];
+              const latestPrice = (priceDataToUse[priceDataToUse.length - 1] as any)?.[material] || 0;
               
               return (
                 <div key={index} className="border border-gray-200 dark:border-slate-800 rounded-lg p-4 bg-white dark:bg-slate-900">
@@ -368,28 +385,28 @@ const PriceTracking: React.FC = () => {
                     </div>
                   </div>
                   
-                  {/* Risk-Adjusted Pricing */}
+                  {/* Price Info */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-gray-500">Risk-Adjusted Price:</span>
-                      <span className="font-semibold text-gray-800">${Math.round(latestPrice * (1 + riskData.riskAdjustment / 100))}</span>
+                      <span className="text-gray-500">Current Price:</span>
+                      <span className="font-semibold text-gray-800">${latestPrice}</span>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div className="flex items-center gap-1">
                         <Shield className="h-3 w-3 text-blue-500" />
-                        <span className="text-gray-500">Insurance:</span>
-                        <span className="font-medium">{riskData.insuranceCoverage}%</span>
+                        <span className="text-gray-500">Status:</span>
+                        <span className="font-medium">Active</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <AlertTriangle className="h-3 w-3 text-orange-500" />
-                        <span className="text-gray-500">Volatility:</span>
-                        <span className="font-medium">{riskData.marketVolatility}/10</span>
+                        <span className="text-gray-500">Change:</span>
+                        <span className="font-medium">{changePercent > 0 ? '+' : ''}{changePercent}%</span>
                       </div>
                     </div>
                     
                     <div className="text-xs text-gray-500">
-                      Supplier Reliability: {riskData.supplierReliability}/10
+                      Price tracking enabled
                     </div>
                   </div>
                 </div>

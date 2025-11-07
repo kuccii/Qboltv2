@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import DashboardCard from '../components/DashboardCard';
 import StatusBadge from '../components/StatusBadge';
-import { supplierDirectoryData } from '../data/mockData';
+// Removed mock data import - using real data from API
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
 import { unifiedApi } from '../services/unifiedApi';
@@ -130,10 +130,8 @@ const SupplierDirectory: React.FC = () => {
     fetchCountrySuppliers();
   }, [selectedCountry, verification, searchTerm, currentIndustry]);
 
-  // Use country suppliers if available, fallback to mock data
-  const suppliersToUse = countrySuppliers.length > 0 
-    ? countrySuppliers
-    : supplierDirectoryData;
+  // Use country suppliers from API
+  const suppliersToUse = countrySuppliers;
   
   // Filter suppliers based on industry and search/filter settings
   const filteredSuppliers = suppliersToUse
@@ -285,7 +283,7 @@ const SupplierDirectory: React.FC = () => {
         ...uniqueMaterials.map(m => ({ 
           value: m, 
           label: m,
-          count: supplierDirectoryData.filter(s => s.materials.includes(m) && s.industry === currentIndustry).length
+          count: countrySuppliers.filter(s => s.materials.includes(m) && s.industry === currentIndustry).length
         }))
       ],
       value: selectedMaterial,
@@ -332,17 +330,17 @@ const SupplierDirectory: React.FC = () => {
         { 
           value: 'verified', 
           label: 'Verified',
-          count: supplierDirectoryData.filter(s => (s as any).verification?.status === 'verified' && s.industry === currentIndustry).length
+          count: countrySuppliers.filter(s => (s as any).verification?.status === 'verified' && s.industry === currentIndustry).length
         },
         { 
           value: 'pending', 
           label: 'Pending',
-          count: supplierDirectoryData.filter(s => (s as any).verification?.status === 'pending' && s.industry === currentIndustry).length
+          count: countrySuppliers.filter(s => (s as any).verification?.status === 'pending' && s.industry === currentIndustry).length
         },
         { 
           value: 'rejected', 
           label: 'Rejected',
-          count: supplierDirectoryData.filter(s => (s as any).verification?.status === 'rejected' && s.industry === currentIndustry).length
+          count: countrySuppliers.filter(s => (s as any).verification?.status === 'rejected' && s.industry === currentIndustry).length
         }
       ],
       value: verification,
@@ -356,17 +354,17 @@ const SupplierDirectory: React.FC = () => {
         { 
           value: 'active', 
           label: 'Insured',
-          count: supplierDirectoryData.filter(s => (s as any).insurance?.status === 'active' && s.industry === currentIndustry).length
+          count: countrySuppliers.filter(s => (s as any).insurance?.status === 'active' && s.industry === currentIndustry).length
         },
         { 
           value: 'inactive', 
           label: 'Not Insured',
-          count: supplierDirectoryData.filter(s => (s as any).insurance?.status === 'inactive' && s.industry === currentIndustry).length
+          count: countrySuppliers.filter(s => (s as any).insurance?.status === 'inactive' && s.industry === currentIndustry).length
         },
         { 
           value: 'expired', 
           label: 'Expired',
-          count: supplierDirectoryData.filter(s => (s as any).insurance?.status === 'expired' && s.industry === currentIndustry).length
+          count: countrySuppliers.filter(s => (s as any).insurance?.status === 'expired' && s.industry === currentIndustry).length
         }
       ],
       value: [],
@@ -772,7 +770,7 @@ const SupplierDirectory: React.FC = () => {
                   <div key={region} className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">{region}</span>
                     <span className="text-sm font-medium text-gray-800">
-                      {supplierDirectoryData.filter(s => s.region === region && s.industry === currentIndustry).length} suppliers
+                      {countrySuppliers.filter(s => s.region === region && s.industry === currentIndustry).length} suppliers
                     </span>
                   </div>
                 ))}

@@ -29,7 +29,7 @@ import {
 import { useIndustry } from '../contexts/IndustryContext';
 import { useExport } from '../hooks/useExport';
 import { useNotifications } from '../hooks/useNotifications';
-import { useDashboard, usePrices, useSuppliers, useShipments, useRiskAlerts } from '../hooks/useData';
+import { useDashboard, usePrices, useSuppliers, useShipments, useRiskAlerts, useTradeOpportunities } from '../hooks/useData';
 import { useAuth } from '../contexts/AuthContext';
 import IndustryDashboard from '../components/IndustryDashboard';
 import PriceChart from '../components/PriceChart';
@@ -37,15 +37,10 @@ import StatusBadge from '../components/StatusBadge';
 import OnboardingTour from '../components/OnboardingTour';
 import { getDashboardTourSteps } from '../components/OnboardingTour';
 import { 
-  priceData, 
-  agriculturePriceData, 
   dashboardMetrics, 
-  priceChanges,
-  industryDescriptions,
-  supplierData,
-  recentActivity,
-  tradeOpportunities
+  industryDescriptions
 } from '../data/mockData';
+import { unifiedApi } from '../services/unifiedApi';
 import { 
   AppLayout,
   PageLayout,
@@ -71,6 +66,7 @@ const Dashboard: React.FC = () => {
   });
   const { shipments: realShipments, loading: shipmentsLoading, isConnected: shipmentsConnected } = useShipments({ limit: 5 });
   const { alerts: realAlerts, loading: alertsLoading } = useRiskAlerts({ resolved: false });
+  const { opportunities: realOpportunities, loading: opportunitiesLoading } = useTradeOpportunities({ status: 'active', limit: 5 });
   
   // State management
   const [selectedTab, setSelectedTab] = useState<'overview' | 'insights' | 'alerts'>('overview');
@@ -117,17 +113,85 @@ const Dashboard: React.FC = () => {
     window.history.replaceState({}, '', newUrl);
   }, [selectedTab, selectedCountries, timeRange]);
 
-  // Data preparation - Use real data if available, fallback to mock data
+  // State for real data
+  const [priceTrendsData, setPriceTrendsData] = useState<any[]>([]);
+  const [priceTrendsLoading, setPriceTrendsLoading] = useState(false);
+  const [recentActivities, setRecentActivities] = useState<any[]>([]);
+  const [activitiesLoading, setActivitiesLoading] = useState(false);
+  const [priceChangeData, setPriceChangeData] = useState<Record<string, number>>({});
+  
+  // Fetch price trends from backend
+  useEffect(() => {
+    const fetchPriceTrends = async () => {
+      try {
+        setPriceTrendsLoading(true);
+        const industryMaterials = currentIndustry === 'construction' 
+          ? ['cement', 'steel', 'timber', 'sand']
+          : ['fertilizer', 'seeds', 'pesticides', 'equipment'];
+        
+        const trends = await unifiedApi.analytics.getPriceTrends({
+          period: '30d',
+          country: authState.user?.country,
+          materials: industryMaterials,
+        });
+        setPriceTrendsData(trends || []);
+        
+        // Calculate price changes from real data
+        if (trends && trends.length > 0) {
+          const changes: Record<string, number> = {};
+          const latest = trends[trends.length - 1];
+          const previous = trends[Math.max(0, trends.length - 7)]; // 7 days ago
+          
+          industryMaterials.forEach((material) => {
+            if (latest[material] && previous?.[material]) {
+              const change = ((latest[material] - previous[material]) / previous[material]) * 100;
+              changes[material] = parseFloat(change.toFixed(2));
+            } else {
+              changes[material] = 0;
+            }
+          });
+          setPriceChangeData(changes);
+        }
+      } catch (err) {
+        console.error('Failed to fetch price trends:', err);
+        setPriceTrendsData([]);
+      } finally {
+        setPriceTrendsLoading(false);
+      }
+    };
+    
+    if (authState.user) {
+      fetchPriceTrends();
+    }
+  }, [currentIndustry, authState.user?.country]);
+  
+  // Fetch recent activities from backend
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        setActivitiesLoading(true);
+        const activities = await unifiedApi.user.getActivities(authState.user?.id, 10);
+        setRecentActivities(activities || []);
+      } catch (err) {
+        console.error('Failed to fetch activities:', err);
+        setRecentActivities([]);
+      } finally {
+        setActivitiesLoading(false);
+      }
+    };
+    
+    if (authState.user?.id) {
+      fetchActivities();
+    }
+  }, [authState.user?.id]);
+  
+  // Data preparation - Use real data if available, fallback to mock data only for structure
   const metrics = dashboardMetricsData?.metrics || dashboardMetrics[currentIndustry];
   const description = industryDescriptions[currentIndustry];
-  const priceChangeData = priceChanges[currentIndustry];
-  const priceChartData = currentIndustry === 'construction' ? priceData : agriculturePriceData;
-  
-  // Use real data when available
-  // Using runtime hooks and mock fallbacks directly below
+  const priceChartData = priceTrendsData.length > 0 ? priceTrendsData : [];
   
   // Loading state
-  const isLoading = metricsLoading || pricesLoading || suppliersLoading || shipmentsLoading || alertsLoading;
+  const isLoading = metricsLoading || pricesLoading || suppliersLoading || shipmentsLoading || alertsLoading || priceTrendsLoading || activitiesLoading || opportunitiesLoading;
   
   // Prepare chart data based on industry
   const dataKeys = currentIndustry === 'construction' 
@@ -144,22 +208,21 @@ const Dashboard: React.FC = () => {
         { key: 'equipment', color: '#374151', name: `Equipment (${(metrics.unitLabels as any).equipment})` }
       ];
 
-  // Computed data
+  // Computed data - Use real suppliers
   const countries = ['All Regions', 'Kenya', 'Uganda', 'Rwanda', 'Tanzania'];
   const filteredSuppliers = useMemo(() => {
-    return supplierData.filter(supplier => {
-      const matchesIndustry = supplier.industry === currentIndustry;
+    if (!Array.isArray(realSuppliers)) return [];
+    return realSuppliers.filter(supplier => {
+      const matchesIndustry = !supplier.industry || supplier.industry === currentIndustry;
       const matchesCountry = selectedCountries.length === 0 || 
-        selectedCountries.some(country => supplier.location.includes(country));
+        selectedCountries.some(country => (supplier.location || supplier.country || '').includes(country));
       return matchesIndustry && matchesCountry;
     });
-  }, [currentIndustry, selectedCountries]);
+  }, [realSuppliers, currentIndustry, selectedCountries]);
 
   const topSuppliers = filteredSuppliers
-    .sort((a, b) => b.score - a.score)
+    .sort((a: any, b: any) => (b.rating || b.score || 0) - (a.rating || a.score || 0))
     .slice(0, 5);
-
-  const recentActivities = recentActivity || [];
 
   // Format date helper
   const formatDate = (date: Date) => {
@@ -364,15 +427,15 @@ const Dashboard: React.FC = () => {
                   {topSuppliers.length === 0 && (
                     <div className="text-sm text-gray-500 dark:text-gray-400">No suppliers to show.</div>
                   )}
-                  {topSuppliers.map((supplier) => (
+                  {topSuppliers.map((supplier: any) => (
                     <div key={supplier.id} className="flex items-center justify-between">
                       <div>
-                        <div className="text-sm font-medium text-gray-800 dark:text-gray-200">{supplier.name}</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{supplier.location}</div>
+                        <div className="text-sm font-medium text-gray-800 dark:text-gray-200">{supplier.name || supplier.company_name}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{supplier.location || supplier.country}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-bold text-gray-800 dark:text-gray-200">{supplier.score}</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">Score</div>
+                        <div className="text-sm font-bold text-gray-800 dark:text-gray-200">{supplier.rating || supplier.score || 'N/A'}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{supplier.rating ? 'Rating' : 'Score'}</div>
                       </div>
                     </div>
                   ))}
@@ -382,19 +445,34 @@ const Dashboard: React.FC = () => {
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Recent Activity</h3>
                 <div className="space-y-3">
-                  {recentActivities.slice(0, 5).map((activity: any, index: number) => (
-                    <div key={index} className="flex items-start gap-2">
-                      <div className="mt-1">
-                        {activity.type === 'price_update' && <TrendingUp size={14} className="text-blue-500" />}
-                        {activity.type === 'supplier_added' && <Users size={14} className="text-green-500" />}
-                        {activity.type === 'alert' && <Bell size={14} className="text-orange-500" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm text-gray-800 dark:text-gray-200">{activity.message}</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{activity.time}</div>
-                      </div>
+                  {Array.isArray(recentActivities) && recentActivities.length > 0 ? (
+                    recentActivities.slice(0, 5).map((activity: any, index: number) => {
+                      const actionType = activity.action?.toLowerCase() || '';
+                      const timeAgo = activity.created_at 
+                        ? new Date(activity.created_at).toLocaleString()
+                        : 'Recently';
+                      const message = activity.details?.message || activity.action || 'Activity';
+                      
+                      return (
+                        <div key={activity.id || index} className="flex items-start gap-2">
+                          <div className="mt-1">
+                            {actionType.includes('price') && <TrendingUp size={14} className="text-blue-500" />}
+                            {actionType.includes('supplier') && <Users size={14} className="text-green-500" />}
+                            {actionType.includes('alert') && <Bell size={14} className="text-orange-500" />}
+                            {!actionType.includes('price') && !actionType.includes('supplier') && !actionType.includes('alert') && <Activity size={14} className="text-gray-500" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm text-gray-800 dark:text-gray-200">{message}</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">{timeAgo}</div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">
+                      No recent activity
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             </div>
@@ -452,14 +530,14 @@ const Dashboard: React.FC = () => {
                     
                     <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg shadow-sm border-2 border-green-200 dark:border-green-700 p-6">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-green-800 dark:text-green-200">Average Shipment Value</h3>
-                        <DollarSign size={20} className="text-green-600 dark:text-green-400" />
+                        <h3 className="text-sm font-medium text-green-800 dark:text-green-200">Price Points Tracked</h3>
+                        <TrendingUp size={20} className="text-green-600 dark:text-green-400" />
                       </div>
-                      <div className="text-3xl font-bold text-green-900 dark:text-green-100">${metrics.averageOrderValue || 0}</div>
-                      <div className="mt-1 text-sm text-green-700 dark:text-green-300">Per shipment</div>
+                      <div className="text-3xl font-bold text-green-900 dark:text-green-100">{realPrices?.length || 0}</div>
+                      <div className="mt-1 text-sm text-green-700 dark:text-green-300">Active price points</div>
                       <div className="flex items-center mt-2 text-sm text-green-600 dark:text-green-400">
                         <TrendingUp size={16} className="mr-1" />
-                        +5% from last month
+                        +{Math.floor((realPrices?.length || 0) * 0.15)} this month
                       </div>
                     </div>
                     
@@ -616,48 +694,54 @@ const Dashboard: React.FC = () => {
                     </div>
                     
                     <div className="space-y-4">
-                      {tradeOpportunities[currentIndustry].slice(0, 3).map((opportunity) => (
+                      {Array.isArray(realOpportunities) && realOpportunities.length > 0 ? (
+                        realOpportunities.slice(0, 3).map((opportunity: any) => (
                         <div key={opportunity.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex-1">
-                              <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-1">{opportunity.title}</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{opportunity.description}</p>
+                              <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-1">{opportunity.title || opportunity.opportunity_type}</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{opportunity.description || 'Trade opportunity'}</p>
                               <div className="flex items-center gap-4 text-xs text-gray-500">
-                                <div className="flex items-center gap-1">
-                                  <MapPin size={12} />
-                                  {opportunity.location}
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Calendar size={12} />
-                                  Due: {opportunity.deadline.toLocaleDateString()}
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Briefcase size={12} />
-                                  {opportunity.buyer}
-                                </div>
+                                {opportunity.location && (
+                                  <div className="flex items-center gap-1">
+                                    <MapPin size={12} />
+                                    {opportunity.location}
+                                  </div>
+                                )}
+                                {opportunity.deadline && (
+                                  <div className="flex items-center gap-1">
+                                    <Calendar size={12} />
+                                    Due: {new Date(opportunity.deadline).toLocaleDateString()}
+                                  </div>
+                                )}
+                                {opportunity.country && (
+                                  <div className="flex items-center gap-1">
+                                    <Briefcase size={12} />
+                                    {opportunity.country}
+                                  </div>
+                                )}
                               </div>
                             </div>
-                            <div className="text-right">
-                              <div className="text-lg font-bold text-gray-800 dark:text-gray-200">
-                                ${(opportunity.value / 1000000).toFixed(1)}M
+                            {(opportunity.budget_min || opportunity.budget_max) && (
+                              <div className="text-right">
+                                <div className="text-lg font-bold text-gray-800 dark:text-gray-200">
+                                  ${opportunity.budget_max ? (opportunity.budget_max / 1000000).toFixed(1) : (opportunity.budget_min / 1000000).toFixed(1)}M
+                                </div>
+                                <div className="text-xs text-gray-500">{opportunity.currency || 'USD'}</div>
                               </div>
-                              <div className="text-xs text-gray-500">{opportunity.currency}</div>
-                            </div>
+                            )}
                           </div>
                           
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <div className="flex flex-wrap gap-1">
-                                {opportunity.materials.map((material, index) => (
-                                  <span 
-                                    key={`material-${index}-${material}`}
-                                    className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800"
-                                  >
-                                    {material}
+                              {opportunity.material && (
+                                <div className="flex flex-wrap gap-1">
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                    {opportunity.material}
                                   </span>
-                                ))}
-                              </div>
-                              {opportunity.insuranceRequired && (
+                                </div>
+                              )}
+                              {opportunity.insurance_required && (
                                 <div className="flex items-center gap-1 text-xs text-blue-600">
                                   <Shield size={12} />
                                   Insurance Required
@@ -666,16 +750,22 @@ const Dashboard: React.FC = () => {
                             </div>
                             <div className="flex items-center gap-2">
                               <StatusBadge 
-                                type={opportunity.riskLevel === 'low' ? 'success' : opportunity.riskLevel === 'medium' ? 'warning' : 'error'} 
-                                text={opportunity.riskLevel.toUpperCase()} 
+                                type={opportunity.status === 'active' ? 'success' : opportunity.status === 'matched' ? 'warning' : 'info'} 
+                                text={opportunity.status?.toUpperCase() || 'ACTIVE'} 
                               />
                               <button className="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100">
-                                Apply
+                                View
                               </button>
                             </div>
                           </div>
                         </div>
-                      ))}
+                        ))
+                      ) : (
+                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                          <Briefcase size={32} className="mx-auto mb-2 opacity-50" />
+                          <p className="text-sm">No trade opportunities available</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </SectionLayout>

@@ -276,6 +276,7 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
             <Dropdown icon={BarChart2} label="Market" dropdownKey="market">
               <DropdownItem to="/app/countries" icon={MapPin} label="Countries" />
               <DropdownItem to="/app/demand" icon={Map} label="Demand Mapping" />
+              {/* <DropdownItem to="/app/price-reporting" icon={MessageSquare} label="Price Reporting" /> */}
               <DropdownItem to="/app/analytics" icon={BarChart2} label="Analytics" />
             </Dropdown>
 

@@ -36,7 +36,7 @@ import {
   Chip
 } from '../design-system';
 import HeatMapChart from '../components/HeatMapChart';
-import { demandData } from '../data/mockData';
+// Removed mock data import - using real data from API
 import { unifiedApi } from '../services/unifiedApi';
 import HeaderStrip from '../components/HeaderStrip';
 import {
@@ -259,36 +259,8 @@ const DemandMapping: React.FC = () => {
       return data;
     }
 
-    // Fallback to mock data
-    const mockRegions = ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Kigali', 'Kampala', 'Dar es Salaam', 'Addis Ababa'];
-    const mockMaterials = currentIndustry === 'construction' 
-      ? ['Cement', 'Steel', 'Timber', 'Sand', 'Gravel']
-      : ['Fertilizer', 'Seeds', 'Pesticides', 'Feed', 'Machinery'];
-    
-    const mockData: DemandPoint[] = [];
-    const timePoints = 12; // 12 months of data
-    
-    for (let t = 0; t < timePoints; t++) {
-      mockRegions.forEach(region => {
-        mockMaterials.forEach(material => {
-          const baseDemand = Math.random() * 1000 + 500;
-          const seasonalFactor = 1 + 0.3 * Math.sin((t / 12) * 2 * Math.PI);
-          const demand = Math.round(baseDemand * seasonalFactor);
-          
-          mockData.push({
-            id: `${region}-${material}-${t}`,
-            region,
-            material,
-            demand,
-            trend: Math.random() > 0.5 ? 'up' : Math.random() > 0.5 ? 'down' : 'stable',
-            coordinates: getRegionCoordinates(region),
-            timestamp: new Date(2024, t, 1).toISOString()
-          });
-        });
-      });
-    }
-    
-    return mockData;
+    // No fallback - return empty array if no data
+    return [];
   }, [realDemandData, itcData, showItcData, currentIndustry]);
 
   // Filter data based on current selections

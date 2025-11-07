@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import DashboardCard from '../components/DashboardCard';
 import StatusBadge from '../components/StatusBadge';
-import { financingOffers } from '../data/mockData';
+// Removed mock data import - using real data from API
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
 import { unifiedApi } from '../services/unifiedApi';
@@ -178,26 +178,8 @@ const Financing: React.FC = () => {
       }));
     }
     
-    // Fallback to mock data if no DB offers
-    return financingOffers
-      .filter(offer => offer.industry === 'both' || offer.industry === currentIndustry)
-      .map((m) => ({
-        id: m.id,
-        provider: m.provider,
-        providerType: 'fintech',
-        title: m.title,
-        description: m.description,
-        interestRate: parseFloat(m.interestRate.replace('%', '')),
-        termDays: parseInt(m.term.replace(' months', '')) * 30,
-        term: m.term,
-        minAmount: 5000,
-        maxAmount: 50000,
-        amount: m.amount,
-        eligibilityScore: m.eligibilityScore,
-        features: [],
-        requirements: [],
-        metadata: {},
-      }));
+    // No fallback - return empty array if no offers from DB
+    return [];
   }, [offers, financeAmount, currentIndustry]);
 
   // Filter offers

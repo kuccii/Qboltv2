@@ -546,4 +546,110 @@ export function useTradeOpportunities(filters?: {
   };
 }
 
+// ============================================
+// LOGISTICS
+// ============================================
+
+export function useLogistics(filters?: {
+  country?: string;
+  from?: string;
+  to?: string;
+  limit?: number;
+}) {
+  const { authState } = useAuth();
+  const [routes, setRoutes] = useState<any[]>([]);
+  const [shipments, setShipments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const timeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+      
+      const [routesData, shipmentsData] = await Promise.race([
+        Promise.all([
+          unifiedApi.logistics.getRoutes({
+            origin_country: filters?.country || filters?.from,
+            destination_country: filters?.to,
+          }),
+          unifiedApi.logistics.getShipments({ 
+            limit: filters?.limit || 10 
+          })
+        ]),
+        timeout
+      ]) as [any[], any[]];
+      
+      setRoutes(routesData || []);
+      setShipments(shipmentsData || []);
+      setIsConnected(true);
+    } catch (err: any) {
+      console.error('Failed to fetch logistics data:', err);
+      setError(err.message);
+      setRoutes([]);
+      setShipments([]);
+      setIsConnected(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [filters?.country, filters?.from, filters?.to, filters?.limit]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return { routes, shipments, loading, error, isConnected, refetch: fetchData };
+}
+
+// ============================================
+// DEMAND DATA
+// ============================================
+
+export function useDemandData(filters?: {
+  country?: string;
+  material?: string;
+  industry?: string;
+  limit?: number;
+}) {
+  const { authState } = useAuth();
+  const [demandData, setDemandData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const timeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+      
+      const data = await Promise.race([
+        unifiedApi.demand.get(filters),
+        timeout
+      ]) as any[];
+      
+      setDemandData(data || []);
+    } catch (err: any) {
+      console.error('Failed to fetch demand data:', err);
+      setError(err.message);
+      setDemandData([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [filters?.country, filters?.material, filters?.industry, filters?.limit]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return { demandData, loading, error, refetch: fetchData };
+}
+
 

@@ -132,7 +132,7 @@ export const industryDescriptions = {
     subtitle: 'Monitor building material prices and supplier performance',
     metrics: {
       transactions: 'Construction Projects',
-      orders: 'Material Orders',
+      orders: 'Price Points Tracked',
       suppliers: 'Material Suppliers',
       volatility: 'Price Volatility'
     }
@@ -142,7 +142,7 @@ export const industryDescriptions = {
     subtitle: 'Track farming inputs and seasonal patterns',
     metrics: {
       transactions: 'Farm Supplies',
-      orders: 'Input Orders',
+      orders: 'Price Points Tracked',
       suppliers: 'Input Suppliers',
       volatility: 'Seasonal Variation'
     }
