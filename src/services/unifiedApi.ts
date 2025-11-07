@@ -633,6 +633,268 @@ export const unifiedApi = {
   },
 
   // ============================================
+  // INSURANCE MANAGEMENT
+  // ============================================
+
+  insurance: {
+    async getPolicies(filters?: {
+      active?: boolean;
+    }) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
+      // Fetch insurance from suppliers and shipments
+      const [suppliersResult, shipmentsResult] = await Promise.all([
+        supabase
+          .from('suppliers')
+          .select('id, name, insurance_active, insurance_expiry, insurance_details')
+          .eq('insurance_active', true),
+        supabase
+          .from('shipments')
+          .select('id, tracking_number, insurance_active, insurance_details, created_at')
+          .eq('user_id', user.id)
+          .eq('insurance_active', true)
+      ]);
+
+      const policies: any[] = [];
+
+      // Transform supplier insurance
+      if (suppliersResult.data) {
+        suppliersResult.data.forEach((supplier: any) => {
+          if (supplier.insurance_active) {
+            policies.push({
+              id: `supplier-${supplier.id}`,
+              type: 'supplier_liability',
+              provider: supplier.insurance_details?.provider || 'Unknown',
+              coverageAmount: supplier.insurance_details?.coverage_amount || 0,
+              expiryDate: supplier.insurance_expiry ? new Date(supplier.insurance_expiry) : null,
+              status: supplier.insurance_expiry && new Date(supplier.insurance_expiry) > new Date() ? 'active' : 'expired',
+              entityType: 'supplier',
+              entityId: supplier.id,
+              entityName: supplier.name,
+              details: supplier.insurance_details || {}
+            });
+          }
+        });
+      }
+
+      // Transform shipment insurance
+      if (shipmentsResult.data) {
+        shipmentsResult.data.forEach((shipment: any) => {
+          if (shipment.insurance_active && shipment.insurance_details) {
+            policies.push({
+              id: `shipment-${shipment.id}`,
+              type: shipment.insurance_details.type || 'cargo',
+              provider: shipment.insurance_details.provider || 'Unknown',
+              coverageAmount: shipment.insurance_details.coverage_amount || 0,
+              expiryDate: shipment.insurance_details.expiry_date ? new Date(shipment.insurance_details.expiry_date) : null,
+              status: shipment.insurance_details.expiry_date && new Date(shipment.insurance_details.expiry_date) > new Date() ? 'active' : 'expired',
+              entityType: 'shipment',
+              entityId: shipment.id,
+              entityName: `Shipment ${shipment.tracking_number}`,
+              details: shipment.insurance_details
+            });
+          }
+        });
+      }
+
+      // Filter by active status if requested
+      if (filters?.active !== undefined) {
+        return policies.filter(p => 
+          filters.active ? p.status === 'active' : p.status !== 'active'
+        );
+      }
+
+      return policies;
+    },
+
+    async getCoverageSummary() {
+      try {
+        const policies = await this.getPolicies({ active: true });
+        
+        const totalCoverage = policies.reduce((sum, p) => sum + (p.coverageAmount || 0), 0);
+        const activePolicies = policies.filter(p => p.status === 'active').length;
+        const expiringSoon = policies.filter(p => {
+          if (!p.expiryDate) return false;
+          const daysUntilExpiry = (p.expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24);
+          return daysUntilExpiry > 0 && daysUntilExpiry <= 30;
+        }).length;
+
+        // Get risk profile to calculate recommendations
+        let riskProfile;
+        try {
+          riskProfile = await unifiedApi.riskProfile.get();
+        } catch (err) {
+          // Risk profile doesn't exist yet, use defaults
+          riskProfile = null;
+        }
+
+        // Calculate coverage gaps based on risk profile and alerts
+        const alerts = await unifiedApi.risk.getAlerts({ resolved: false });
+        const highRiskAlerts = alerts.filter((a: any) => a.severity === 'high' || a.severity === 'critical');
+        
+        // Base recommended coverage on risk tolerance
+        let baseRecommendedCoverage = 3000000; // Default
+        if (riskProfile?.risk_tolerance === 'low') {
+          baseRecommendedCoverage = 5000000; // Conservative - more coverage
+        } else if (riskProfile?.risk_tolerance === 'high') {
+          baseRecommendedCoverage = 2000000; // Aggressive - less coverage
+        }
+
+        // Adjust based on high-risk alerts
+        const recommendedCoverage = highRiskAlerts.length > 0 
+          ? Math.max(baseRecommendedCoverage, 5000000)
+          : baseRecommendedCoverage;
+
+        // Use risk profile's min_coverage preference if set
+        const minCoverage = riskProfile?.insurance_preferences?.min_coverage || 1000000;
+        const finalRecommendedCoverage = Math.max(recommendedCoverage, minCoverage);
+
+        // Calculate coverage gaps
+        const coverageGaps = totalCoverage < finalRecommendedCoverage 
+          ? (highRiskAlerts.length > 0 ? 2 : 1)
+          : 0;
+
+        return {
+          activePolicies,
+          totalCoverage,
+          coverageGaps,
+          expiringSoon,
+          recommendedCoverage: finalRecommendedCoverage,
+          policies
+        };
+      } catch (error) {
+        console.error('Error getting insurance coverage summary:', error);
+        return {
+          activePolicies: 0,
+          totalCoverage: 0,
+          coverageGaps: 0,
+          expiringSoon: 0,
+          recommendedCoverage: 3000000,
+          policies: []
+        };
+      }
+    },
+  },
+
+  // ============================================
+  // RISK PROFILES
+  // ============================================
+
+  riskProfile: {
+    async get(): Promise<any> {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      const { data, error } = await supabase
+        .from('risk_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows returned
+      
+      // Return default profile if none exists
+      if (!data) {
+        return {
+          user_id: user.id,
+          risk_tolerance: 'medium',
+          alert_preferences: {
+            price_volatility: { enabled: true, threshold: 'medium' },
+            supply_shortage: { enabled: true, threshold: 'medium' },
+            logistics_delay: { enabled: true, threshold: 'medium' },
+            supplier_risk: { enabled: true, threshold: 'medium' },
+            market_risk: { enabled: true, threshold: 'medium' },
+            compliance_issue: { enabled: true, threshold: 'medium' }
+          },
+          regions_of_interest: [],
+          materials_of_interest: [],
+          insurance_preferences: {
+            min_coverage: 1000000,
+            preferred_providers: [],
+            auto_recommend: true
+          },
+          notification_settings: {
+            email_alerts: true,
+            push_alerts: true,
+            high_priority_only: false
+          }
+        };
+      }
+
+      return data;
+    },
+
+    async createOrUpdate(profile: {
+      risk_tolerance?: 'low' | 'medium' | 'high';
+      alert_preferences?: any;
+      regions_of_interest?: string[];
+      materials_of_interest?: string[];
+      insurance_preferences?: any;
+      notification_settings?: any;
+    }): Promise<any> {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // Check if profile exists
+      const { data: existing } = await supabase
+        .from('risk_profiles')
+        .select('id')
+        .eq('user_id', user.id)
+        .single();
+
+      if (existing) {
+        // Update existing profile
+        const { data, error } = await supabase
+          .from('risk_profiles')
+          .update({
+            ...profile,
+            updated_at: new Date().toISOString()
+          })
+          .eq('user_id', user.id)
+          .select()
+          .single();
+
+        if (error) throw error;
+        return data;
+      } else {
+        // Create new profile
+        const { data, error } = await supabase
+          .from('risk_profiles')
+          .insert({
+            user_id: user.id,
+            risk_tolerance: profile.risk_tolerance || 'medium',
+            alert_preferences: profile.alert_preferences || {
+              price_volatility: { enabled: true, threshold: 'medium' },
+              supply_shortage: { enabled: true, threshold: 'medium' },
+              logistics_delay: { enabled: true, threshold: 'medium' },
+              supplier_risk: { enabled: true, threshold: 'medium' },
+              market_risk: { enabled: true, threshold: 'medium' },
+              compliance_issue: { enabled: true, threshold: 'medium' }
+            },
+            regions_of_interest: profile.regions_of_interest || [],
+            materials_of_interest: profile.materials_of_interest || [],
+            insurance_preferences: profile.insurance_preferences || {
+              min_coverage: 1000000,
+              preferred_providers: [],
+              auto_recommend: true
+            },
+            notification_settings: profile.notification_settings || {
+              email_alerts: true,
+              push_alerts: true,
+              high_priority_only: false
+            }
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        return data;
+      }
+    },
+  },
+
+  // ============================================
   // NOTIFICATIONS
   // ============================================
 

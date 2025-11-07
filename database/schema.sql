@@ -355,6 +355,36 @@ CREATE TABLE IF NOT EXISTS risk_alerts (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Risk Profiles (User Risk Preferences & Settings)
+CREATE TABLE IF NOT EXISTS risk_profiles (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES user_profiles(id) ON DELETE CASCADE UNIQUE,
+  risk_tolerance TEXT NOT NULL DEFAULT 'medium' CHECK (risk_tolerance IN ('low', 'medium', 'high')),
+  alert_preferences JSONB DEFAULT '{
+    "price_volatility": {"enabled": true, "threshold": "medium"},
+    "supply_shortage": {"enabled": true, "threshold": "medium"},
+    "logistics_delay": {"enabled": true, "threshold": "medium"},
+    "supplier_risk": {"enabled": true, "threshold": "medium"},
+    "market_risk": {"enabled": true, "threshold": "medium"},
+    "compliance_issue": {"enabled": true, "threshold": "medium"}
+  }'::jsonb,
+  regions_of_interest TEXT[] DEFAULT ARRAY[]::TEXT[],
+  materials_of_interest TEXT[] DEFAULT ARRAY[]::TEXT[],
+  insurance_preferences JSONB DEFAULT '{
+    "min_coverage": 1000000,
+    "preferred_providers": [],
+    "auto_recommend": true
+  }'::jsonb,
+  notification_settings JSONB DEFAULT '{
+    "email_alerts": true,
+    "push_alerts": true,
+    "high_priority_only": false
+  }'::jsonb,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Risk Assessments
 CREATE TABLE IF NOT EXISTS risk_assessments (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

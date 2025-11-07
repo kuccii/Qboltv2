@@ -58,9 +58,60 @@ const RiskMitigation: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set());
   const [initialLoadTimeout, setInitialLoadTimeout] = useState(false);
+  const [insuranceData, setInsuranceData] = useState<any>(null);
+  const [insuranceLoading, setInsuranceLoading] = useState(false);
+  const [insuranceError, setInsuranceError] = useState<string | null>(null);
+  const [showRiskProfileModal, setShowRiskProfileModal] = useState(false);
+  const [riskProfile, setRiskProfile] = useState<any>(null);
+  const [riskProfileLoading, setRiskProfileLoading] = useState(false);
 
   // Fetch real risk alerts from backend
-  const { alerts: realAlerts, loading: alertsLoading, refetch: refetchAlerts, resolveAlert } = useRiskAlerts({ resolved: false });
+  const { alerts: realAlerts, loading: alertsLoading, error: alertsError, refetch: refetchAlerts, resolveAlert } = useRiskAlerts({ resolved: false });
+
+  // Fetch insurance data from backend
+  useEffect(() => {
+    const fetchInsuranceData = async () => {
+      try {
+        setInsuranceLoading(true);
+        setInsuranceError(null);
+        const summary = await unifiedApi.insurance.getCoverageSummary();
+        setInsuranceData(summary);
+      } catch (err) {
+        console.error('Error fetching insurance data:', err);
+        setInsuranceError(err instanceof Error ? err.message : 'Failed to fetch insurance data');
+        // Set fallback data
+        setInsuranceData({
+          activePolicies: 0,
+          totalCoverage: 0,
+          coverageGaps: 0,
+          expiringSoon: 0,
+          recommendedCoverage: 3000000,
+          policies: []
+        });
+      } finally {
+        setInsuranceLoading(false);
+      }
+    };
+
+    fetchInsuranceData();
+  }, []);
+
+  // Fetch risk profile from backend
+  useEffect(() => {
+    const fetchRiskProfile = async () => {
+      try {
+        setRiskProfileLoading(true);
+        const profile = await unifiedApi.riskProfile.get();
+        setRiskProfile(profile);
+      } catch (err) {
+        console.error('Error fetching risk profile:', err);
+      } finally {
+        setRiskProfileLoading(false);
+      }
+    };
+
+    fetchRiskProfile();
+  }, []);
 
   // Timeout for initial load to prevent infinite loading
   useEffect(() => {
@@ -70,31 +121,54 @@ const RiskMitigation: React.FC = () => {
     }
 
     const timer = setTimeout(() => {
-      if (alertsLoading) {
-        setInitialLoadTimeout(true);
-      }
+      setInitialLoadTimeout(true);
     }, 5000); // 5 second timeout
 
     return () => clearTimeout(timer);
   }, [alertsLoading]);
 
+  // Handle errors gracefully
+  useEffect(() => {
+    if (alertsError) {
+      console.error('Error loading risk alerts:', alertsError);
+      // Set timeout to show content even if there's an error
+      setInitialLoadTimeout(true);
+    }
+  }, [alertsError]);
+
   // Transform and prioritize alerts - HIGH SEVERITY FIRST
   const processedAlerts = useMemo(() => {
-    return (realAlerts || [])
-      .map((alert: any) => ({
-        id: alert.id,
-        type: alert.alert_type || 'general',
-        severity: alert.severity || 'medium',
-        title: alert.title || 'Risk Alert',
-        message: alert.description || alert.message || '',
-        region: alert.country || alert.region || 'Unknown',
-        material: alert.material || 'N/A',
-        timestamp: new Date(alert.created_at),
-        isActive: !alert.resolved,
-        impact: alert.impact || 'Medium',
-        recommendedAction: alert.recommended_action || 'Review and take action',
-        alert: alert // Keep original for API calls
-      }))
+    // Ensure we always have an array
+    const alerts = Array.isArray(realAlerts) ? realAlerts : [];
+    
+    return alerts
+      .map((alert: any) => {
+        // Handle invalid dates
+        let timestamp: Date;
+        try {
+          timestamp = alert.created_at ? new Date(alert.created_at) : new Date();
+          if (isNaN(timestamp.getTime())) {
+            timestamp = new Date();
+          }
+        } catch {
+          timestamp = new Date();
+        }
+
+        return {
+          id: alert.id || `alert-${Math.random()}`,
+          type: alert.alert_type || 'general',
+          severity: alert.severity || 'medium',
+          title: alert.title || 'Risk Alert',
+          message: alert.description || alert.message || '',
+          region: alert.country || alert.region || 'Unknown',
+          material: alert.material || 'N/A',
+          timestamp,
+          isActive: !alert.resolved,
+          impact: alert.impact || 'Medium',
+          recommendedAction: alert.recommended_action || 'Review and take action',
+          alert: alert // Keep original for API calls
+        };
+      })
       .filter(alert => !dismissedAlerts.has(alert.id))
       .filter(alert => {
         // Search filter
@@ -156,12 +230,12 @@ const RiskMitigation: React.FC = () => {
     const supplyAlerts = processedAlerts.filter(a => a.type === 'supply' || a.type === 'supply_disruption').length;
     const complianceScore = Math.max(100 - (highRisk * 5) - (mediumAlerts.length * 2), 70);
 
-    // Insurance coverage metrics (mock data for now - can be connected to real data later)
-    const insuranceCoverage = {
-      activePolicies: 3,
-      totalCoverage: 2500000, // USD
+    // Insurance coverage metrics - from backend or fallback
+    const insuranceCoverage = insuranceData || {
+      activePolicies: 0,
+      totalCoverage: 0,
       coverageGaps: highRisk > 0 ? 2 : 0,
-      expiringSoon: 1,
+      expiringSoon: 0,
       recommendedCoverage: highRisk > 0 ? 5000000 : 3000000
     };
 
@@ -219,8 +293,20 @@ const RiskMitigation: React.FC = () => {
   useEffect(() => {
     if (!isAutoRefresh) return;
 
-    const interval = setInterval(() => {
-      refetchAlerts();
+    const interval = setInterval(async () => {
+      // Refresh both alerts and insurance data
+      await Promise.all([
+        refetchAlerts(),
+        (async () => {
+          try {
+            const summary = await unifiedApi.insurance.getCoverageSummary();
+            setInsuranceData(summary);
+            setInsuranceError(null);
+          } catch (err) {
+            console.error('Error refreshing insurance data:', err);
+          }
+        })()
+      ]);
       setLastUpdated(new Date());
     }, 30000);
 
@@ -230,8 +316,26 @@ const RiskMitigation: React.FC = () => {
   const handleRefresh = async () => {
     setLoading(true);
     try {
-      await refetchAlerts();
+      // Refresh both alerts and insurance data
+      await Promise.all([
+        refetchAlerts(),
+        (async () => {
+          try {
+            setInsuranceLoading(true);
+            const summary = await unifiedApi.insurance.getCoverageSummary();
+            setInsuranceData(summary);
+            setInsuranceError(null);
+          } catch (err) {
+            console.error('Error refreshing insurance data:', err);
+            setInsuranceError(err instanceof Error ? err.message : 'Failed to fetch insurance data');
+          } finally {
+            setInsuranceLoading(false);
+          }
+        })()
+      ]);
       setLastUpdated(new Date());
+    } catch (error) {
+      console.error('Error refreshing data:', error);
     } finally {
       setLoading(false);
     }
@@ -315,9 +419,9 @@ const RiskMitigation: React.FC = () => {
                 }
               },
               {
-                label: 'Risk Settings',
+                label: 'Risk Profile Settings',
                 icon: <Settings className="h-4 w-4" />,
-                onClick: () => console.log('Settings')
+                onClick: () => setShowRiskProfileModal(true)
               }
             ]} />
           </div>
@@ -329,8 +433,33 @@ const RiskMitigation: React.FC = () => {
         <div className="px-10 md:px-14 lg:px-20 py-8 space-y-8">
           {/* Loading State - Only show if still loading and not timed out */}
           {(loading || (alertsLoading && !initialLoadTimeout)) && (
-            <div className="flex items-center justify-center py-12">
-              <RefreshCw className="h-8 w-8 animate-spin text-primary-600" />
+            <div className="flex flex-col items-center justify-center py-12">
+              <RefreshCw className="h-8 w-8 animate-spin text-primary-600 mb-4" />
+              <p className="text-sm text-gray-600 dark:text-gray-400">Loading risk data...</p>
+            </div>
+          )}
+
+          {/* Error State */}
+          {alertsError && initialLoadTimeout && (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-yellow-900 dark:text-yellow-100 mb-1">
+                    Unable to load risk alerts
+                  </h3>
+                  <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-3">
+                    {alertsError}. Showing cached or empty data. Please try refreshing.
+                  </p>
+                  <button
+                    onClick={handleRefresh}
+                    className="text-sm font-medium text-yellow-700 dark:text-yellow-300 hover:text-yellow-900 dark:hover:text-yellow-100 flex items-center gap-1"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    Retry
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
@@ -418,7 +547,7 @@ const RiskMitigation: React.FC = () => {
             <div className="p-6">
 
               {/* Tab Content */}
-              {(!loading && (!alertsLoading || initialLoadTimeout)) && (
+              {(!loading && (!alertsLoading || initialLoadTimeout || alertsError)) && (
                 <>
                 {selectedTab === 'overview' && (
               <div className="space-y-8">
@@ -1235,82 +1364,124 @@ const RiskMitigation: React.FC = () => {
                     {/* Insurance Policies */}
                     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Active Insurance Policies</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Your current insurance coverage</p>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Active Insurance Policies</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Your current insurance coverage</p>
+                          </div>
+                          {insuranceLoading && (
+                            <RefreshCw className="h-4 w-4 animate-spin text-gray-400" />
+                          )}
+                        </div>
                       </div>
                       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                        {/* Mock policy data - can be replaced with real data */}
-                        <div className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <InsuranceIndicator 
-                                  status="active" 
-                                  type="cargo" 
-                                  coverageAmount={1500000}
-                                  showAmount={true}
-                                />
-                                <h4 className="text-base font-semibold text-gray-900 dark:text-white">Cargo Insurance</h4>
-                              </div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                Covers goods in transit across East Africa. Protects against theft, damage, and loss during transportation.
-                              </p>
-                              <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-                                <span className="flex items-center gap-1">
-                                  <DollarSign className="h-3 w-3" />
-                                  Coverage: $1.5M USD
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <Clock className="h-3 w-3" />
-                                  Expires: Dec 15, 2024
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <Shield className="h-3 w-3" />
-                                  Provider: East Africa Cargo Insurance
-                                </span>
-                              </div>
-                            </div>
-                            <button className="ml-4 px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 border border-primary-200 dark:border-primary-800 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors">
-                              View Details
+                        {insuranceLoading ? (
+                          <div className="p-6 text-center">
+                            <RefreshCw className="h-6 w-6 animate-spin text-primary-600 mx-auto mb-2" />
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Loading insurance policies...</p>
+                          </div>
+                        ) : insuranceError ? (
+                          <div className="p-6 text-center">
+                            <AlertTriangle className="h-6 w-6 text-yellow-600 mx-auto mb-2" />
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{insuranceError}</p>
+                            <button
+                              onClick={async () => {
+                                try {
+                                  setInsuranceLoading(true);
+                                  const summary = await unifiedApi.insurance.getCoverageSummary();
+                                  setInsuranceData(summary);
+                                  setInsuranceError(null);
+                                } catch (err) {
+                                  setInsuranceError(err instanceof Error ? err.message : 'Failed to fetch');
+                                } finally {
+                                  setInsuranceLoading(false);
+                                }
+                              }}
+                              className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700"
+                            >
+                              Retry
                             </button>
                           </div>
-                        </div>
-
-                        <div className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <InsuranceIndicator 
-                                  status="active" 
-                                  type="liability" 
-                                  coverageAmount={1000000}
-                                  showAmount={true}
-                                />
-                                <h4 className="text-base font-semibold text-gray-900 dark:text-white">Professional Liability</h4>
+                        ) : insuranceData?.policies && insuranceData.policies.length > 0 ? (
+                          insuranceData.policies.map((policy: any) => (
+                          <div key={policy.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-3 mb-2">
+                                  <InsuranceIndicator 
+                                    status={policy.status as any} 
+                                    type={policy.type === 'cargo' ? 'cargo' : policy.type === 'supplier_liability' ? 'liability' : 'general'} 
+                                    coverageAmount={policy.coverageAmount}
+                                    expiryDate={policy.expiryDate}
+                                    showAmount={true}
+                                  />
+                                  <h4 className="text-base font-semibold text-gray-900 dark:text-white">
+                                    {policy.type === 'cargo' ? 'Cargo Insurance' : 
+                                     policy.type === 'supplier_liability' ? 'Supplier Liability Insurance' :
+                                     policy.type === 'liability' ? 'Professional Liability' : 'Insurance Policy'}
+                                  </h4>
+                                </div>
+                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                  {policy.details.description || 
+                                   (policy.type === 'cargo' ? 'Covers goods in transit across East Africa. Protects against theft, damage, and loss during transportation.' :
+                                    policy.type === 'supplier_liability' ? `Insurance for supplier: ${policy.entityName}` :
+                                    'Protects against claims of negligence or errors in professional services and advice.')}
+                                </p>
+                                <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+                                  {policy.coverageAmount > 0 && (
+                                    <span className="flex items-center gap-1">
+                                      <DollarSign className="h-3 w-3" />
+                                      Coverage: ${(policy.coverageAmount / 1000000).toFixed(1)}M USD
+                                    </span>
+                                  )}
+                                  {policy.expiryDate && (
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="h-3 w-3" />
+                                      Expires: {policy.expiryDate.toLocaleDateString()}
+                                    </span>
+                                  )}
+                                  <span className="flex items-center gap-1">
+                                    <Shield className="h-3 w-3" />
+                                    Provider: {policy.provider}
+                                  </span>
+                                  {policy.entityType && (
+                                    <span className="flex items-center gap-1">
+                                      <FileText className="h-3 w-3" />
+                                      {policy.entityType === 'supplier' ? 'Supplier' : 'Shipment'} Policy
+                                    </span>
+                                  )}
+                                </div>
                               </div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                Protects against claims of negligence or errors in professional services and advice.
-                              </p>
-                              <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-                                <span className="flex items-center gap-1">
-                                  <DollarSign className="h-3 w-3" />
-                                  Coverage: $1.0M USD
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <Clock className="h-3 w-3" />
-                                  Expires: Mar 20, 2025
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <Shield className="h-3 w-3" />
-                                  Provider: Trade Shield Insurance
-                                </span>
-                              </div>
+                              <button 
+                                onClick={() => {
+                                  if (policy.entityType === 'supplier') {
+                                    navigate(`/app/supplier-directory/${policy.entityId}`);
+                                  } else if (policy.entityType === 'shipment') {
+                                    navigate(`/app/logistics`);
+                                  }
+                                }}
+                                className="ml-4 px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 border border-primary-200 dark:border-primary-800 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+                              >
+                                View Details
+                              </button>
                             </div>
-                            <button className="ml-4 px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 border border-primary-200 dark:border-primary-800 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors">
-                              View Details
+                          </div>
+                          ))
+                        ) : (
+                          <div className="p-6 text-center">
+                            <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4 opacity-50" />
+                            <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">No Insurance Policies Found</p>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mb-4">
+                              You don't have any active insurance policies. Consider adding insurance to protect your supply chain.
+                            </p>
+                            <button
+                              onClick={() => navigate('/app/supplier-directory')}
+                              className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-1 mx-auto"
+                            >
+                              Find Insured Suppliers <ArrowRight className="h-4 w-4" />
                             </button>
                           </div>
-                        </div>
+                        )}
 
                         {riskMetrics.insuranceCoverage.expiringSoon > 0 && (
                           <div className="p-6 bg-orange-50 dark:bg-orange-900/10 border-l-4 border-orange-400">
@@ -1531,6 +1702,257 @@ const RiskMitigation: React.FC = () => {
           </div>
         </div>
       </PageLayout>
+
+      {/* Risk Profile Modal */}
+      {showRiskProfileModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Risk Profile Settings</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  Configure your risk tolerance and alert preferences
+                </p>
+              </div>
+              <button
+                onClick={() => setShowRiskProfileModal(false)}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {riskProfileLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <RefreshCw className="h-6 w-6 animate-spin text-primary-600" />
+                </div>
+              ) : (
+                <>
+                  {/* Risk Tolerance */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                      Risk Tolerance Level
+                    </label>
+                    <div className="grid grid-cols-3 gap-3">
+                      {(['low', 'medium', 'high'] as const).map((level) => (
+                        <button
+                          key={level}
+                          onClick={() => {
+                            setRiskProfile((prev: any) => ({ ...prev, risk_tolerance: level }));
+                          }}
+                          className={`px-4 py-3 rounded-lg border-2 transition-all ${
+                            riskProfile?.risk_tolerance === level
+                              ? level === 'low'
+                                ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
+                                : level === 'medium'
+                                ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400'
+                                : 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'
+                              : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="font-semibold capitalize">{level}</div>
+                          <div className="text-xs mt-1">
+                            {level === 'low' && 'Conservative approach'}
+                            {level === 'medium' && 'Balanced approach'}
+                            {level === 'high' && 'Aggressive approach'}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Alert Preferences */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                      Alert Preferences
+                    </label>
+                    <div className="space-y-3">
+                      {[
+                        { key: 'price_volatility', label: 'Price Volatility Alerts', icon: <TrendingUp className="h-4 w-4" /> },
+                        { key: 'supply_shortage', label: 'Supply Shortage Alerts', icon: <AlertTriangle className="h-4 w-4" /> },
+                        { key: 'logistics_delay', label: 'Logistics Delay Alerts', icon: <Clock className="h-4 w-4" /> },
+                        { key: 'supplier_risk', label: 'Supplier Risk Alerts', icon: <Shield className="h-4 w-4" /> },
+                        { key: 'market_risk', label: 'Market Risk Alerts', icon: <BarChart3 className="h-4 w-4" /> },
+                        { key: 'compliance_issue', label: 'Compliance Issue Alerts', icon: <FileText className="h-4 w-4" /> },
+                      ].map((alert) => (
+                        <div key={alert.key} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className="text-gray-500 dark:text-gray-400">{alert.icon}</div>
+                            <div>
+                              <div className="font-medium text-gray-900 dark:text-white">{alert.label}</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400">
+                                Threshold: {riskProfile?.alert_preferences?.[alert.key]?.threshold || 'medium'}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <select
+                              value={riskProfile?.alert_preferences?.[alert.key]?.threshold || 'medium'}
+                              onChange={(e) => {
+                                setRiskProfile((prev: any) => ({
+                                  ...prev,
+                                  alert_preferences: {
+                                    ...prev?.alert_preferences,
+                                    [alert.key]: {
+                                      ...prev?.alert_preferences?.[alert.key],
+                                      threshold: e.target.value
+                                    }
+                                  }
+                                }));
+                              }}
+                              className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            >
+                              <option value="low">Low</option>
+                              <option value="medium">Medium</option>
+                              <option value="high">High</option>
+                            </select>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={riskProfile?.alert_preferences?.[alert.key]?.enabled !== false}
+                                onChange={(e) => {
+                                  setRiskProfile((prev: any) => ({
+                                    ...prev,
+                                    alert_preferences: {
+                                      ...prev?.alert_preferences,
+                                      [alert.key]: {
+                                        ...prev?.alert_preferences?.[alert.key],
+                                        enabled: e.target.checked
+                                      }
+                                    }
+                                  }));
+                                }}
+                                className="sr-only peer"
+                              />
+                              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                            </label>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Regions of Interest */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                      Regions of Interest
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {['Rwanda', 'Kenya', 'Uganda', 'Tanzania', 'Ethiopia'].map((region) => (
+                        <button
+                          key={region}
+                          onClick={() => {
+                            const regions = riskProfile?.regions_of_interest || [];
+                            const newRegions = regions.includes(region)
+                              ? regions.filter((r: string) => r !== region)
+                              : [...regions, region];
+                            setRiskProfile((prev: any) => ({ ...prev, regions_of_interest: newRegions }));
+                          }}
+                          className={`px-4 py-2 rounded-lg border transition-all ${
+                            riskProfile?.regions_of_interest?.includes(region)
+                              ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400'
+                              : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-300'
+                          }`}
+                        >
+                          {region}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Insurance Preferences */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                      Insurance Preferences
+                    </label>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-xs text-gray-600 dark:text-gray-400 mb-2">
+                          Minimum Coverage Amount (USD)
+                        </label>
+                        <input
+                          type="number"
+                          value={riskProfile?.insurance_preferences?.min_coverage || 1000000}
+                          onChange={(e) => {
+                            setRiskProfile((prev: any) => ({
+                              ...prev,
+                              insurance_preferences: {
+                                ...prev?.insurance_preferences,
+                                min_coverage: parseInt(e.target.value) || 1000000
+                              }
+                            }));
+                          }}
+                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                          min="0"
+                          step="100000"
+                        />
+                      </div>
+                      <label className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={riskProfile?.insurance_preferences?.auto_recommend !== false}
+                          onChange={(e) => {
+                            setRiskProfile((prev: any) => ({
+                              ...prev,
+                              insurance_preferences: {
+                                ...prev?.insurance_preferences,
+                                auto_recommend: e.target.checked
+                              }
+                            }));
+                          }}
+                          className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                        />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                          Automatically recommend insurance based on risk profile
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <button
+                      onClick={() => setShowRiskProfileModal(false)}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={async () => {
+                        try {
+                          setRiskProfileLoading(true);
+                          await unifiedApi.riskProfile.createOrUpdate(riskProfile);
+                          setShowRiskProfileModal(false);
+                          // Refresh insurance data to reflect new preferences
+                          const summary = await unifiedApi.insurance.getCoverageSummary();
+                          setInsuranceData(summary);
+                        } catch (err) {
+                          console.error('Error saving risk profile:', err);
+                          alert('Failed to save risk profile. Please try again.');
+                        } finally {
+                          setRiskProfileLoading(false);
+                        }
+                      }}
+                      disabled={riskProfileLoading}
+                      className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      {riskProfileLoading ? (
+                        <span className="flex items-center gap-2">
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                          Saving...
+                        </span>
+                      ) : (
+                        'Save Risk Profile'
+                      )}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 };

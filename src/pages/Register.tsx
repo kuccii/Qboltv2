@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
+import { SelectInput } from '../design-system';
 
 interface FormData {
   // Step 1: Basic Info
@@ -462,22 +463,24 @@ const Register: React.FC = () => {
                 Your Role <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600 appearance-none"
-                  style={{ backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundPosition: 'right 0.75rem center', backgroundSize: '1em 1em' }}
-                >
-                  <option value="">Select your role</option>
-                  <option value="procurement">Procurement Manager</option>
-                  <option value="operations">Operations Manager</option>
-                  <option value="finance">Finance Manager</option>
-                  <option value="ceo">CEO/Founder</option>
-                  <option value="other">Other</option>
-                </select>
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors z-10 pointer-events-none" />
+                <div className="pl-12">
+                  <SelectInput
+                    options={[
+                      { value: '', label: 'Select your role', disabled: true },
+                      { value: 'procurement', label: 'Procurement Manager' },
+                      { value: 'operations', label: 'Operations Manager' },
+                      { value: 'finance', label: 'Finance Manager' },
+                      { value: 'ceo', label: 'CEO/Founder' },
+                      { value: 'other', label: 'Other' }
+                    ]}
+                    value={formData.role}
+                    onChange={(value) => setFormData(prev => ({ ...prev, role: value }))}
+                    placeholder="Select your role"
+                    size="lg"
+                    className="w-full border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                  />
+                </div>
               </div>
             </div>
 

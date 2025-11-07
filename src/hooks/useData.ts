@@ -33,10 +33,18 @@ export function usePrices(filters?: {
     try {
       setLoading(true);
       setError(null);
-      const data = await unifiedApi.prices.get(filters);
+      
+      // Add timeout to prevent indefinite loading
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+      
+      const dataPromise = unifiedApi.prices.get(filters);
+      const data = await Promise.race([dataPromise, timeoutPromise]) as any[];
       setPrices(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch prices');
+      setPrices([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
@@ -112,10 +120,18 @@ export function useSuppliers(filters?: {
     try {
       setLoading(true);
       setError(null);
-      const data = await unifiedApi.suppliers.get(filters);
+      
+      // Add timeout to prevent indefinite loading
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+      
+      const dataPromise = unifiedApi.suppliers.get(filters);
+      const data = await Promise.race([dataPromise, timeoutPromise]) as any[];
       setSuppliers(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch suppliers');
+      setSuppliers([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
@@ -190,10 +206,18 @@ export function useShipments(filters?: {
     try {
       setLoading(true);
       setError(null);
-      const data = await unifiedApi.logistics.getShipments(filters);
+      
+      // Add timeout to prevent indefinite loading
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+      
+      const dataPromise = unifiedApi.logistics.getShipments(filters);
+      const data = await Promise.race([dataPromise, timeoutPromise]) as any[];
       setShipments(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch shipments');
+      setShipments([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
@@ -304,14 +328,23 @@ export function useNotifications() {
     try {
       setLoading(true);
       setError(null);
-      const [data, count] = await Promise.all([
+      
+      // Add timeout to prevent indefinite loading
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+      
+      const dataPromise = Promise.all([
         unifiedApi.notifications.get({ limit: 50 }),
         unifiedApi.notifications.getUnreadCount(),
       ]);
+      const [data, count] = await Promise.race([dataPromise, timeoutPromise]) as [any[], number];
       setNotifications(data);
       setUnreadCount(count);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch notifications');
+      setNotifications([]); // Set empty array on error
+      setUnreadCount(0);
     } finally {
       setLoading(false);
     }
@@ -368,17 +401,37 @@ export function useRiskAlerts(filters?: {
     try {
       setLoading(true);
       setError(null);
-      const data = await unifiedApi.risk.getAlerts(filters);
-      setAlerts(data);
+      
+      // Add timeout to prevent indefinite loading
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+      
+      const dataPromise = unifiedApi.risk.getAlerts(filters);
+      const data = await Promise.race([dataPromise, timeoutPromise]) as any;
+      setAlerts(Array.isArray(data) ? data : []);
     } catch (err) {
+      console.error('Error fetching risk alerts:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch alerts');
+      setAlerts([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters?.severity, filters?.alert_type, filters?.resolved]);
 
   useEffect(() => {
-    fetchAlerts();
+    let cancelled = false;
+    
+    const loadData = async () => {
+      await fetchAlerts();
+      if (cancelled) return;
+    };
+
+    loadData();
+
+    return () => {
+      cancelled = true;
+    };
   }, [fetchAlerts]);
 
   // Real-time alerts - TEMPORARILY DISABLED
@@ -433,10 +486,18 @@ export function useTradeOpportunities(filters?: {
     try {
       setLoading(true);
       setError(null);
-      const data = await unifiedApi.opportunities.get(filters);
+      
+      // Add timeout to prevent indefinite loading
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+      
+      const dataPromise = unifiedApi.opportunities.get(filters);
+      const data = await Promise.race([dataPromise, timeoutPromise]) as any[];
       setOpportunities(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch opportunities');
+      setOpportunities([]); // Set empty array on error
     } finally {
       setLoading(false);
     }

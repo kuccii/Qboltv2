@@ -26,6 +26,7 @@ import {
   Shield
 } from 'lucide-react';
 import { unifiedApi } from '../services/unifiedApi';
+import { HeaderStrip } from '../design-system';
 import RwandaOverview from '../components/rwanda/RwandaOverview';
 import RwandaInfrastructureOverview from '../components/rwanda/RwandaInfrastructureOverview';
 import RwandaContactDirectory from '../components/rwanda/RwandaContactDirectory';
@@ -137,64 +138,52 @@ const CountryProfile: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate('/app')}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">{currentCountry.flag}</span>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {currentCountry.name}
-                </h1>
-                {countryProfile && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {countryProfile.description || 'Country Profile'}
-                  </p>
-                )}
-              </div>
+        <HeaderStrip
+          title={`${currentCountry.flag} ${currentCountry.name}`}
+          subtitle={countryProfile?.description || 'Country Profile'}
+          chips={[
+            { label: normalizedCountryCode, variant: 'info' },
+            ...(countryProfile ? [
+              { label: 'Active', variant: 'success' as const }
+            ] : [])
+          ]}
+          right={
+            <div className="flex items-center gap-2">
+              {prevCountry && (
+                <button
+                  onClick={() => handleCountryChange(prevCountry.code)}
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white/20 hover:bg-white/30 text-white rounded-md border border-white/30 transition-colors"
+                  title={`Previous: ${prevCountry.name}`}
+                >
+                  <ArrowLeft size={16} />
+                  <span className="hidden sm:inline">{prevCountry.name}</span>
+                </button>
+              )}
+              {nextCountry && (
+                <button
+                  onClick={() => handleCountryChange(nextCountry.code)}
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white/20 hover:bg-white/30 text-white rounded-md border border-white/30 transition-colors"
+                  title={`Next: ${nextCountry.name}`}
+                >
+                  <span className="hidden sm:inline">{nextCountry.name}</span>
+                  <ArrowRight size={16} />
+                </button>
+              )}
+              <select
+                value={normalizedCountryCode}
+                onChange={(e) => handleCountryChange(e.target.value)}
+                className="px-3 py-2 text-sm font-medium bg-white/20 hover:bg-white/30 text-white rounded-md border border-white/30 transition-colors cursor-pointer"
+                style={{ color: 'white' }}
+              >
+                {availableCountries.map(c => (
+                  <option key={c.code} value={c.code} style={{ color: '#1f2937', backgroundColor: 'white' }}>
+                    {c.flag} {c.name}
+                  </option>
+                ))}
+              </select>
             </div>
-          </div>
-
-          {/* Country Navigation */}
-          <div className="flex items-center gap-2">
-            {prevCountry && (
-              <button
-                onClick={() => handleCountryChange(prevCountry.code)}
-                className="flex items-center gap-2 px-3 py-2 text-sm border rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                title={`Previous: ${prevCountry.name}`}
-              >
-                <ArrowLeft size={16} />
-                <span className="hidden sm:inline">{prevCountry.name}</span>
-              </button>
-            )}
-            {nextCountry && (
-              <button
-                onClick={() => handleCountryChange(nextCountry.code)}
-                className="flex items-center gap-2 px-3 py-2 text-sm border rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                title={`Next: ${nextCountry.name}`}
-              >
-                <span className="hidden sm:inline">{nextCountry.name}</span>
-                <ArrowRight size={16} />
-              </button>
-            )}
-            <select
-              value={normalizedCountryCode}
-              onChange={(e) => handleCountryChange(e.target.value)}
-              className="px-3 py-2 text-sm border rounded-md bg-white dark:bg-gray-800"
-            >
-              {availableCountries.map(c => (
-                <option key={c.code} value={c.code}>
-                  {c.flag} {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+          }
+        />
 
         {/* Tabs */}
         <div className="flex items-center gap-1 border-b border-gray-200 dark:border-gray-700">

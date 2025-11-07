@@ -39,6 +39,12 @@ import HeatMapChart from '../components/HeatMapChart';
 import { demandData } from '../data/mockData';
 import { unifiedApi } from '../services/unifiedApi';
 import HeaderStrip from '../components/HeaderStrip';
+import {
+  getEastAfricaExportPotential,
+  getEastAfricaTradeData,
+  convertExportPotentialToDemand,
+  convertTradeDataToDemand
+} from '../services/itcDataService';
 
 interface DemandPoint {
   id: string;
@@ -64,6 +70,7 @@ const DemandMapping: React.FC = () => {
   const currentUser = authState.user;
   
   // State management
+  const [selectedTab, setSelectedTab] = useState<'demand' | 'itc-export' | 'trade-data'>('demand');
   const [timeRange, setTimeRange] = useState<'current' | 'forecast' | 'historical'>('current');
   const [selectedMaterial, setSelectedMaterial] = useState('All Materials');
   const [selectedRegion, setSelectedRegion] = useState('All Regions');
@@ -77,6 +84,8 @@ const DemandMapping: React.FC = () => {
   // Fetch real demand data from Supabase
   const [realDemandData, setRealDemandData] = useState<any[]>([]);
   const [demandLoading, setDemandLoading] = useState(true);
+  const [itcData, setItcData] = useState<any[]>([]);
+  const [showItcData, setShowItcData] = useState(true);
 
   useEffect(() => {
     const fetchDemandData = async () => {
@@ -98,6 +107,28 @@ const DemandMapping: React.FC = () => {
         
         const allDemandArrays = await Promise.all(demandPromises);
         const allDemand = allDemandArrays.flat();
+
+        // Fetch ITC data (Export Potential Map & Trade Map)
+        if (showItcData) {
+          try {
+            const material = selectedMaterial !== 'All Materials' ? selectedMaterial : undefined;
+            
+            // Fetch both export potential and trade data
+            const [exportPotential, tradeData] = await Promise.all([
+              getEastAfricaExportPotential(countries, material),
+              getEastAfricaTradeData(countries, material)
+            ]);
+
+            // Convert ITC data to demand format
+            const exportPotentialDemand = convertExportPotentialToDemand(exportPotential);
+            const tradeDataDemand = convertTradeDataToDemand(tradeData);
+            
+            setItcData([...exportPotentialDemand, ...tradeDataDemand]);
+          } catch (itcError) {
+            console.warn('Failed to fetch ITC data:', itcError);
+            setItcData([]);
+          }
+        }
         setRealDemandData(allDemand);
         setLastUpdated(new Date());
       } catch (err) {
@@ -108,7 +139,7 @@ const DemandMapping: React.FC = () => {
       }
     };
     fetchDemandData();
-  }, [selectedRegion, selectedMaterial, currentIndustry, timeRange]);
+  }, [selectedRegion, selectedMaterial, currentIndustry, timeRange, showItcData]);
 
   const handleRefresh = async () => {
     try {
@@ -129,6 +160,22 @@ const DemandMapping: React.FC = () => {
       const allDemandArrays = await Promise.all(demandPromises);
       const allDemand = allDemandArrays.flat();
       setRealDemandData(allDemand);
+
+      // Refresh ITC data
+      if (showItcData) {
+        try {
+          const material = selectedMaterial !== 'All Materials' ? selectedMaterial : undefined;
+          const [exportPotential, tradeData] = await Promise.all([
+            getEastAfricaExportPotential(countries, material),
+            getEastAfricaTradeData(countries, material)
+          ]);
+          const exportPotentialDemand = convertExportPotentialToDemand(exportPotential);
+          const tradeDataDemand = convertTradeDataToDemand(tradeData);
+          setItcData([...exportPotentialDemand, ...tradeDataDemand]);
+        } catch (itcError) {
+          console.warn('Failed to refresh ITC data:', itcError);
+        }
+      }
       setLastUpdated(new Date());
     } catch (err) {
       console.error('Failed to refresh demand data:', err);
@@ -176,17 +223,40 @@ const DemandMapping: React.FC = () => {
   
   // Generate demand data - Use real data if available, fallback to mock
   const generateDemandData = useMemo(() => {
-    // Use real data if available
+    const data: DemandPoint[] = [];
+    
+    // Add real demand data
     if (realDemandData.length > 0) {
-      return realDemandData.map((item: any) => ({
-        id: item.id || `${item.country_code}-${item.region}-${item.material}-${item.timestamp}`,
-        region: item.region || item.country_code,
-        material: item.material,
-        demand: item.demand_quantity || item.forecast_demand || 0,
-        trend: (item.trend || 'stable') as 'up' | 'down' | 'stable',
-        coordinates: item.coordinates ? JSON.parse(item.coordinates) : getRegionCoordinates(item.region || item.country_code),
-        timestamp: item.timestamp || item.created_at
-      }));
+      realDemandData.forEach((item: any) => {
+        data.push({
+          id: item.id || `${item.country_code}-${item.region}-${item.material}-${item.timestamp}`,
+          region: item.region || item.country_code,
+          material: item.material,
+          demand: item.demand_quantity || item.forecast_demand || 0,
+          trend: (item.trend || 'stable') as 'up' | 'down' | 'stable',
+          coordinates: item.coordinates ? JSON.parse(item.coordinates) : getRegionCoordinates(item.region || item.country_code),
+          timestamp: item.timestamp || item.created_at
+        });
+      });
+    }
+    
+    // Add ITC data if enabled
+    if (showItcData && itcData.length > 0) {
+      itcData.forEach((item: any) => {
+        data.push({
+          id: item.id,
+          region: item.region,
+          material: item.material,
+          demand: item.demand,
+          trend: item.trend,
+          coordinates: item.coordinates,
+          timestamp: item.timestamp
+        });
+      });
+    }
+    
+    if (data.length > 0) {
+      return data;
     }
 
     // Fallback to mock data
@@ -195,7 +265,7 @@ const DemandMapping: React.FC = () => {
       ? ['Cement', 'Steel', 'Timber', 'Sand', 'Gravel']
       : ['Fertilizer', 'Seeds', 'Pesticides', 'Feed', 'Machinery'];
     
-    const data: DemandPoint[] = [];
+    const mockData: DemandPoint[] = [];
     const timePoints = 12; // 12 months of data
     
     for (let t = 0; t < timePoints; t++) {
@@ -205,7 +275,7 @@ const DemandMapping: React.FC = () => {
           const seasonalFactor = 1 + 0.3 * Math.sin((t / 12) * 2 * Math.PI);
           const demand = Math.round(baseDemand * seasonalFactor);
           
-          data.push({
+          mockData.push({
             id: `${region}-${material}-${t}`,
             region,
             material,
@@ -218,8 +288,8 @@ const DemandMapping: React.FC = () => {
       });
     }
     
-    return data;
-  }, [realDemandData, currentIndustry]);
+    return mockData;
+  }, [realDemandData, itcData, showItcData, currentIndustry]);
 
   // Filter data based on current selections
   const filteredData = useMemo(() => {
@@ -288,6 +358,18 @@ const DemandMapping: React.FC = () => {
 
   const allRegions = ['All Regions', 'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Kigali', 'Kampala', 'Dar es Salaam', 'Addis Ababa'];
 
+  // Helper function to get ITC country code
+  const getITCCountryCode = (countryCode: string): number => {
+    const itcCodes: Record<string, number> = {
+      'RW': 646, // Rwanda
+      'KE': 404, // Kenya
+      'UG': 800, // Uganda
+      'TZ': 834, // Tanzania
+      'ET': 231, // Ethiopia
+    };
+    return itcCodes[countryCode.toUpperCase()] || 646; // Default to Rwanda
+  };
+
   const renderMapView = () => (
     <div className="space-y-4">
       {/* Map Controls */}
@@ -354,7 +436,7 @@ const DemandMapping: React.FC = () => {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Map visualization showing demand patterns across regions
             </p>
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center justify-center gap-4 flex-wrap">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <span className="text-sm text-gray-600 dark:text-gray-400">High Demand</span>
@@ -367,6 +449,23 @@ const DemandMapping: React.FC = () => {
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 <span className="text-sm text-gray-600 dark:text-gray-400">Low Demand</span>
               </div>
+              {showItcData && itcData.length > 0 && (
+                <>
+                  <div className="w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
+                  <div className="flex items-center gap-2">
+                    <Globe className="h-3 w-3 text-blue-500" />
+                    <span className="text-xs text-gray-600 dark:text-gray-400">
+                      ITC Data ({itcData.length} points)
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Info className="h-3 w-3 text-gray-400" />
+                    <span className="text-xs text-gray-500 dark:text-gray-500">
+                      Sources: Export Potential Map & Trade Map
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -526,8 +625,20 @@ const DemandMapping: React.FC = () => {
               Refresh
             </button>
             <button
+              onClick={() => setShowItcData(!showItcData)}
+              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                showItcData
+                  ? 'bg-blue-100 text-blue-700 border border-blue-300 dark:bg-blue-900/20 dark:text-blue-400'
+                  : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300'
+              }`}
+              title="Toggle ITC (Export Potential Map & Trade Map) data"
+            >
+              <Globe className="h-4 w-4" />
+              ITC Data {showItcData ? 'ON' : 'OFF'}
+            </button>
+            <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300"
             >
               <Filter className="h-4 w-4" />
               Filters
@@ -544,16 +655,64 @@ const DemandMapping: React.FC = () => {
       />
       
       <PageLayout maxWidth="full" padding="none">
-        <RailLayout
-          right={
-            <div className="space-y-6">
-              {renderRegionDetails()}
-              {renderTemporalTrends()}
+        <div className="px-10 md:px-14 lg:px-20 py-8 space-y-8">
+          {/* Tab Navigation */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center border-b border-gray-200 dark:border-gray-700">
+              <button
+                onClick={() => setSelectedTab('demand')}
+                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                  selectedTab === 'demand'
+                    ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                    : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <MapIcon className="h-4 w-4" />
+                  Demand Map
+                </div>
+              </button>
+              <button
+                onClick={() => setSelectedTab('itc-export')}
+                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                  selectedTab === 'itc-export'
+                    ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                    : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Globe className="h-4 w-4" />
+                  ITC Export Map
+                </div>
+              </button>
+              <button
+                onClick={() => setSelectedTab('trade-data')}
+                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                  selectedTab === 'trade-data'
+                    ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                    : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4" />
+                  Trade Data
+                </div>
+              </button>
             </div>
-          }
-        >
-          <div className="px-6 py-6 space-y-6">
-            {/* Filters */}
+
+            <div className="p-6">
+              {/* Tab Content */}
+              {selectedTab === 'demand' && (
+                <RailLayout
+                  right={
+                    <div className="space-y-6">
+                      {renderRegionDetails()}
+                      {renderTemporalTrends()}
+                    </div>
+                  }
+                >
+                  <div className="space-y-6">
+                    {/* Filters */}
             <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -621,28 +780,202 @@ const DemandMapping: React.FC = () => {
               )}
             </SectionLayout>
 
-            {/* Export Options */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <div>
-                <h4 className="font-medium text-gray-900 dark:text-gray-100">Export Snapshot</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Download current view as image or data
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <button className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                  PNG
-                </button>
-                <button className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                  CSV
-                </button>
-                <button className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                  PDF
-                </button>
-              </div>
+                    {/* Export Options */}
+                    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div>
+                        <h4 className="font-medium text-gray-900 dark:text-gray-100">Export Snapshot</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Download current view as image or data
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                          PNG
+                        </button>
+                        <button className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                          CSV
+                        </button>
+                        <button className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                          PDF
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </RailLayout>
+              )}
+
+              {selectedTab === 'itc-export' && (
+                <div className="space-y-6">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                      ITC Export Potential Map
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Interactive export potential analysis from the International Trade Centre (ITC). 
+                      Explore export opportunities for East African countries.
+                    </p>
+                  </div>
+
+                  {/* Country Selector for ITC Map */}
+                  <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg mb-4">
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Select Exporter Country
+                      </label>
+                      <SelectInput
+                        value={selectedRegion}
+                        onChange={setSelectedRegion}
+                        options={[
+                          { value: 'RW', label: 'Rwanda' },
+                          { value: 'KE', label: 'Kenya' },
+                          { value: 'UG', label: 'Uganda' },
+                          { value: 'TZ', label: 'Tanzania' },
+                          { value: 'ET', label: 'Ethiopia' }
+                        ]}
+                        className="w-full"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Info className="h-4 w-4 text-gray-400" />
+                      <span className="text-xs text-gray-600 dark:text-gray-400">
+                        Data source: ITC Export Potential Map
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Embedded ITC Export Potential Map */}
+                  <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div className="h-[800px] w-full">
+                      <iframe
+                        src={`https://exportpotential.intracen.org/en/products/analyze?fromMarker=i&exporter=${getITCCountryCode(selectedRegion)}&toMarker=w&market=w&whatMarker=k`}
+                        className="w-full h-full border-0"
+                        title="ITC Export Potential Map"
+                        allow="fullscreen"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Info Banner */}
+                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                          About ITC Export Potential Map
+                        </h4>
+                        <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
+                          The ITC Export Potential Map helps identify export opportunities by analyzing market size, 
+                          growth potential, and competition. This interactive tool is provided by the International Trade Centre.
+                        </p>
+                        <a
+                          href="https://exportpotential.intracen.org/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-100 underline"
+                        >
+                          Visit ITC Export Potential Map →
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedTab === 'trade-data' && (
+                <div className="space-y-6">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                      Trade Data Analysis
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Import and export trade statistics from ITC Trade Map for East African countries.
+                    </p>
+                  </div>
+
+                  {/* Trade Data Summary */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    {['RW', 'KE', 'UG', 'TZ', 'ET'].map((country) => (
+                      <div
+                        key={country}
+                        className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
+                            {country === 'RW' ? 'Rwanda' : 
+                             country === 'KE' ? 'Kenya' :
+                             country === 'UG' ? 'Uganda' :
+                             country === 'TZ' ? 'Tanzania' : 'Ethiopia'}
+                          </h4>
+                          <Globe className="h-4 w-4 text-gray-400" />
+                        </div>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
+                          Trade data from ITC Trade Map
+                        </p>
+                        <a
+                          href={`https://www.trademap.org/`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 underline"
+                        >
+                          View on Trade Map →
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Embedded Trade Map Link */}
+                  <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <div className="text-center">
+                      <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                        ITC Trade Map
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        Access comprehensive trade statistics, import/export values, volumes, growth rates, 
+                        and market shares for East African countries.
+                      </p>
+                      <a
+                        href="https://www.trademap.org/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
+                      >
+                        <Globe className="h-4 w-4" />
+                        Open ITC Trade Map
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Info Banner */}
+                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                          About ITC Trade Map
+                        </h4>
+                        <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
+                          ITC Trade Map provides monthly, quarterly, and yearly trade data for 220 countries 
+                          and territories and 5,300 products. Access detailed import/export statistics, 
+                          market shares, and growth rates.
+                        </p>
+                        <a
+                          href="https://www.trademap.org/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-100 underline"
+                        >
+                          Visit ITC Trade Map →
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </RailLayout>
+        </div>
       </PageLayout>
     </AppLayout>
   );

@@ -9,6 +9,7 @@ export { SectionLayout } from './components/SectionLayout';
 export { RailLayout } from './components/RailLayout';
 export { AppLayout } from './components/AppLayout';
 export { PageLayout } from './components/PageLayout';
+export { default as HeaderStrip } from '../components/HeaderStrip';
 export { SelectInput } from './components/SelectInput';
 export { ActionMenu } from './components/ActionMenu';
 export { StatusBadge } from './components/StatusBadge';
