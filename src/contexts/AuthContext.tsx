@@ -370,9 +370,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const userRole = authData.user.user_metadata?.role;
           const validRole = ['user', 'admin', 'supplier', 'agent'].includes(userRole) ? userRole : 'user';
           
-          const { data: newProfile, error: profileError } = await supabase
-            .from('user_profiles')
-            .insert({
+          try {
+            const insertPromise = supabase
+              .from('user_profiles')
+              .insert({
+                id: authData.user.id,
+                email: authData.user.email || email,
+                name: authData.user.user_metadata?.name || email.split('@')[0],
+                company: authData.user.user_metadata?.company || '',
+                industry: (authData.user.user_metadata?.industry || 'construction') as 'construction' | 'agriculture',
+                country: authData.user.user_metadata?.country || 'Kenya',
+                role: validRole,
+              })
+              .select()
+              .single();
+
+            const timeoutPromise = new Promise<null>((resolve) => {
+              setTimeout(() => resolve(null), 5000); // 5 second timeout
+            });
+
+            const result = await Promise.race([insertPromise, timeoutPromise]);
+            
+            if (result && 'data' in result && result.data) {
+              profile = result.data;
+            } else if (result && 'error' in result && result.error) {
+              const profileError = result.error;
+              // Profile might already exist (race condition) - try to get it
+              if (profileError.message?.includes('duplicate') || profileError.code === '23505') {
+                try {
+                  const getProfilePromise = unifiedApi.user.getProfile(authData.user.id);
+                  const getTimeoutPromise = new Promise<null>((resolve) => {
+                    setTimeout(() => resolve(null), 3000);
+                  });
+                  profile = await Promise.race([getProfilePromise, getTimeoutPromise]);
+                } catch (getError) {
+                  console.warn('Failed to get profile after duplicate error:', getError);
+                }
+              }
+            }
+          } catch (createError) {
+            console.warn('Profile creation error (non-blocking):', createError);
+            // Continue with user metadata if profile creation fails
+          }
+
+          // If still no profile, use user metadata as fallback
+          if (!profile) {
+            profile = {
               id: authData.user.id,
               email: authData.user.email || email,
               name: authData.user.user_metadata?.name || email.split('@')[0],
@@ -380,22 +423,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               industry: (authData.user.user_metadata?.industry || 'construction') as 'construction' | 'agriculture',
               country: authData.user.user_metadata?.country || 'Kenya',
               role: validRole,
-            })
-            .select()
-            .single();
-
-          if (profileError) {
-            // Profile might already exist (race condition) - try to get it
-            if (profileError.message.includes('duplicate') || profileError.code === '23505') {
-              profile = await unifiedApi.user.getProfile(authData.user.id);
-              if (!profile) {
-                throw new Error('Failed to create user profile. Please try again.');
-              }
-            } else {
-              throw profileError;
-            }
-          } else {
-            profile = newProfile;
+            };
           }
         }
 
