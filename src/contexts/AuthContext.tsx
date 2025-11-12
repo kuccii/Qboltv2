@@ -56,14 +56,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Initialize auth state on mount
   useEffect(() => {
+    let isMounted = true;
+    let timeoutId: NodeJS.Timeout;
+
     const initializeAuth = async () => {
       try {
         validateAuthConfig();
         
         console.log('AuthContext: Initializing auth...');
         
-        // Check Supabase session first
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        // Add timeout to prevent hanging
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) => {
+          timeoutId = setTimeout(() => reject(new Error('Session check timeout')), 10000);
+        });
+        
+        // Check Supabase session first with timeout
+        const { data: { session }, error: sessionError } = await Promise.race([
+          sessionPromise,
+          timeoutPromise,
+        ]) as { data: { session: any }, error: any };
+        
+        clearTimeout(timeoutId);
+        
+        if (!isMounted) return;
         
         console.log('AuthContext: Session check:', { 
           hasSession: !!session, 
@@ -200,15 +216,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => {
           authListener?.subscription.unsubscribe();
         };
-      } catch (err) {
+      } catch (err: any) {
         console.error('Auth initialization error:', err);
-        setError('Failed to initialize authentication');
+        if (isMounted) {
+          if (err?.message === 'Session check timeout') {
+            console.warn('AuthContext: Session check timed out, using fallback');
+            // Try fallback to local auth
+            const user = userManager.getUser();
+            if (user) {
+              setAuthState({ user });
+            }
+          } else {
+            setError('Failed to initialize authentication');
+          }
+          setLoading(false);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     initializeAuth();
+
+    return () => {
+      isMounted = false;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   const refreshToken = useCallback(async () => {

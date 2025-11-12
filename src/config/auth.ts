@@ -23,7 +23,8 @@ export const authConfig = {
   passwordMinLength: 8,
   
   // Demo mode (for development)
-  isDemoMode: import.meta.env.VITE_DEMO_MODE === 'true',
+  // If VITE_API_BASE_URL is not set, we're using Supabase auth only (no custom API)
+  isDemoMode: import.meta.env.VITE_DEMO_MODE === 'true' || !import.meta.env.VITE_API_BASE_URL,
   demoCredentials: {
     admin: { email: 'admin@qivook.com', password: 'admin123' },
     user: { email: 'user@qivook.com', password: 'user12345' },

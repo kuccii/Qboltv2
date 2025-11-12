@@ -14,27 +14,41 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase credentials missing. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
 }
 
+// Singleton pattern to prevent multiple client instances
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
+
 // Create Supabase client with optimized settings for session persistence
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-    storageKey: 'supabase.auth.token',
-    flowType: 'pkce',
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10,
+// Use singleton pattern to prevent multiple instances
+const createSupabaseClient = () => {
+  if (supabaseInstance) {
+    return supabaseInstance;
+  }
+
+  supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+      storageKey: 'supabase.auth.token',
+      flowType: 'pkce',
     },
-  },
-  global: {
-    headers: {
-      'x-client-info': 'qivook@1.0.0',
+    realtime: {
+      params: {
+        eventsPerSecond: 10,
+      },
     },
-  },
-});
+    global: {
+      headers: {
+        'x-client-info': 'qivook@1.0.0',
+      },
+    },
+  });
+
+  return supabaseInstance;
+};
+
+export const supabase = createSupabaseClient();
 
 // Database types (to be updated based on your schema)
 export type Database = {
@@ -132,20 +146,8 @@ export type Database = {
   };
 };
 
-// Typed Supabase client
-export const typedSupabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10,
-    },
-  },
-});
+// Typed Supabase client - reuse the same instance to avoid multiple GoTrueClient instances
+export const typedSupabase = supabase as ReturnType<typeof createClient<Database>>;
 
 // Helper function to check Supabase connection
 export const checkSupabaseConnection = async (): Promise<boolean> => {
