@@ -298,7 +298,7 @@ const PriceTracking: React.FC = () => {
             </>
           }
         >
-        <div className="px-6 py-6 space-y-6">
+        <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
           {/* Real-time Connection Status */}
           {isConnected && (
             <div className="bg-green-50 border border-green-200 rounded-md p-3 flex items-center gap-2">

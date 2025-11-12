@@ -110,7 +110,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ isOpen, onClose }) => {
   return (
     <div 
       ref={menuRef}
-      className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50"
+      className="absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 max-h-[calc(100vh-100px)] overflow-y-auto"
     >
       {/* User Info Header */}
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">

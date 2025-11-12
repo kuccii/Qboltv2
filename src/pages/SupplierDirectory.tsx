@@ -463,7 +463,7 @@ const SupplierDirectory: React.FC = () => {
 
         {/* Active Filters Display */}
         {(selectedMaterial !== 'all' || selectedRegion !== 'all' || verification.length > 0 || minRating > 0) && (
-          <div className="px-6 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <div className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Active filters:</span>
               {selectedMaterial !== 'all' && (
@@ -516,7 +516,7 @@ const SupplierDirectory: React.FC = () => {
             </>
           }
         >
-          <div className="px-6 py-6 space-y-6" id="supplier-filters">
+          <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6" id="supplier-filters">
             <SectionLayout title="Filters" subtitle={`Narrow your search by ${getIndustryTerm('materials').toLowerCase()}, region, verification and rating`}>
               <div className="flex flex-wrap items-center gap-3">
                 <div className="text-sm text-gray-500 flex items-center gap-2">
@@ -714,7 +714,7 @@ const SupplierDirectory: React.FC = () => {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 pb-10">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 px-3 sm:px-4 md:px-6 pb-6 sm:pb-10">
         <DashboardCard 
           title="Supplier Verification" 
           icon={<CheckCircle size={20} />}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navigation from './Navigation';
 import MobileNavigation from './MobileNavigation';
+import BottomTabNavigation from './BottomTabNavigation';
 
 const Layout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -23,9 +24,12 @@ const Layout: React.FC = () => {
       />
 
       {/* Main content */}
-      <main className="flex-1">
+      <main className="flex-1 pb-16 lg:pb-0">
         <Outlet />
       </main>
+
+      {/* Bottom Tab Navigation for Mobile */}
+      <BottomTabNavigation onMoreClick={toggleMobileMenu} />
     </div>
   );
 };

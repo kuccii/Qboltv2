@@ -304,8 +304,8 @@ const Dashboard: React.FC = () => {
   return (
     <AppLayout>
       {/* New compact header strip */}
-      <div className="px-6 pt-5">
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-xl p-4 md:p-5 shadow-lg border border-blue-500 dark:border-blue-600">
+      <div className="px-3 sm:px-4 md:px-6 pt-4 sm:pt-5">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-xl p-3 sm:p-4 md:p-5 shadow-lg border border-blue-500 dark:border-blue-600">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-xl md:text-2xl font-bold text-white">{description.title}</h1>
@@ -478,7 +478,7 @@ const Dashboard: React.FC = () => {
             </div>
           }
         >
-          <div className="px-6 py-6 space-y-6">
+          <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
             {/* Tab Navigation */}
             <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 w-fit">
               <button 

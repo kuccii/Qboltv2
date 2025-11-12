@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
-  TrendingUp, 
+  TrendingUp,
   Map, 
   MapPin,
   Users, 
   Wallet, 
   LogOut, 
-  Building2,
-  AlertTriangle,
-  MessageSquare,
   FileText,
   Truck,
   ShieldCheck,
@@ -18,15 +15,15 @@ import {
   BarChart2,
   Package,
   Shield,
-  CreditCard,
   Settings2,
   ChevronDown,
   ChevronRight,
-  HelpCircle,
-  BookOpen,
-  Search
+  X,
+  Building2,
+  User
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import IndustrySwitcher from './IndustrySwitcher';
 
 interface MobileNavigationProps {
   isOpen: boolean;
@@ -140,17 +137,17 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
               onClick={onClose}
               className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             >
-              <LogOut size={20} />
+              <X size={20} />
             </button>
           </div>
 
           {/* User Info */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
                 {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="font-medium text-gray-900 dark:text-white">
                   {currentUser?.name || 'User'}
                 </p>
@@ -159,46 +156,52 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
                 </p>
               </div>
             </div>
+            
+            {/* Industry Switcher */}
+            <div className="mt-4">
+              <IndustrySwitcher />
+            </div>
           </div>
 
           {/* Navigation */}
           <div className="flex-1 overflow-y-auto p-4 space-y-2">
             <NavItem to="/app" icon={LayoutDashboard} label="Dashboard" end />
 
-            <SectionDropdown icon={BarChart2} label="Market Intelligence" section="market">
+            {/* Market Intelligence Dropdown - Matching Desktop */}
+            <SectionDropdown icon={BarChart2} label="Market" section="market">
               <NavItem to="/app/prices" icon={TrendingUp} label="Price Tracking" />
-              <NavItem to="/app/price-reporting" icon={MessageSquare} label="Price Reporting" />
+              <NavItem to="/app/countries" icon={MapPin} label="Countries" />
               <NavItem to="/app/demand" icon={Map} label="Demand Mapping" />
+              <NavItem to="/app/analytics" icon={BarChart2} label="Analytics" />
             </SectionDropdown>
 
-            <SectionDropdown icon={Package} label="Supply Chain" section="supply">
-              <NavItem to="/app/suppliers" icon={Users} label="Supplier Scores" />
-              <NavItem to="/app/supplier-directory" icon={Building2} label="Supplier Directory" />
-              <NavItem to="/app/agents" icon={UserCog} label="Agents Directory" />
+            {/* Supply Chain Dropdown - Matching Desktop */}
+            <SectionDropdown icon={Package} label="Supply" section="supply">
+              <NavItem to="/app/supplier-directory" icon={Users} label="Suppliers" />
+              <NavItem to="/app/agents" icon={UserCog} label="Agents" />
               <NavItem to="/app/logistics" icon={Truck} label="Logistics" />
-              <NavItem to="/app/rwanda" icon={MapPin} label="Rwanda Logistics" />
             </SectionDropdown>
 
-            <SectionDropdown icon={Shield} label="Risk & Compliance" section="risk">
-              <NavItem to="/app/risk" icon={AlertTriangle} label="Risk Mitigation" />
-              <NavItem to="/app/documents" icon={FileText} label="Document Vault" />
-            </SectionDropdown>
+            {/* Risk - Matching Desktop */}
+            <NavItem to="/app/risk" icon={Shield} label="Risk" />
 
-            <SectionDropdown icon={CreditCard} label="Financial Services" section="finance">
-              <NavItem to="/app/financing" icon={Wallet} label="Financing" />
-            </SectionDropdown>
+            {/* Financial Services - Matching Desktop */}
+            <NavItem to="/app/financing" icon={Wallet} label="Financing" />
 
+            {/* Documents - Matching Desktop */}
+            <NavItem to="/app/documents" icon={FileText} label="Documents" />
+
+            {/* Profile - Added for Mobile */}
+            <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+              <NavItem to="/app/profile" icon={User} label="Profile" />
+            </div>
+
+            {/* Admin Dropdown - Matching Desktop */}
             {currentUser?.role === 'admin' && (
-              <SectionDropdown icon={Settings2} label="Administration" section="admin">
+              <SectionDropdown icon={Settings2} label="Admin" section="admin">
                 <NavItem to="/app/admin" icon={ShieldCheck} label="Admin Dashboard" />
               </SectionDropdown>
             )}
-
-            {/* Help & Support */}
-            <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
-              <NavItem to="/help" icon={HelpCircle} label="Help Center" />
-              <NavItem to="/docs" icon={BookOpen} label="Documentation" />
-            </div>
           </div>
 
           {/* Footer */}
