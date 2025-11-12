@@ -352,8 +352,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // Supabase auth successful
       if (authData.user && authData.session) {
-        // Get user profile from Supabase
-        let profile = await unifiedApi.user.getProfile(authData.user.id);
+        // Get user profile from Supabase with timeout
+        let profile: any = null;
+        try {
+          const profilePromise = unifiedApi.user.getProfile(authData.user.id);
+          const timeoutPromise = new Promise<null>((resolve) => {
+            setTimeout(() => resolve(null), 5000); // 5 second timeout
+          });
+          profile = await Promise.race([profilePromise, timeoutPromise]);
+        } catch (profileError) {
+          console.warn('Profile fetch error (non-blocking):', profileError);
+          // Continue with user metadata if profile fetch fails
+        }
         
         if (!profile) {
           // Profile doesn't exist - create it from user metadata
@@ -403,8 +413,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('AuthContext: Login successful, setting user:', user.id);
         setAuthState({ user });
 
-        // Log activity
-        unifiedApi.user.logActivity('user_logged_in', 'auth', user.id);
+        // Log activity (non-blocking - fire and forget)
+        unifiedApi.user.logActivity('user_logged_in', 'auth', user.id).catch(err => {
+          console.warn('Failed to log activity:', err);
+          // Don't block login if activity logging fails
+        });
       } else if (authData.user && !authData.session) {
         // User exists but session is null - email not confirmed
         throw new Error('Please check your email and confirm your account before signing in.');
