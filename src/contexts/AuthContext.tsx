@@ -67,19 +67,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         // Add timeout to prevent hanging
         const sessionPromise = supabase.auth.getSession();
-        const timeoutPromise = new Promise((_, reject) => {
+        const timeoutPromise = new Promise<never>((_, reject) => {
           timeoutId = setTimeout(() => reject(new Error('Session check timeout')), 10000);
         });
         
         // Check Supabase session first with timeout
-        const { data: { session }, error: sessionError } = await Promise.race([
-          sessionPromise,
-          timeoutPromise,
-        ]) as { data: { session: any }, error: any };
-        
-        clearTimeout(timeoutId);
+        let sessionResult: { data: { session: any }, error: any };
+        try {
+          sessionResult = await Promise.race([
+            sessionPromise,
+            timeoutPromise,
+          ]) as { data: { session: any }, error: any };
+          clearTimeout(timeoutId);
+        } catch (timeoutError: any) {
+          clearTimeout(timeoutId);
+          if (!isMounted) return;
+          // Timeout occurred, use fallback
+          if (timeoutError?.message === 'Session check timeout') {
+            console.warn('AuthContext: Session check timed out, using fallback');
+            const user = userManager.getUser();
+            if (user) {
+              setAuthState({ user });
+            }
+          }
+          setLoading(false);
+          return;
+        }
         
         if (!isMounted) return;
+        
+        const { data: { session }, error: sessionError } = sessionResult;
         
         console.log('AuthContext: Session check:', { 
           hasSession: !!session, 
