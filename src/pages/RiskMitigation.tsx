@@ -512,25 +512,25 @@ const RiskMitigation: React.FC = () => {
 
           {/* Tabs Container - Matching DocumentVault Style */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
+            <div className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide">
               {[
-                { id: 'overview', label: 'Overview', icon: <BarChart3 className="h-4 w-4" />, badge: riskMetrics.totalAlerts },
-                { id: 'alerts', label: 'Alerts', icon: <Bell className="h-4 w-4" />, badge: riskMetrics.totalAlerts, urgent: riskMetrics.highRisk },
-                { id: 'timeline', label: 'Timeline', icon: <History className="h-4 w-4" /> },
-                { id: 'insurance', label: 'Insurance', icon: <ShieldCheck className="h-4 w-4" />, badge: riskMetrics.insuranceCoverage.coverageGaps },
-                { id: 'playbooks', label: 'Playbooks', icon: <Shield className="h-4 w-4" /> }
+                { id: 'overview', label: 'Overview', icon: <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.totalAlerts },
+                { id: 'alerts', label: 'Alerts', icon: <Bell className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.totalAlerts, urgent: riskMetrics.highRisk },
+                { id: 'timeline', label: 'Timeline', icon: <History className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> },
+                { id: 'insurance', label: 'Insurance', icon: <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.insuranceCoverage.coverageGaps },
+                { id: 'playbooks', label: 'Playbooks', icon: <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> }
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setSelectedTab(tab.id as any)}
-                  className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors whitespace-nowrap relative ${
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap relative flex-shrink-0 ${
                     selectedTab === tab.id
                       ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400'
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                   }`}
                 >
                   {tab.icon}
-                  {tab.label}
+                  <span>{tab.label}</span>
                   {tab.badge !== undefined && tab.badge > 0 && (
                     <span className={`ml-1 px-1.5 py-0.5 text-xs font-bold rounded-full ${
                       tab.urgent && tab.urgent > 0

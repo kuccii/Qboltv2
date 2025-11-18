@@ -480,9 +480,9 @@ const Dashboard: React.FC = () => {
         >
           <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
             {/* Tab Navigation */}
-            <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 w-fit">
+            <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 w-full sm:w-fit overflow-x-auto scrollbar-hide">
               <button 
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${selectedTab === 'overview' 
+                className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${selectedTab === 'overview' 
                   ? 'bg-blue-600 text-white shadow-sm' 
                   : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200'}`}
                 onClick={() => setSelectedTab('overview')}
@@ -490,7 +490,7 @@ const Dashboard: React.FC = () => {
                 Overview
               </button>
               <button 
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${selectedTab === 'insights' 
+                className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${selectedTab === 'insights' 
                   ? 'bg-purple-600 text-white shadow-sm' 
                   : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200'}`}
                 onClick={() => setSelectedTab('insights')}
@@ -498,7 +498,7 @@ const Dashboard: React.FC = () => {
                 Insights
               </button>
               <button 
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${selectedTab === 'alerts' 
+                className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${selectedTab === 'alerts' 
                   ? 'bg-red-600 text-white shadow-sm' 
                   : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200'}`}
                 onClick={() => setSelectedTab('alerts')}

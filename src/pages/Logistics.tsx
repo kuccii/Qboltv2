@@ -611,8 +611,8 @@ const Logistics: React.FC = () => {
       <PageLayout maxWidth="full" padding="none">
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-          <div className="px-6">
-            <nav className="flex space-x-8">
+          <div className="px-3 sm:px-4 md:px-6">
+            <nav className="flex space-x-4 sm:space-x-6 md:space-x-8 overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
               {[
                 { id: 'overview', label: 'Overview', icon: BarChart3 },
                 { id: 'planner', label: 'Route Planner', icon: Route },
@@ -622,14 +622,14 @@ const Logistics: React.FC = () => {
                 <button
                   key={id}
                   onClick={() => setActiveTab(id as any)}
-                  className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm ${
+                  className={`flex items-center gap-1.5 sm:gap-2 py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex-shrink-0 ${
                     activeTab === id
                       ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
-                  {label}
+                  <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span>{label}</span>
                 </button>
               ))}
             </nav>

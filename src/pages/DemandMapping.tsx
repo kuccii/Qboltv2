@@ -630,23 +630,23 @@ const DemandMapping: React.FC = () => {
         <div className="px-10 md:px-14 lg:px-20 py-8 space-y-8">
           {/* Tab Navigation */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide">
               <button
                 onClick={() => setSelectedTab('demand')}
-                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                className={`px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
                   selectedTab === 'demand'
                     ? 'border-primary-500 text-primary-600 dark:text-primary-400'
                     : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
-                <div className="flex items-center gap-2">
-                  <MapIcon className="h-4 w-4" />
-                  Demand Map
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <MapIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span>Demand Map</span>
                 </div>
               </button>
               <button
                 onClick={() => setSelectedTab('itc-export')}
-                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                className={`px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
                   selectedTab === 'itc-export'
                     ? 'border-primary-500 text-primary-600 dark:text-primary-400'
                     : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'

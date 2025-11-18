@@ -764,24 +764,24 @@ const DocumentVault: React.FC = () => {
 
           {/* Tabs */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
+            <div className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide">
               {[
-                { id: 'overview', label: 'Overview', icon: <Eye className="h-4 w-4" /> },
-                { id: 'documents', label: 'Documents', icon: <FileText className="h-4 w-4" /> },
-                { id: 'checklist', label: 'My Checklist', icon: <ListChecks className="h-4 w-4" />, badge: checklistProgress.completed },
-                { id: 'resources', label: 'Resources', icon: <BookOpen className="h-4 w-4" /> }
+                { id: 'overview', label: 'Overview', icon: <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> },
+                { id: 'documents', label: 'Documents', icon: <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> },
+                { id: 'checklist', label: 'My Checklist', icon: <ListChecks className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: checklistProgress.completed },
+                { id: 'resources', label: 'Resources', icon: <BookOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> }
               ].map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-2 px-6 py-4 font-medium text-sm transition-colors whitespace-nowrap relative ${
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap relative flex-shrink-0 ${
                     activeTab === tab.id
                       ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400'
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                   }`}
                 >
                   {tab.icon}
-                  {tab.label}
+                  <span>{tab.label}</span>
                   {tab.badge !== undefined && tab.badge > 0 && (
                     <span className="ml-1 px-1.5 py-0.5 text-xs font-bold bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full">
                       {tab.badge}
