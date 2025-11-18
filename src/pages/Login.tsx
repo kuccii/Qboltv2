@@ -153,7 +153,7 @@ const Login: React.FC = () => {
             </div>
           )}
 
-          {/* Demo Credentials */}
+          {/* Demo Credentials (disabled for production)
           {authConfig.isDemoMode && (
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 p-4 rounded-lg mb-6">
               <p className="font-medium text-sm mb-3">Demo Credentials:</p>
@@ -173,6 +173,7 @@ const Login: React.FC = () => {
               </div>
             </div>
           )}
+          */}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
@@ -249,7 +250,7 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={loading || isLocked || !email || !password || password.length < authConfig.passwordMinLength}
-              onClick={(e) => {
+              onClick={() => {
                 console.log('Button clicked', { 
                   loading, 
                   isLocked, 
