@@ -186,61 +186,61 @@ const CountryProfile: React.FC = () => {
         />
 
         {/* Tabs */}
-        <div className="flex items-center gap-1 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center gap-1 border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide">
           <button
             onClick={() => handleTabChange('overview')}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
               activeTab === 'overview'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
-            <BarChart3 size={16} className="inline mr-2" />
-            Overview
+            <BarChart3 size={14} className="sm:w-4 sm:h-4" />
+            <span>Overview</span>
           </button>
           <button
             onClick={() => handleTabChange('infrastructure')}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
               activeTab === 'infrastructure'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
-            <Building2 size={16} className="inline mr-2" />
-            Infrastructure
+            <Building2 size={14} className="sm:w-4 sm:h-4" />
+            <span>Infrastructure</span>
           </button>
           <button
             onClick={() => handleTabChange('pricing')}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
               activeTab === 'pricing'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
-            <TrendingUp size={16} className="inline mr-2" />
-            Pricing
+            <TrendingUp size={14} className="sm:w-4 sm:h-4" />
+            <span>Pricing</span>
           </button>
           <button
             onClick={() => handleTabChange('contacts')}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
               activeTab === 'contacts'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
-            <Users size={16} className="inline mr-2" />
-            Contacts
+            <Users size={14} className="sm:w-4 sm:h-4" />
+            <span>Contacts</span>
           </button>
           <button
             onClick={() => handleTabChange('intelligence')}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
               activeTab === 'intelligence'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
-            <Shield size={16} className="inline mr-2" />
-            Intelligence
+            <Shield size={14} className="sm:w-4 sm:h-4" />
+            <span>Intelligence</span>
           </button>
         </div>
       </div>
