@@ -36,12 +36,12 @@ INSERT INTO public.agents (name, service_type, country, regions, description, ve
 -- SEED FINANCING OFFERS DATA
 -- ============================================
 
-INSERT INTO public.financing_offers (provider_name, offer_type, country, interest_rate, max_amount, currency, min_amount, term_months, requirements, description, active) VALUES
-('East Africa Trade Bank', 'invoice_financing', 'Kenya', 12.5, 500000, 'USD', 10000, 90, ARRAY['Invoice from verified supplier', 'Credit check'], 'Invoice financing for verified trade transactions', true),
-('Agricultural Development Fund', 'order_financing', 'Kenya', 10.0, 200000, 'USD', 5000, 180, ARRAY['Agricultural order', 'Supplier verification'], 'Specialized financing for agricultural inputs', true),
-('Cross-Border Trade Finance', 'trade_finance', 'Uganda', 11.5, 300000, 'USD', 15000, 120, ARRAY['Cross-border transaction', 'Insurance coverage'], 'Trade finance for international transactions', true),
-('SME Growth Capital', 'working_capital', 'Rwanda', 13.0, 100000, 'USD', 5000, 60, ARRAY['Business registration', '6 months trading history'], 'Working capital for growing businesses', true),
-('Export Credit Facility', 'export_financing', 'Tanzania', 9.5, 750000, 'USD', 25000, 180, ARRAY['Export contract', 'Letter of credit'], 'Export financing with competitive rates', true);
+INSERT INTO public.financing_offers (provider_name, provider_type, industry, countries, interest_rate, max_amount, min_amount, term_days, requirements, features, active, metadata) VALUES
+('East Africa Trade Bank', 'bank', ARRAY['construction', 'agriculture'], ARRAY['Kenya', 'Uganda', 'Tanzania'], 12.5, 500000, 10000, 90, '["Invoice from verified supplier", "Credit check"]'::jsonb, '["Fast approval", "Flexible terms"]'::jsonb, true, '{"description": "Invoice financing for verified trade transactions"}'::jsonb),
+('Agricultural Development Fund', 'bank', ARRAY['agriculture'], ARRAY['Kenya', 'Rwanda'], 10.0, 200000, 5000, 180, '["Agricultural order", "Supplier verification"]'::jsonb, '["Seasonal flexibility", "Low rates"]'::jsonb, true, '{"description": "Specialized financing for agricultural inputs"}'::jsonb),
+('Cross-Border Trade Finance', 'fintech', ARRAY['construction', 'agriculture'], ARRAY['Uganda', 'Kenya', 'Tanzania'], 11.5, 300000, 15000, 120, '["Cross-border transaction", "Insurance coverage"]'::jsonb, '["Digital platform", "Quick processing"]'::jsonb, true, '{"description": "Trade finance for international transactions"}'::jsonb),
+('SME Growth Capital', 'platform', ARRAY['construction', 'agriculture'], ARRAY['Rwanda', 'Uganda'], 13.0, 100000, 5000, 60, '["Business registration", "6 months trading history"]'::jsonb, '["Online application", "Transparent fees"]'::jsonb, true, '{"description": "Working capital for growing businesses"}'::jsonb),
+('Export Credit Facility', 'bank', ARRAY['construction', 'agriculture'], ARRAY['Tanzania', 'Kenya'], 9.5, 750000, 25000, 180, '["Export contract", "Letter of credit"]'::jsonb, '["Export support", "Competitive rates"]'::jsonb, true, '{"description": "Export financing with competitive rates"}'::jsonb);
 
 -- ============================================
 -- SEED DEMAND DATA
