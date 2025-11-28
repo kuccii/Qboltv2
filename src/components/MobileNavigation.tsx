@@ -127,12 +127,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <Building2 className="text-white" size={20} />
-              </div>
-              <span className="text-lg font-bold text-gray-900 dark:text-white">Qivook</span>
-            </div>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Menu</h2>
             <button
               onClick={onClose}
               className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
