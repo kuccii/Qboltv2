@@ -288,7 +288,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
 
       {/* Tabs */}
       <div className="border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px flex space-x-2 sm:space-x-4 md:space-x-8 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => {
             const Icon = getTabIcon(tab.id);
             const count = getTabCount(tab.id);
@@ -297,15 +297,15 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`flex items-center gap-1 sm:gap-1.5 py-2 px-2 sm:px-3 md:px-4 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex-shrink-0 transition-colors ${
                   activeTab === tab.id
                     ? 'border-primary-500 text-primary-600 dark:text-primary-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
               >
-                <Icon className="w-4 h-4 mr-2" />
-                {tab.label}
-                <span className="ml-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 py-0.5 px-2 rounded-full text-xs">
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>{tab.label}</span>
+                <span className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 py-0.5 px-1.5 sm:px-2 rounded-full text-[10px] sm:text-xs">
                   {count}
                 </span>
               </button>
