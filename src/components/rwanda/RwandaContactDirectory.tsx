@@ -328,16 +328,19 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-purple-50/0 group-hover:from-blue-50/50 group-hover:to-purple-50/30 dark:group-hover:from-blue-950/20 dark:group-hover:to-purple-950/10 transition-all duration-300 pointer-events-none rounded-2xl"></div>
                 <div className="relative z-10">
                 {/* Header */}
-                <div className="mb-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1 truncate">{contact.name}</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{contact.title}</p>
-                      <p className="text-sm font-medium text-primary-600 dark:text-primary-400">{contact.ministry}</p>
+                <div className="mb-5">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1 min-w-0 pr-3">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 leading-tight tracking-tight">{contact.name}</h3>
+                      <p className="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300 mb-2 leading-relaxed">{contact.title}</p>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-primary-50 dark:bg-primary-900/30 rounded-lg border border-primary-200 dark:border-primary-800">
+                        <Building2 className="w-3.5 h-3.5 text-primary-600 dark:text-primary-400" />
+                        <p className="text-xs sm:text-sm font-semibold text-primary-700 dark:text-primary-300 uppercase tracking-wide">{contact.ministry}</p>
+                      </div>
                     </div>
-                    <div className="flex items-center text-green-600 dark:text-green-400 ml-2 flex-shrink-0">
+                    <div className="flex items-center text-green-600 dark:text-green-400 ml-2 flex-shrink-0 bg-green-50 dark:bg-green-900/20 px-2 py-1.5 rounded-lg">
                       <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="text-xs font-medium ml-1 hidden sm:inline">Verified</span>
+                      <span className="text-xs font-semibold ml-1.5 hidden sm:inline">Verified</span>
                     </div>
                   </div>
                 </div>
@@ -354,8 +357,8 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                           <Phone className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Phone</p>
-                          <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{contact.contact.phone}</p>
+                          <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Phone</p>
+                          <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{contact.contact.phone}</p>
                         </div>
                       </div>
                       <button
@@ -381,8 +384,8 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                           <Mail className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Email</p>
-                          <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{contact.contact.email}</p>
+                          <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Email</p>
+                          <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{contact.contact.email}</p>
                         </div>
                       </div>
                       <button
@@ -408,8 +411,8 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                           <Globe className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Website</p>
-                          <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{contact.contact.website}</p>
+                          <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Website</p>
+                          <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{contact.contact.website}</p>
                         </div>
                       </div>
                       <ExternalLink className="w-4 h-4 text-gray-400 flex-shrink-0" />
@@ -418,20 +421,20 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                 </div>
                 
                 {contact.services.length > 0 && (
-                  <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Services</p>
-                    <div className="flex flex-wrap gap-1.5">
+                  <div className="pt-4 border-t-2 border-gray-200 dark:border-gray-700">
+                    <p className="text-xs font-bold text-gray-600 dark:text-gray-300 mb-3 uppercase tracking-wider">Services Offered</p>
+                    <div className="flex flex-wrap gap-2">
                       {contact.services.slice(0, 3).map((service, index) => (
                         <span
                           key={index}
-                          className="px-2.5 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
+                          className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-800/50 text-blue-800 dark:text-blue-200 text-xs font-semibold rounded-lg border border-blue-200 dark:border-blue-700 shadow-sm"
                         >
                           {service}
                         </span>
                       ))}
                       {contact.services.length > 3 && (
-                        <span className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs rounded-full">
-                          +{contact.services.length - 3}
+                        <span className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-bold rounded-lg border border-gray-300 dark:border-gray-600">
+                          +{contact.services.length - 3} more
                         </span>
                       )}
                     </div>
@@ -468,27 +471,29 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-purple-50/0 group-hover:from-blue-50/50 group-hover:to-purple-50/30 dark:group-hover:from-blue-950/20 dark:group-hover:to-purple-950/10 transition-all duration-300 pointer-events-none rounded-2xl"></div>
                   <div className="relative z-10">
                   {/* Header */}
-                  <div className="mb-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1 truncate">{supplier.name}</h3>
-                        <div className="flex items-center gap-2 mb-1">
-                          <MapPin className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                          <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{supplier.location}</p>
+                  <div className="mb-5">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1 min-w-0 pr-3">
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 leading-tight tracking-tight">{supplier.name}</h3>
+                        <div className="flex items-center gap-2 mb-2">
+                          <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                          <p className="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300 truncate">{supplier.location}</p>
                         </div>
-                        <p className="text-xs font-medium text-primary-600 dark:text-primary-400 capitalize">{supplier.category}</p>
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-primary-50 dark:bg-primary-900/30 rounded-lg border border-primary-200 dark:border-primary-800">
+                          <span className="text-xs sm:text-sm font-bold text-primary-700 dark:text-primary-300 uppercase tracking-wide">{supplier.category}</span>
+                        </div>
                       </div>
-                      <div className="flex flex-col items-end gap-1.5 ml-2 flex-shrink-0">
+                      <div className="flex flex-col items-end gap-2 ml-2 flex-shrink-0">
                         {supplier.verified && (
-                          <div className="flex items-center text-green-600 dark:text-green-400">
+                          <div className="flex items-center text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1.5 rounded-lg">
                             <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                            <span className="text-xs font-medium ml-1 hidden sm:inline">Verified</span>
+                            <span className="text-xs font-semibold ml-1.5 hidden sm:inline">Verified</span>
                           </div>
                         )}
                         {supplier.rating && (
-                          <div className="flex items-center text-yellow-500">
-                            <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
-                            <span className="text-xs sm:text-sm font-semibold ml-1">{supplier.rating}</span>
+                          <div className="flex items-center gap-1.5 bg-yellow-50 dark:bg-yellow-900/20 px-2.5 py-1.5 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                            <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-500 text-yellow-500" />
+                            <span className="text-sm sm:text-base font-bold text-yellow-700 dark:text-yellow-400">{supplier.rating}</span>
                           </div>
                         )}
                       </div>
@@ -507,8 +512,8 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                             <Phone className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Phone</p>
-                            <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{supplier.contact.phone}</p>
+                            <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Phone</p>
+                            <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{supplier.contact.phone}</p>
                           </div>
                         </div>
                         <button
@@ -534,8 +539,8 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                             <Mail className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Email</p>
-                            <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{supplier.contact.email}</p>
+                            <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Email</p>
+                            <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{supplier.contact.email}</p>
                           </div>
                         </div>
                         <button
@@ -561,8 +566,8 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                             <Globe className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Website</p>
-                            <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{supplier.contact.website}</p>
+                            <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Website</p>
+                            <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{supplier.contact.website}</p>
                           </div>
                         </div>
                         <ExternalLink className="w-4 h-4 text-gray-400 flex-shrink-0" />
@@ -571,20 +576,20 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                   </div>
                   
                   {supplier.services.length > 0 && (
-                    <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
-                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Services</p>
-                      <div className="flex flex-wrap gap-1.5">
+                    <div className="pt-4 border-t-2 border-gray-200 dark:border-gray-700">
+                      <p className="text-xs font-bold text-gray-600 dark:text-gray-300 mb-3 uppercase tracking-wider">Services Offered</p>
+                      <div className="flex flex-wrap gap-2">
                         {supplier.services.slice(0, 2).map((service, index) => (
                           <span
                             key={index}
-                            className="px-2.5 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
+                            className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-800/50 text-blue-800 dark:text-blue-200 text-xs font-semibold rounded-lg border border-blue-200 dark:border-blue-700 shadow-sm"
                           >
                             {service}
                           </span>
                         ))}
                         {supplier.services.length > 2 && (
-                          <span className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs rounded-full">
-                            +{supplier.services.length - 2}
+                          <span className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-bold rounded-lg border border-gray-300 dark:border-gray-600">
+                            +{supplier.services.length - 2} more
                           </span>
                         )}
                       </div>
