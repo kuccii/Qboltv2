@@ -1,0 +1,123 @@
+-- ============================================
+-- QIVOOK - COMPREHENSIVE SEED DATA
+-- Migrates all mock data to database
+-- Run this AFTER schema.sql
+-- ============================================
+
+-- Temporarily disable RLS for seeding
+ALTER TABLE IF EXISTS public.user_profiles DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.prices DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.suppliers DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.shipments DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.notifications DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.risk_alerts DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.trade_opportunities DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.logistics_routes DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.documents DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.agents DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.financing_offers DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.demand_data DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.country_suppliers DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.government_contacts DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.country_infrastructure DISABLE ROW LEVEL SECURITY;
+
+-- ============================================
+-- SEED AGENTS DATA
+-- ============================================
+
+INSERT INTO public.agents (name, service_type, country, regions, description, verified, rating, total_bookings, phone, email, website) VALUES
+('East Africa Logistics Solutions', 'logistics', 'Kenya', ARRAY['Kenya', 'Uganda', 'Tanzania'], 'Full-service logistics provider for cross-border trade', true, 4.8, 156, '+254712345678', 'info@ealogistics.com', 'https://ealogistics.com'),
+('Customs Clearance Pro', 'customs', 'Kenya', ARRAY['Kenya', 'Uganda'], 'Expert customs clearance and documentation services', true, 4.6, 89, '+254723456789', 'clearance@customspro.com', 'https://customspro.com'),
+('Quality Inspection Services', 'inspection', 'Rwanda', ARRAY['Rwanda', 'Uganda', 'Tanzania'], 'Professional quality inspection and certification', true, 4.7, 67, '+250788123456', 'inspect@qualityservices.rw', 'https://qualityservices.rw'),
+('Trade Documentation Hub', 'documentation', 'Tanzania', ARRAY['Tanzania', 'Kenya'], 'Complete trade documentation and compliance services', true, 4.5, 45, '+255712345678', 'docs@tradehub.co.tz', 'https://tradehub.co.tz'),
+('Freight Forwarding Experts', 'logistics', 'Uganda', ARRAY['Uganda', 'Kenya', 'Rwanda'], 'Reliable freight forwarding across East Africa', true, 4.9, 123, '+256712345678', 'freight@experts.ug', 'https://experts.ug');
+
+-- ============================================
+-- SEED FINANCING OFFERS DATA
+-- ============================================
+
+INSERT INTO public.financing_offers (provider_name, offer_type, country, interest_rate, max_amount, currency, min_amount, term_months, requirements, description, active) VALUES
+('East Africa Trade Bank', 'invoice_financing', 'Kenya', 12.5, 500000, 'USD', 10000, 90, ARRAY['Invoice from verified supplier', 'Credit check'], 'Invoice financing for verified trade transactions', true),
+('Agricultural Development Fund', 'order_financing', 'Kenya', 10.0, 200000, 'USD', 5000, 180, ARRAY['Agricultural order', 'Supplier verification'], 'Specialized financing for agricultural inputs', true),
+('Cross-Border Trade Finance', 'trade_finance', 'Uganda', 11.5, 300000, 'USD', 15000, 120, ARRAY['Cross-border transaction', 'Insurance coverage'], 'Trade finance for international transactions', true),
+('SME Growth Capital', 'working_capital', 'Rwanda', 13.0, 100000, 'USD', 5000, 60, ARRAY['Business registration', '6 months trading history'], 'Working capital for growing businesses', true),
+('Export Credit Facility', 'export_financing', 'Tanzania', 9.5, 750000, 'USD', 25000, 180, ARRAY['Export contract', 'Letter of credit'], 'Export financing with competitive rates', true);
+
+-- ============================================
+-- SEED DEMAND DATA
+-- ============================================
+
+INSERT INTO public.demand_data (region, country, material, industry, demand_quantity, demand_period, source) VALUES
+('Nairobi', 'Kenya', 'Cement', 'construction', 50000, 'monthly', 'Market Research'),
+('Mombasa', 'Kenya', 'Steel', 'construction', 30000, 'monthly', 'Market Research'),
+('Kampala', 'Uganda', 'Fertilizer', 'agriculture', 25000, 'monthly', 'Agricultural Survey'),
+('Kigali', 'Rwanda', 'Cement', 'construction', 20000, 'monthly', 'Market Research'),
+('Dar es Salaam', 'Tanzania', 'Seeds', 'agriculture', 15000, 'monthly', 'Agricultural Survey'),
+('Nakuru', 'Kenya', 'Fertilizer', 'agriculture', 18000, 'monthly', 'Agricultural Survey'),
+('Kisumu', 'Kenya', 'Timber', 'construction', 12000, 'monthly', 'Market Research');
+
+-- ============================================
+-- SEED DOCUMENTS DATA
+-- ============================================
+
+INSERT INTO public.documents (title, category, country, document_type, description, file_url, required, processing_time_days, cost, currency) VALUES
+('Import License', 'trade', 'Kenya', 'license', 'Required for importing goods into Kenya', 'https://example.com/docs/kenya-import-license.pdf', true, 14, 500, 'USD'),
+('Export Certificate', 'trade', 'Kenya', 'certificate', 'Certificate for exporting goods from Kenya', 'https://example.com/docs/kenya-export-cert.pdf', true, 7, 300, 'USD'),
+('Phytosanitary Certificate', 'agriculture', 'Uganda', 'certificate', 'Required for agricultural exports', 'https://example.com/docs/uganda-phyto.pdf', true, 5, 200, 'USD'),
+('Certificate of Origin', 'trade', 'Rwanda', 'certificate', 'Proof of origin for goods', 'https://example.com/docs/rwanda-coo.pdf', true, 3, 150, 'USD'),
+('Customs Declaration', 'trade', 'Tanzania', 'form', 'Customs declaration form for imports/exports', 'https://example.com/docs/tanzania-customs.pdf', true, 2, 100, 'USD'),
+('Tax Compliance Certificate', 'compliance', 'Kenya', 'certificate', 'Tax compliance certificate for businesses', 'https://example.com/docs/kenya-tax-compliance.pdf', true, 10, 400, 'USD'),
+('Business Registration', 'compliance', 'Uganda', 'license', 'Business registration certificate', 'https://example.com/docs/uganda-business-reg.pdf', true, 7, 250, 'USD');
+
+-- ============================================
+-- SEED COUNTRY SUPPLIERS (Additional Categories)
+-- ============================================
+
+INSERT INTO public.country_suppliers (country_code, name, category, location, region, email, phone, website, services, verified, rating) VALUES
+-- Quality & Testing
+('RW', 'Rwanda Standards Board Lab', 'testing', 'Kigali', 'Kigali', 'lab@rsb.gov.rw', '+250788123456', 'https://rsb.gov.rw', ARRAY['Quality Testing', 'Certification'], true, 4.8),
+('KE', 'Kenya Bureau of Standards', 'certification', 'Nairobi', 'Nairobi', 'cert@kebs.org', '+254712345678', 'https://kebs.org', ARRAY['Product Certification', 'Standards Compliance'], true, 4.7),
+('UG', 'Uganda National Bureau of Standards', 'testing', 'Kampala', 'Kampala', 'testing@unbs.go.ug', '+256712345678', 'https://unbs.go.ug', ARRAY['Laboratory Testing', 'Quality Assurance'], true, 4.6),
+
+-- Financial Services
+('KE', 'Trade Finance Bank', 'bank', 'Nairobi', 'Nairobi', 'trade@tfbank.com', '+254712345679', 'https://tfbank.com', ARRAY['Trade Finance', 'Letters of Credit'], true, 4.5),
+('RW', 'Rwanda Development Bank', 'finance', 'Kigali', 'Kigali', 'finance@brd.rw', '+250788123457', 'https://brd.rw', ARRAY['Business Loans', 'Trade Finance'], true, 4.4),
+('UG', 'Uganda Export Credit Agency', 'insurance', 'Kampala', 'Kampala', 'info@ueca.go.ug', '+256712345679', 'https://ueca.go.ug', ARRAY['Export Insurance', 'Credit Guarantees'], true, 4.6),
+
+-- Trade Services
+('KE', 'Mombasa Customs Brokers', 'customs', 'Mombasa', 'Coast', 'brokers@mombasacustoms.com', '+254712345680', 'https://mombasacustoms.com', ARRAY['Customs Clearance', 'Documentation'], true, 4.7),
+('TZ', 'Dar es Salaam Clearing Agents', 'clearing', 'Dar es Salaam', 'Dar es Salaam', 'clearing@darcustoms.co.tz', '+255712345679', 'https://darcustoms.co.tz', ARRAY['Port Clearance', 'Freight Forwarding'], true, 4.5),
+('KE', 'Trade Documentation Services', 'documentation', 'Nairobi', 'Nairobi', 'docs@tradeservices.com', '+254712345681', 'https://tradeservices.com', ARRAY['Document Preparation', 'Compliance'], true, 4.6);
+
+-- ============================================
+-- SEED GOVERNMENT CONTACTS
+-- ============================================
+
+INSERT INTO public.government_contacts (country_code, ministry, department, name, title, email, phone, website, services, jurisdiction) VALUES
+('RW', 'Ministry of Trade and Industry', 'Trade Promotion', 'Jean Baptiste Nkurunziza', 'Director of Trade', 'trade@minicom.gov.rw', '+250788123458', 'https://minicom.gov.rw', ARRAY['Trade Facilitation', 'Export Promotion'], 'National'),
+('KE', 'Ministry of Industrialization', 'Trade Development', 'Mary Wanjiku', 'Senior Trade Officer', 'trade@industrialization.go.ke', '+254712345682', 'https://industrialization.go.ke', ARRAY['Trade Policy', 'Market Access'], 'National'),
+('UG', 'Ministry of Trade, Industry and Cooperatives', 'Export Promotion', 'David Okello', 'Export Promotion Manager', 'exports@mtic.go.ug', '+256712345680', 'https://mtic.go.ug', ARRAY['Export Support', 'Trade Information'], 'National'),
+('TZ', 'Ministry of Industry and Trade', 'Trade Services', 'Fatuma Hassan', 'Trade Services Director', 'services@mit.go.tz', '+255712345680', 'https://mit.go.tz', ARRAY['Trade Facilitation', 'Business Support'], 'National');
+
+-- ============================================
+-- SEED COUNTRY INFRASTRUCTURE
+-- ============================================
+
+INSERT INTO public.country_infrastructure (country_code, name, type, location, region, capacity, status, description) VALUES
+('RW', 'Kigali Logistics Hub', 'warehouse', 'Kigali', 'Kigali', 50000, 'operational', 'Modern warehouse facility with cold storage'),
+('KE', 'Mombasa Port Terminal', 'port', 'Mombasa', 'Coast', 1000000, 'operational', 'Main port facility for imports/exports'),
+('UG', 'Kampala Freight Terminal', 'warehouse', 'Kampala', 'Kampala', 30000, 'operational', 'Freight handling and storage facility'),
+('TZ', 'Dar es Salaam Port', 'port', 'Dar es Salaam', 'Dar es Salaam', 800000, 'operational', 'Major port for East African trade'),
+('KE', 'Nairobi Dry Port', 'warehouse', 'Nairobi', 'Nairobi', 75000, 'operational', 'Inland container depot'),
+('RW', 'Rwanda Standards Laboratory', 'laboratory', 'Kigali', 'Kigali', 0, 'operational', 'Quality testing and certification facility');
+
+-- ============================================
+-- RE-ENABLE RLS (Optional - for production)
+-- ============================================
+
+-- Uncomment these lines after seeding if you want to re-enable RLS
+-- ALTER TABLE IF EXISTS public.user_profiles ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE IF EXISTS public.prices ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE IF EXISTS public.suppliers ENABLE ROW LEVEL SECURITY;
+-- ... (repeat for all tables)
+
