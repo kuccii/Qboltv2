@@ -11,13 +11,15 @@ import {
   Users, 
   Truck, 
   FlaskConical,
-  Utensils,
   Shield,
   CheckCircle,
   ExternalLink,
   Download,
   Copy,
-  Star
+  Star,
+  CreditCard,
+  FileText,
+  Scale
 } from 'lucide-react';
 import { CountrySupplier, GovernmentContact, CountryData } from '../../data/countries/types';
 import { getRwandaSuppliers, getRwandaGovernment, getRwandaData } from '../../data/countries/rwanda/rwandaDataLoader';
@@ -28,7 +30,7 @@ interface ContactDirectoryProps {
   countryCode?: string; // Optional: defaults to 'RW' for backward compatibility
 }
 
-type ContactTab = 'government' | 'suppliers' | 'logistics' | 'laboratories' | 'food';
+type ContactTab = 'government' | 'suppliers' | 'logistics' | 'quality' | 'financial' | 'trade-services';
 
 const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '', countryCode = 'RW' }) => {
   const [activeTab, setActiveTab] = useState<ContactTab>('government');
@@ -199,8 +201,9 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
       case 'government': return Building2;
       case 'suppliers': return Users;
       case 'logistics': return Truck;
-      case 'laboratories': return FlaskConical;
-      case 'food': return Utensils;
+      case 'quality': return FlaskConical;
+      case 'financial': return CreditCard;
+      case 'trade-services': return FileText;
       default: return Users;
     }
   };
@@ -209,8 +212,9 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
     { id: 'government', label: 'Government' },
     { id: 'suppliers', label: 'Suppliers' },
     { id: 'logistics', label: 'Logistics' },
-    { id: 'laboratories', label: 'Laboratories' },
-    { id: 'food', label: 'Food Suppliers' }
+    { id: 'quality', label: 'Quality & Testing' },
+    { id: 'financial', label: 'Financial Services' },
+    { id: 'trade-services', label: 'Trade Services' }
   ];
 
   if (loading) {
@@ -426,11 +430,13 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                   case 'suppliers':
                     return supplier.category === 'construction' || supplier.category === 'agriculture';
                   case 'logistics':
-                    return supplier.category === 'transport';
-                  case 'laboratories':
-                    return supplier.category === 'laboratory';
-                  case 'food':
-                    return supplier.category === 'food';
+                    return supplier.category === 'transport' || supplier.category === 'logistics' || supplier.category === 'warehousing';
+                  case 'quality':
+                    return supplier.category === 'laboratory' || supplier.category === 'testing' || supplier.category === 'certification';
+                  case 'financial':
+                    return supplier.category === 'bank' || supplier.category === 'fintech' || supplier.category === 'insurance' || supplier.category === 'finance';
+                  case 'trade-services':
+                    return supplier.category === 'customs' || supplier.category === 'clearing' || supplier.category === 'broker' || supplier.category === 'documentation';
                   default:
                     return true;
                 }
@@ -536,9 +542,10 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
           (activeTab !== 'government' && getFilteredSuppliers().filter(supplier => {
             switch (activeTab) {
               case 'suppliers': return supplier.category === 'construction' || supplier.category === 'agriculture';
-              case 'logistics': return supplier.category === 'transport';
-              case 'laboratories': return supplier.category === 'laboratory';
-              case 'food': return supplier.category === 'food';
+              case 'logistics': return supplier.category === 'transport' || supplier.category === 'logistics' || supplier.category === 'warehousing';
+              case 'quality': return supplier.category === 'laboratory' || supplier.category === 'testing' || supplier.category === 'certification';
+              case 'financial': return supplier.category === 'bank' || supplier.category === 'fintech' || supplier.category === 'insurance' || supplier.category === 'finance';
+              case 'trade-services': return supplier.category === 'customs' || supplier.category === 'clearing' || supplier.category === 'broker' || supplier.category === 'documentation';
               default: return true;
             }
           }).length === 0)) && (
