@@ -76,10 +76,10 @@ INSERT INTO public.documents (user_id, name, type, category, file_url, tags, met
 -- ============================================
 
 INSERT INTO public.country_suppliers (country_code, name, category, location, region, email, phone, website, services, verified, rating) VALUES
--- Quality & Testing
-('RW', 'Rwanda Standards Board Lab', 'testing', 'Kigali', 'Kigali', 'lab@rsb.gov.rw', '+250788123456', 'https://rsb.gov.rw', ARRAY['Quality Testing', 'Certification'], true, 4.8),
-('KE', 'Kenya Bureau of Standards', 'certification', 'Nairobi', 'Nairobi', 'cert@kebs.org', '+254712345678', 'https://kebs.org', ARRAY['Product Certification', 'Standards Compliance'], true, 4.7),
-('UG', 'Uganda National Bureau of Standards', 'testing', 'Kampala', 'Kampala', 'testing@unbs.go.ug', '+256712345678', 'https://unbs.go.ug', ARRAY['Laboratory Testing', 'Quality Assurance'], true, 4.6),
+-- Quality & Testing (using 'laboratory' category)
+('RW', 'Rwanda Standards Board Lab', 'laboratory', 'Kigali', 'Kigali', 'lab@rsb.gov.rw', '+250788123456', 'https://rsb.gov.rw', ARRAY['Quality Testing', 'Certification'], true, 4.8),
+('KE', 'Kenya Bureau of Standards', 'laboratory', 'Nairobi', 'Nairobi', 'cert@kebs.org', '+254712345678', 'https://kebs.org', ARRAY['Product Certification', 'Standards Compliance'], true, 4.7),
+('UG', 'Uganda National Bureau of Standards', 'laboratory', 'Kampala', 'Kampala', 'testing@unbs.go.ug', '+256712345678', 'https://unbs.go.ug', ARRAY['Laboratory Testing', 'Quality Assurance'], true, 4.6),
 
 -- Financial Services
 ('KE', 'Trade Finance Bank', 'bank', 'Nairobi', 'Nairobi', 'trade@tfbank.com', '+254712345679', 'https://tfbank.com', ARRAY['Trade Finance', 'Letters of Credit'], true, 4.5),
