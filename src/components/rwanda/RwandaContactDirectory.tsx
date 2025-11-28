@@ -321,96 +321,113 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
       {/* Content */}
       <div className="space-y-4">
         {activeTab === 'government' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {getFilteredGovernment().map((contact) => (
-              <div key={contact.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">{contact.name}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{contact.title}</p>
-                    <p className="text-sm font-medium text-primary-600 dark:text-primary-400">{contact.ministry}</p>
-                  </div>
-                  <div className="flex items-center text-green-600 dark:text-green-400">
-                    <CheckCircle className="w-4 h-4 mr-1" />
-                    <span className="text-xs font-medium">Verified</span>
+              <div key={contact.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5">
+                {/* Header */}
+                <div className="mb-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1 truncate">{contact.name}</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{contact.title}</p>
+                      <p className="text-sm font-medium text-primary-600 dark:text-primary-400">{contact.ministry}</p>
+                    </div>
+                    <div className="flex items-center text-green-600 dark:text-green-400 ml-2 flex-shrink-0">
+                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="text-xs font-medium ml-1 hidden sm:inline">Verified</span>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="space-y-2">
-                  {contact.contact.email && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Email:</span>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-mono text-gray-900 dark:text-white">{contact.contact.email}</span>
-                        <button
-                          onClick={() => copyToClipboard(contact.contact.email)}
-                          className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                          title="Copy email"
-                        >
-                          <Copy className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={() => handleContact('email', contact.contact.email)}
-                          className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                          title="Send email"
-                        >
-                          <Mail className="w-3 h-3" />
-                        </button>
+                {/* Contact Actions - Mobile Optimized */}
+                <div className="space-y-3 mb-4">
+                  {contact.contact.phone && (
+                    <button
+                      onClick={() => handleContact('phone', contact.contact.phone)}
+                      className="w-full flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                    >
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="flex-shrink-0 w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                          <Phone className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Phone</p>
+                          <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{contact.contact.phone}</p>
+                        </div>
                       </div>
-                    </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyToClipboard(contact.contact.phone);
+                        }}
+                        className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        title="Copy"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                    </button>
                   )}
                   
-                  {contact.contact.phone && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Phone:</span>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-mono text-gray-900 dark:text-white">{contact.contact.phone}</span>
-                        <button
-                          onClick={() => copyToClipboard(contact.contact.phone)}
-                          className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                          title="Copy phone"
-                        >
-                          <Copy className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={() => handleContact('phone', contact.contact.phone)}
-                          className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                          title="Call"
-                        >
-                          <Phone className="w-3 h-3" />
-                        </button>
+                  {contact.contact.email && (
+                    <button
+                      onClick={() => handleContact('email', contact.contact.email)}
+                      className="w-full flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
+                    >
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="flex-shrink-0 w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Email</p>
+                          <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{contact.contact.email}</p>
+                        </div>
                       </div>
-                    </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyToClipboard(contact.contact.email);
+                        }}
+                        className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        title="Copy"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                    </button>
                   )}
                   
                   {contact.contact.website && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Website:</span>
-                      <button
-                        onClick={() => handleContact('website', contact.contact.website)}
-                        className="flex items-center text-primary-600 dark:text-primary-400 hover:underline"
-                      >
-                        <span className="text-sm mr-1">Visit</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => handleContact('website', contact.contact.website)}
+                      className="w-full flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+                    >
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="flex-shrink-0 w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                          <Globe className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Website</p>
+                          <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{contact.contact.website}</p>
+                        </div>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    </button>
                   )}
                 </div>
                 
                 {contact.services.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Services:</p>
-                    <div className="flex flex-wrap gap-1">
+                  <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Services</p>
+                    <div className="flex flex-wrap gap-1.5">
                       {contact.services.slice(0, 3).map((service, index) => (
                         <span
                           key={index}
-                          className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
+                          className="px-2.5 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
                         >
                           {service}
                         </span>
                       ))}
                       {contact.services.length > 3 && (
-                        <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs rounded-full">
+                        <span className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs rounded-full">
                           +{contact.services.length - 3}
                         </span>
                       )}
@@ -442,90 +459,124 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                 }
               })
               .map((supplier) => (
-                <div key={supplier.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white">{supplier.name}</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">{supplier.location}</p>
-                      <p className="text-xs text-primary-600 dark:text-primary-400 capitalize">{supplier.category}</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {supplier.verified && (
-                        <div className="flex items-center text-green-600 dark:text-green-400">
-                          <CheckCircle className="w-4 h-4 mr-1" />
-                          <span className="text-xs font-medium">Verified</span>
+                <div key={supplier.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5">
+                  {/* Header */}
+                  <div className="mb-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1 truncate">{supplier.name}</h3>
+                        <div className="flex items-center gap-2 mb-1">
+                          <MapPin className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                          <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{supplier.location}</p>
                         </div>
-                      )}
-                      {supplier.rating && (
-                        <div className="flex items-center text-yellow-500">
-                          <Star className="w-3 h-3 fill-current" />
-                          <span className="text-xs ml-1">{supplier.rating}</span>
-                        </div>
-                      )}
+                        <p className="text-xs font-medium text-primary-600 dark:text-primary-400 capitalize">{supplier.category}</p>
+                      </div>
+                      <div className="flex flex-col items-end gap-1.5 ml-2 flex-shrink-0">
+                        {supplier.verified && (
+                          <div className="flex items-center text-green-600 dark:text-green-400">
+                            <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                            <span className="text-xs font-medium ml-1 hidden sm:inline">Verified</span>
+                          </div>
+                        )}
+                        {supplier.rating && (
+                          <div className="flex items-center text-yellow-500">
+                            <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
+                            <span className="text-xs sm:text-sm font-semibold ml-1">{supplier.rating}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    {supplier.contact.email && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">Email:</span>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-mono text-gray-900 dark:text-white truncate max-w-32">{supplier.contact.email}</span>
-                          <button
-                            onClick={() => handleContact('email', supplier.contact.email)}
-                            className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                            title="Send email"
-                          >
-                            <Mail className="w-3 h-3" />
-                          </button>
+                  {/* Contact Actions - Mobile Optimized */}
+                  <div className="space-y-3 mb-4">
+                    {supplier.contact.phone && (
+                      <button
+                        onClick={() => handleContact('phone', supplier.contact.phone)}
+                        className="w-full flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="flex-shrink-0 w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                            <Phone className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Phone</p>
+                            <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{supplier.contact.phone}</p>
+                          </div>
                         </div>
-                      </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copyToClipboard(supplier.contact.phone);
+                          }}
+                          className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                          title="Copy"
+                        >
+                          <Copy className="w-4 h-4" />
+                        </button>
+                      </button>
                     )}
                     
-                    {supplier.contact.phone && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">Phone:</span>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-mono text-gray-900 dark:text-white">{supplier.contact.phone}</span>
-                          <button
-                            onClick={() => handleContact('phone', supplier.contact.phone)}
-                            className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                            title="Call"
-                          >
-                            <Phone className="w-3 h-3" />
-                          </button>
+                    {supplier.contact.email && (
+                      <button
+                        onClick={() => handleContact('email', supplier.contact.email)}
+                        className="w-full flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="flex-shrink-0 w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
+                            <Mail className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Email</p>
+                            <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{supplier.contact.email}</p>
+                          </div>
                         </div>
-                      </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copyToClipboard(supplier.contact.email);
+                          }}
+                          className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                          title="Copy"
+                        >
+                          <Copy className="w-4 h-4" />
+                        </button>
+                      </button>
                     )}
                     
                     {supplier.contact.website && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">Website:</span>
-                        <button
-                          onClick={() => handleContact('website', supplier.contact.website)}
-                          className="flex items-center text-primary-600 dark:text-primary-400 hover:underline"
-                        >
-                          <span className="text-sm mr-1">Visit</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => handleContact('website', supplier.contact.website)}
+                        className="w-full flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="flex-shrink-0 w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                            <Globe className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Website</p>
+                            <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">{supplier.contact.website}</p>
+                          </div>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      </button>
                     )}
                   </div>
                   
                   {supplier.services.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Services:</p>
-                      <div className="flex flex-wrap gap-1">
+                    <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Services</p>
+                      <div className="flex flex-wrap gap-1.5">
                         {supplier.services.slice(0, 2).map((service, index) => (
                           <span
                             key={index}
-                            className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
+                            className="px-2.5 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
                           >
                             {service}
                           </span>
                         ))}
                         {supplier.services.length > 2 && (
-                          <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs rounded-full">
+                          <span className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs rounded-full">
                             +{supplier.services.length - 2}
                           </span>
                         )}
