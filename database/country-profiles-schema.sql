@@ -27,7 +27,11 @@ CREATE TABLE IF NOT EXISTS country_suppliers (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   country_code TEXT NOT NULL REFERENCES country_profiles(code) ON DELETE CASCADE,
   name TEXT NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('laboratory', 'storage', 'food', 'transport', 'government', 'construction', 'agriculture')),
+  category TEXT NOT NULL CHECK (category IN (
+    'laboratory', 'storage', 'food', 'transport', 'government', 'construction', 'agriculture',
+    'testing', 'certification', 'bank', 'fintech', 'insurance', 'finance',
+    'customs', 'clearing', 'broker', 'documentation', 'logistics', 'warehousing'
+  )),
   location TEXT NOT NULL,
   region TEXT,
   email TEXT,

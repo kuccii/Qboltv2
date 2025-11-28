@@ -321,9 +321,9 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
       {/* Content */}
       <div className="space-y-4">
         {activeTab === 'government' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {getFilteredGovernment().map((contact) => (
-              <div key={contact.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5">
+              <div key={contact.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-gray-100 dark:border-gray-700/50 p-4 sm:p-6 hover:shadow-xl hover:border-primary-200 dark:hover:border-primary-800/50 transition-all duration-300 transform hover:-translate-y-1">
                 {/* Header */}
                 <div className="mb-4">
                   <div className="flex items-start justify-between mb-2">
@@ -459,7 +459,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                 }
               })
               .map((supplier) => (
-                <div key={supplier.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5">
+                <div key={supplier.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-gray-100 dark:border-gray-700/50 p-4 sm:p-6 hover:shadow-xl hover:border-primary-200 dark:hover:border-primary-800/50 transition-all duration-300 transform hover:-translate-y-1">
                   {/* Header */}
                   <div className="mb-4">
                     <div className="flex items-start justify-between mb-2">
