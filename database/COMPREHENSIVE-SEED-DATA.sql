@@ -110,13 +110,13 @@ INSERT INTO public.government_contacts (country_code, ministry, department, name
 -- SEED COUNTRY INFRASTRUCTURE
 -- ============================================
 
-INSERT INTO public.country_infrastructure (country_code, name, type, location, region, capacity, status, description) VALUES
-('RW', 'Kigali Logistics Hub', 'warehouse', 'Kigali', 'Kigali', 50000, 'operational', 'Modern warehouse facility with cold storage'),
-('KE', 'Mombasa Port Terminal', 'port', 'Mombasa', 'Coast', 1000000, 'operational', 'Main port facility for imports/exports'),
-('UG', 'Kampala Freight Terminal', 'warehouse', 'Kampala', 'Kampala', 30000, 'operational', 'Freight handling and storage facility'),
-('TZ', 'Dar es Salaam Port', 'port', 'Dar es Salaam', 'Dar es Salaam', 800000, 'operational', 'Major port for East African trade'),
-('KE', 'Nairobi Dry Port', 'warehouse', 'Nairobi', 'Nairobi', 75000, 'operational', 'Inland container depot'),
-('RW', 'Rwanda Standards Laboratory', 'laboratory', 'Kigali', 'Kigali', 0, 'operational', 'Quality testing and certification facility');
+INSERT INTO public.country_infrastructure (country_code, name, type, location, capacity, status, address) VALUES
+('RW', 'Kigali Logistics Hub', 'warehouse', 'Kigali', '50000 sqm', 'operational', 'Kigali, Rwanda'),
+('KE', 'Mombasa Port Terminal', 'port', 'Mombasa', '1000000 TEU', 'operational', 'Mombasa, Kenya'),
+('UG', 'Kampala Freight Terminal', 'warehouse', 'Kampala', '30000 sqm', 'operational', 'Kampala, Uganda'),
+('TZ', 'Dar es Salaam Port', 'port', 'Dar es Salaam', '800000 TEU', 'operational', 'Dar es Salaam, Tanzania'),
+('KE', 'Nairobi Dry Port', 'warehouse', 'Nairobi', '75000 sqm', 'operational', 'Nairobi, Kenya'),
+('RW', 'Kigali International Airport', 'airport', 'Kigali', 'Cargo terminal', 'operational', 'Kigali, Rwanda');
 
 -- ============================================
 -- RE-ENABLE RLS (Optional - for production)
