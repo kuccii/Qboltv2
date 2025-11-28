@@ -321,9 +321,12 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
       {/* Content */}
       <div className="space-y-4">
         {activeTab === 'government' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {getFilteredGovernment().map((contact) => (
-              <div key={contact.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-gray-100 dark:border-gray-700/50 p-4 sm:p-6 hover:shadow-xl hover:border-primary-200 dark:hover:border-primary-800/50 transition-all duration-300 transform hover:-translate-y-1">
+              <div key={contact.id} className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-gray-200 dark:border-gray-600 p-5 sm:p-6 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 transform hover:-translate-y-2 hover:scale-[1.02] overflow-hidden group">
+                {/* Subtle gradient overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-purple-50/0 group-hover:from-blue-50/50 group-hover:to-purple-50/30 dark:group-hover:from-blue-950/20 dark:group-hover:to-purple-950/10 transition-all duration-300 pointer-events-none rounded-2xl"></div>
+                <div className="relative z-10">
                 {/* Header */}
                 <div className="mb-4">
                   <div className="flex items-start justify-between mb-2">
@@ -344,10 +347,10 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                   {contact.contact.phone && (
                     <button
                       onClick={() => handleContact('phone', contact.contact.phone)}
-                      className="w-full flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                      className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/30 dark:to-blue-800/20 rounded-xl hover:from-blue-100 hover:to-blue-200/50 dark:hover:from-blue-900/40 dark:hover:to-blue-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-blue-200/50 dark:border-blue-700/50"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="flex-shrink-0 w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md">
                           <Phone className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -371,10 +374,10 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                   {contact.contact.email && (
                     <button
                       onClick={() => handleContact('email', contact.contact.email)}
-                      className="w-full flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
+                      className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-green-50 to-emerald-100/50 dark:from-green-900/30 dark:to-emerald-800/20 rounded-xl hover:from-green-100 hover:to-emerald-200/50 dark:hover:from-green-900/40 dark:hover:to-emerald-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-green-200/50 dark:border-green-700/50"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="flex-shrink-0 w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
+                        <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-green-600 to-emerald-700 rounded-xl flex items-center justify-center shadow-md">
                           <Mail className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -398,10 +401,10 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                   {contact.contact.website && (
                     <button
                       onClick={() => handleContact('website', contact.contact.website)}
-                      className="w-full flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+                      className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-purple-50 to-indigo-100/50 dark:from-purple-900/30 dark:to-indigo-800/20 rounded-xl hover:from-purple-100 hover:to-indigo-200/50 dark:hover:from-purple-900/40 dark:hover:to-indigo-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-purple-200/50 dark:border-purple-700/50"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="flex-shrink-0 w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                        <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-md">
                           <Globe className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -434,6 +437,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                     </div>
                   </div>
                 )}
+                </div>
               </div>
             ))}
           </div>
@@ -459,7 +463,10 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                 }
               })
               .map((supplier) => (
-                <div key={supplier.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-gray-100 dark:border-gray-700/50 p-4 sm:p-6 hover:shadow-xl hover:border-primary-200 dark:hover:border-primary-800/50 transition-all duration-300 transform hover:-translate-y-1">
+                <div key={supplier.id} className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-gray-200 dark:border-gray-600 p-5 sm:p-6 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 transform hover:-translate-y-2 hover:scale-[1.02] overflow-hidden group">
+                  {/* Subtle gradient overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-purple-50/0 group-hover:from-blue-50/50 group-hover:to-purple-50/30 dark:group-hover:from-blue-950/20 dark:group-hover:to-purple-950/10 transition-all duration-300 pointer-events-none rounded-2xl"></div>
+                  <div className="relative z-10">
                   {/* Header */}
                   <div className="mb-4">
                     <div className="flex items-start justify-between mb-2">
@@ -493,10 +500,10 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                     {supplier.contact.phone && (
                       <button
                         onClick={() => handleContact('phone', supplier.contact.phone)}
-                        className="w-full flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                        className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/30 dark:to-blue-800/20 rounded-xl hover:from-blue-100 hover:to-blue-200/50 dark:hover:from-blue-900/40 dark:hover:to-blue-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-blue-200/50 dark:border-blue-700/50"
                       >
                         <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="flex-shrink-0 w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                          <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md">
                             <Phone className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -520,10 +527,10 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                     {supplier.contact.email && (
                       <button
                         onClick={() => handleContact('email', supplier.contact.email)}
-                        className="w-full flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
+                        className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-green-50 to-emerald-100/50 dark:from-green-900/30 dark:to-emerald-800/20 rounded-xl hover:from-green-100 hover:to-emerald-200/50 dark:hover:from-green-900/40 dark:hover:to-emerald-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-green-200/50 dark:border-green-700/50"
                       >
                         <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="flex-shrink-0 w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
+                          <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-green-600 to-emerald-700 rounded-xl flex items-center justify-center shadow-md">
                             <Mail className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -547,10 +554,10 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                     {supplier.contact.website && (
                       <button
                         onClick={() => handleContact('website', supplier.contact.website)}
-                        className="w-full flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+                        className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-purple-50 to-indigo-100/50 dark:from-purple-900/30 dark:to-indigo-800/20 rounded-xl hover:from-purple-100 hover:to-indigo-200/50 dark:hover:from-purple-900/40 dark:hover:to-indigo-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-purple-200/50 dark:border-purple-700/50"
                       >
                         <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="flex-shrink-0 w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                          <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-md">
                             <Globe className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -583,6 +590,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                       </div>
                     </div>
                   )}
+                  </div>
                 </div>
               ))}
           </div>
