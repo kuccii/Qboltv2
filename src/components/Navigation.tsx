@@ -306,108 +306,111 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
 
           {/* Right: Actions */}
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 flex-shrink-0 ml-auto">
-            {/* Search */}
-            <button
-              onClick={toggleSearchModal}
-              className="p-1.5 sm:p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-              title="Search (Press /)"
-            >
-              <Search size={18} className="sm:w-5 sm:h-5" />
-            </button>
-
-            {/* Help */}
-            <NavLink
-              to="/app/help"
-              className={({ isActive }) => `
-                hidden md:inline-flex items-center gap-1.5 xl:gap-2 py-1 xl:py-1.5 px-2 xl:px-2.5 rounded-md text-xs font-medium transition-colors
-                ${isActive 
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300' 
-                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }
-              `}
-              title="Help Center"
-            >
-              <HelpCircle size={13} className="xl:w-[14px] xl:h-[14px]" />
-              <span className="hidden xl:inline">Help</span>
-            </NavLink>
-
-            {/* Notifications */}
-            <div className="relative">
-              <button 
-                onClick={toggleNotifications}
-                className="p-1.5 sm:p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors relative"
-                title="Notifications"
+            {/* Desktop Actions - Hidden on mobile */}
+            <div className="hidden lg:flex items-center gap-1.5 sm:gap-2 md:gap-3">
+              {/* Search */}
+              <button
+                onClick={toggleSearchModal}
+                className="p-1.5 sm:p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                title="Search (Press /)"
               >
-                <Bell size={18} className="sm:w-5 sm:h-5" />
-                <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full"></span>
+                <Search size={18} className="sm:w-5 sm:h-5" />
               </button>
-              <NotificationDropdown 
-                isOpen={showNotifications}
-                onClose={() => setShowNotifications(false)}
-              />
-            </div>
 
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-1.5 sm:p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            >
-              {theme === 'dark' ? <Sun size={18} className="sm:w-5 sm:h-5" /> : <Moon size={18} className="sm:w-5 sm:h-5" />}
-            </button>
+              {/* Help */}
+              <NavLink
+                to="/app/help"
+                className={({ isActive }) => `
+                  hidden md:inline-flex items-center gap-1.5 xl:gap-2 py-1 xl:py-1.5 px-2 xl:px-2.5 rounded-md text-xs font-medium transition-colors
+                  ${isActive 
+                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300' 
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }
+                `}
+                title="Help Center"
+              >
+                <HelpCircle size={13} className="xl:w-[14px] xl:h-[14px]" />
+                <span className="hidden xl:inline">Help</span>
+              </NavLink>
 
-            {/* Settings */}
-            <NavLink
-              to="/app/settings"
-              className={({ isActive }) => `
-                p-1.5 sm:p-2 rounded-md transition-colors
-                ${isActive 
-                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' 
-                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-                }
-              `}
-              title="Settings"
-            >
-              <Settings size={18} className="sm:w-5 sm:h-5" />
-            </NavLink>
-
-            {/* User Menu - Visible on all screen sizes */}
-            <div className="flex items-center gap-2 xl:gap-3 pl-1.5 xl:pl-2 border-l border-gray-200 dark:border-gray-700">
+              {/* Notifications */}
               <div className="relative">
                 <button 
-                  onClick={toggleUserMenu}
-                  className="flex items-center gap-1.5 sm:gap-2 xl:gap-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-1 sm:p-1.5 xl:p-2 transition-colors"
+                  onClick={toggleNotifications}
+                  className="p-1.5 sm:p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors relative"
+                  title="Notifications"
                 >
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 xl:w-8 xl:h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-xs xl:text-sm">
-                    {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
-                  </div>
-                  <div className="text-xs xl:text-sm text-left hidden sm:block xl:block">
-                    <p className="font-medium text-gray-900 dark:text-white leading-none text-xs xl:text-sm">
-                      {currentUser?.name || 'User'}
-                    </p>
-                    <p className="text-[10px] xl:text-xs text-gray-500 dark:text-gray-400 hidden xl:block">
-                      {currentUser?.company || 'Company'}
-                    </p>
-                  </div>
-                  <ChevronDown size={12} className="sm:w-3.5 sm:h-3.5 xl:w-4 xl:h-4 text-gray-500 hidden sm:block" />
+                  <Bell size={18} className="sm:w-5 sm:h-5" />
+                  <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full"></span>
                 </button>
-                <UserMenu 
-                  isOpen={showUserMenu}
-                  onClose={() => setShowUserMenu(false)}
+                <NotificationDropdown 
+                  isOpen={showNotifications}
+                  onClose={() => setShowNotifications(false)}
                 />
               </div>
+
+              {/* Theme Toggle */}
+              <button
+                onClick={toggleTheme}
+                className="p-1.5 sm:p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              >
+                {theme === 'dark' ? <Sun size={18} className="sm:w-5 sm:h-5" /> : <Moon size={18} className="sm:w-5 sm:h-5" />}
+              </button>
+
+              {/* Settings */}
+              <NavLink
+                to="/app/settings"
+                className={({ isActive }) => `
+                  p-1.5 sm:p-2 rounded-md transition-colors
+                  ${isActive 
+                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' 
+                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                  }
+                `}
+                title="Settings"
+              >
+                <Settings size={18} className="sm:w-5 sm:h-5" />
+              </NavLink>
+
+              {/* User Menu */}
+              <div className="flex items-center gap-2 xl:gap-3 pl-1.5 xl:pl-2 border-l border-gray-200 dark:border-gray-700">
+                <div className="relative">
+                  <button 
+                    onClick={toggleUserMenu}
+                    className="flex items-center gap-1.5 sm:gap-2 xl:gap-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-1 sm:p-1.5 xl:p-2 transition-colors"
+                  >
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 xl:w-8 xl:h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-xs xl:text-sm">
+                      {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
+                    </div>
+                    <div className="text-xs xl:text-sm text-left hidden sm:block xl:block">
+                      <p className="font-medium text-gray-900 dark:text-white leading-none text-xs xl:text-sm">
+                        {currentUser?.name || 'User'}
+                      </p>
+                      <p className="text-[10px] xl:text-xs text-gray-500 dark:text-gray-400 hidden xl:block">
+                        {currentUser?.company || 'Company'}
+                      </p>
+                    </div>
+                    <ChevronDown size={12} className="sm:w-3.5 sm:h-3.5 xl:w-4 xl:h-4 text-gray-500 hidden sm:block" />
+                  </button>
+                  <UserMenu 
+                    isOpen={showUserMenu}
+                    onClose={() => setShowUserMenu(false)}
+                  />
+                </div>
+              </div>
+
+              {/* Logout */}
+              <button 
+                onClick={handleLogout}
+                className="hidden xl:flex items-center gap-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 py-2 px-3 rounded-md text-xs xl:text-sm transition-colors"
+              >
+                <LogOut size={14} className="xl:w-4 xl:h-4" />
+                <span>Log out</span>
+              </button>
             </div>
 
-            {/* Logout */}
-            <button 
-              onClick={handleLogout}
-              className="hidden xl:flex items-center gap-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 py-2 px-3 rounded-md text-xs xl:text-sm transition-colors"
-            >
-              <LogOut size={14} className="xl:w-4 xl:h-4" />
-              <span>Log out</span>
-            </button>
-
-            {/* Mobile menu toggle */}
+            {/* Mobile menu toggle - Only visible on mobile */}
             <button 
               className="lg:hidden p-1.5 sm:p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
               onClick={onMobileMenuToggle}
