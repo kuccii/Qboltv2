@@ -58,16 +58,18 @@ INSERT INTO public.demand_data (region, country, material, industry, demand_quan
 
 -- ============================================
 -- SEED DOCUMENTS DATA
+-- Note: Documents require a user_id, so these are template documents
+-- In production, documents should be created by users through the app
 -- ============================================
 
-INSERT INTO public.documents (title, category, country, document_type, description, file_url, required, processing_time_days, cost, currency) VALUES
-('Import License', 'trade', 'Kenya', 'license', 'Required for importing goods into Kenya', 'https://example.com/docs/kenya-import-license.pdf', true, 14, 500, 'USD'),
-('Export Certificate', 'trade', 'Kenya', 'certificate', 'Certificate for exporting goods from Kenya', 'https://example.com/docs/kenya-export-cert.pdf', true, 7, 300, 'USD'),
-('Phytosanitary Certificate', 'agriculture', 'Uganda', 'certificate', 'Required for agricultural exports', 'https://example.com/docs/uganda-phyto.pdf', true, 5, 200, 'USD'),
-('Certificate of Origin', 'trade', 'Rwanda', 'certificate', 'Proof of origin for goods', 'https://example.com/docs/rwanda-coo.pdf', true, 3, 150, 'USD'),
-('Customs Declaration', 'trade', 'Tanzania', 'form', 'Customs declaration form for imports/exports', 'https://example.com/docs/tanzania-customs.pdf', true, 2, 100, 'USD'),
-('Tax Compliance Certificate', 'compliance', 'Kenya', 'certificate', 'Tax compliance certificate for businesses', 'https://example.com/docs/kenya-tax-compliance.pdf', true, 10, 400, 'USD'),
-('Business Registration', 'compliance', 'Uganda', 'license', 'Business registration certificate', 'https://example.com/docs/uganda-business-reg.pdf', true, 7, 250, 'USD');
+-- Skip documents seed for now as they require user_id
+-- Documents should be created through the application by users
+-- Uncomment and modify if you have a system/admin user_id:
+/*
+INSERT INTO public.documents (user_id, name, type, category, file_url, tags, metadata) VALUES
+('ADMIN_USER_ID_HERE', 'Import License Guide', 'guide', 'trade', 'https://example.com/docs/kenya-import-license.pdf', ARRAY['kenya', 'import', 'license'], '{"country": "Kenya", "description": "Required for importing goods into Kenya", "processing_time_days": 14, "cost": 500, "currency": "USD"}'::jsonb),
+('ADMIN_USER_ID_HERE', 'Export Certificate Guide', 'guide', 'trade', 'https://example.com/docs/kenya-export-cert.pdf', ARRAY['kenya', 'export', 'certificate'], '{"country": "Kenya", "description": "Certificate for exporting goods from Kenya", "processing_time_days": 7, "cost": 300, "currency": "USD"}'::jsonb);
+*/
 
 -- ============================================
 -- SEED COUNTRY SUPPLIERS (Additional Categories)
