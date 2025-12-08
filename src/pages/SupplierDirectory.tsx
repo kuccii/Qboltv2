@@ -36,7 +36,6 @@ import {
   VerificationBadge,
   InsuranceIndicator
 } from '../design-system';
-import HeaderStrip from '../components/HeaderStrip';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const SupplierDirectory: React.FC = () => {
@@ -408,49 +407,60 @@ const SupplierDirectory: React.FC = () => {
   
   return (
     <AppLayout>
-      <HeaderStrip 
-        title={`${getIndustryTerm('suppliers')} Directory`}
-        subtitle={`Find and connect with verified ${getIndustryTerm('suppliers').toLowerCase()} in your industry`}
-        right={
-          <div className="flex items-center gap-3">
-            <SearchInput 
-              value={searchTerm} 
-              onChange={setSearchTerm} 
-              placeholder={`Search ${getIndustryTerm('suppliers').toLowerCase()}...`} 
-              size="sm" 
-            />
-            <div className="flex items-center border rounded-md">
-              <button onClick={() => setViewMode('list')} className={`px-3 py-2 text-sm flex items-center gap-1 rounded-l-md ${viewMode === 'list' ? 'bg-primary-100 text-primary-700 border-primary-300' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
-                <ListIcon className="h-4 w-4" />
-                List
-              </button>
-              <button onClick={() => setViewMode('grid')} className={`px-3 py-2 text-sm flex items-center gap-1 border-l ${viewMode === 'grid' ? 'bg-primary-100 text-primary-700 border-primary-300' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
-                <GridIcon className="h-4 w-4" />
-                Grid
-              </button>
-              <button onClick={() => setViewMode('map')} className={`px-3 py-2 text-sm flex items-center gap-1 rounded-r-md border-l ${viewMode === 'map' ? 'bg-primary-100 text-primary-700 border-primary-300' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
-                <MapIcon className="h-4 w-4" />
-                Map
+      {/* Playful Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 sm:px-6 lg:px-8 py-6 shadow-lg">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2 mb-2">
+                <span>🏢</span>
+                {getIndustryTerm('suppliers')} Directory!
+              </h1>
+              <p className="text-blue-100 flex items-center gap-2">
+                <span>🔍</span>
+                Find and connect with awesome {getIndustryTerm('suppliers').toLowerCase()}!
+              </p>
+              <div className="flex items-center gap-4 mt-3">
+                <div className="bg-white/20 px-3 py-1 rounded-lg border border-white/30">
+                  <span className="text-sm font-bold">Total: {suppliersToUse.length}</span>
+                </div>
+                <div className="bg-white/20 px-3 py-1 rounded-lg border border-white/30">
+                  <span className="text-sm font-bold">Showing: {filteredSuppliers.length}</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 flex-wrap">
+              <SearchInput 
+                value={searchTerm} 
+                onChange={setSearchTerm} 
+                placeholder={`Search ${getIndustryTerm('suppliers').toLowerCase()}...`} 
+                size="sm" 
+              />
+              <div className="flex items-center bg-white/20 rounded-lg border border-white/30 overflow-hidden">
+                <button onClick={() => setViewMode('list')} className={`px-3 py-2 text-sm flex items-center gap-1 ${viewMode === 'list' ? 'bg-white/30 text-white font-bold' : 'text-white/80 hover:bg-white/10'}`}>
+                  <ListIcon className="h-4 w-4" />
+                  List
+                </button>
+                <button onClick={() => setViewMode('grid')} className={`px-3 py-2 text-sm flex items-center gap-1 border-l border-white/30 ${viewMode === 'grid' ? 'bg-white/30 text-white font-bold' : 'text-white/80 hover:bg-white/10'}`}>
+                  <GridIcon className="h-4 w-4" />
+                  Grid
+                </button>
+                <button onClick={() => setViewMode('map')} className={`px-3 py-2 text-sm flex items-center gap-1 border-l border-white/30 ${viewMode === 'map' ? 'bg-white/30 text-white font-bold' : 'text-white/80 hover:bg-white/10'}`}>
+                  <MapIcon className="h-4 w-4" />
+                  Map
+                </button>
+              </div>
+              <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-2 px-3 py-2 text-sm font-bold bg-white/20 text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all">
+                <FilterIcon className="h-4 w-4" />
+                Filters
+                {(selectedMaterial !== 'all' || selectedRegion !== 'all' || verification.length > 0 || minRating > 0) && (
+                  <span className="px-2 py-0.5 text-xs bg-yellow-400 text-yellow-900 rounded-full font-bold">Active</span>
+                )}
               </button>
             </div>
-            <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-              <FilterIcon className="h-4 w-4" />
-              Filters
-              {(selectedMaterial !== 'all' || selectedRegion !== 'all' || verification.length > 0 || minRating > 0) && (
-                <span className="px-2 py-0.5 text-xs bg-primary-100 text-primary-700 rounded-full">Active</span>
-              )}
-            </button>
-            <ActionMenu
-              items={[
-                { id: 'export', label: 'Export List', icon: <Download className="h-4 w-4" />, description: 'Download CSV/PDF', onClick: () => console.log('Export') },
-                { id: 'save-view', label: 'Save Current View', icon: <Plus className="h-4 w-4" />, description: 'Save filters and view settings', onClick: () => console.log('Save view') }
-              ]}
-              size="sm"
-            />
           </div>
-        }
-        chips={[{ label: 'Total', value: suppliersToUse.length }, { label: 'Filtered', value: filteredSuppliers.length, variant: 'info' }]}
-      />
+        </div>
+      </div>
 
       <PageLayout maxWidth="full" padding="none">
         {/* Filter Sidebar */}
@@ -581,24 +591,25 @@ const SupplierDirectory: React.FC = () => {
                   filteredSuppliers.map(supplier => (
                   <div 
                     key={supplier.id} 
-                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    className="bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-800 dark:to-blue-900/20 rounded-xl shadow-lg border-2 border-blue-200 dark:border-blue-700 p-5 hover:shadow-xl hover:border-blue-400 dark:hover:border-blue-600 transition-all transform hover:scale-[1.02]"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-medium text-gray-800">{supplier.name}</h3>
+                          <h3 className="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2">
+                            <span>🏢</span>
+                            {supplier.name}
+                          </h3>
                           {/* Verification Badge */}
                           {(supplier as any).verification && (
-                            <VerificationBadge 
-                              status={(supplier as any).verification.status}
-                              type="documents"
-                              size="sm"
-                            />
+                            <div className="flex items-center text-green-600 dark:text-green-400 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/40 dark:to-green-800/40 px-2 py-1 rounded-lg border-2 border-green-300 dark:border-green-700">
+                              <CheckCircle className="w-4 h-4" />
+                            </div>
                           )}
                         </div>
-                        <div className="flex items-center text-sm text-gray-500 mt-1">
-                          <MapPin size={14} className="mr-1" />
-                          {supplier.location}
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mt-1 mb-2">
+                          <MapPin size={14} className="mr-1 text-purple-600 dark:text-purple-400" />
+                          <span className="font-medium">{supplier.location}</span>
                         </div>
                         {/* Insurance Indicator */}
                         {(supplier as any).insurance && (
@@ -615,68 +626,84 @@ const SupplierDirectory: React.FC = () => {
                           </div>
                         )}
                       </div>
-                      <div className="flex items-center gap-2">
-                        <label className="text-xs text-gray-500">Compare</label>
-                        <input type="checkbox" checked={compareIds.includes(String(supplier.id))} onChange={() => toggleCompare(String(supplier.id))} />
-                        <div className="flex items-center">
-                          <Star size={16} className="text-warning-500 mr-1" />
-                          <span className="text-sm font-medium">{supplier.rating}</span>
+                      <div className="flex flex-col items-end gap-2">
+                        <div className="flex items-center gap-1.5 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900/40 dark:to-yellow-800/40 px-2 py-1 rounded-lg border-2 border-yellow-300 dark:border-yellow-700">
+                          <Star size={16} className="text-yellow-600 dark:text-yellow-400 fill-yellow-500" />
+                          <span className="text-sm font-bold text-yellow-700 dark:text-yellow-400">{supplier.rating}</span>
                         </div>
+                        <label className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1 cursor-pointer">
+                          <input type="checkbox" checked={compareIds.includes(String(supplier.id))} onChange={() => toggleCompare(String(supplier.id))} className="rounded" />
+                          Compare
+                        </label>
                       </div>
                     </div>
                     
                     <div className="space-y-3">
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-2">
                         {supplier.materials.map((material, index) => (
                           <span 
                             key={index} 
-                            className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800"
+                            className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 text-blue-800 dark:text-blue-200 border-2 border-blue-300 dark:border-blue-700"
                           >
                             {material}
                           </span>
                         ))}
                       </div>
                       
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <div className="flex items-center">
-                          <Truck size={14} className="mr-1" />
-                          {(supplier as any).avgDeliveryTime ? `${(supplier as any).avgDeliveryTime} days` : '—'}
-                        </div>
-                        <div className="flex items-center">
-                          <CheckCircle size={14} className="mr-1" />
-                          {(supplier as any).reliabilityScore ?? '—'}% Reliable
-                        </div>
+                      <div className="flex flex-wrap items-center gap-3 text-sm">
+                        {(supplier as any).avgDeliveryTime && (
+                          <div className="flex items-center gap-1 bg-purple-50 dark:bg-purple-900/30 px-2 py-1 rounded-lg border border-purple-200 dark:border-purple-700">
+                            <span>🚚</span>
+                            <span className="font-semibold text-purple-700 dark:text-purple-300">{(supplier as any).avgDeliveryTime} days</span>
+                          </div>
+                        )}
+                        {(supplier as any).reliabilityScore && (
+                          <div className="flex items-center gap-1 bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded-lg border border-green-200 dark:border-green-700">
+                            <span>✅</span>
+                            <span className="font-semibold text-green-700 dark:text-green-300">{(supplier as any).reliabilityScore}% Reliable</span>
+                          </div>
+                        )}
                         {(supplier as any).riskScore && (
-                          <div className="flex items-center">
-                            <AlertCircle size={14} className="mr-1" />
-                            Risk: {(supplier as any).riskScore}/10
+                          <div className="flex items-center gap-1 bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded-lg border border-red-200 dark:border-red-700">
+                            <span>⚠️</span>
+                            <span className="font-semibold text-red-700 dark:text-red-300">Risk: {(supplier as any).riskScore}/10</span>
                           </div>
                         )}
                       </div>
                       
                       {(supplier as any).transactionHistory && (
-                        <div className="text-xs text-gray-500">
-                          {((supplier as any).transactionHistory)} transactions completed
+                        <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-lg">
+                          <span>📊</span> {((supplier as any).transactionHistory)} transactions completed
                         </div>
                       )}
                       
-                      <div className="pt-2">
-                        <div className="flex items-center gap-2 text-sm">
-                          <Phone size={14} className="text-gray-400" />
-                          <span className="text-gray-600">{(supplier as any).phone || '—'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm mt-1">
-                          <Mail size={14} className="text-gray-400" />
-                          <span className="text-gray-600">{(supplier as any).email || '—'}</span>
-                        </div>
+                      <div className="pt-2 space-y-2">
+                        {(supplier as any).phone && (
+                          <div className="flex items-center gap-2 text-sm bg-blue-50 dark:bg-blue-900/30 px-3 py-2 rounded-lg border border-blue-200 dark:border-blue-700">
+                            <span>📞</span>
+                            <span className="font-semibold text-gray-700 dark:text-gray-300">{(supplier as any).phone}</span>
+                          </div>
+                        )}
+                        {(supplier as any).email && (
+                          <div className="flex items-center gap-2 text-sm bg-green-50 dark:bg-green-900/30 px-3 py-2 rounded-lg border border-green-200 dark:border-green-700">
+                            <span>✉️</span>
+                            <span className="font-semibold text-gray-700 dark:text-gray-300">{(supplier as any).email}</span>
+                          </div>
+                        )}
                       </div>
                       
                       <div className="pt-2 grid grid-cols-2 gap-2">
-                        <button className="py-2 bg-primary-50 text-primary-700 rounded-md hover:bg-primary-100 transition-colors text-sm font-medium">
-                          Contact
+                        <button 
+                          onClick={() => navigate(`/app/suppliers/${supplier.id}`)}
+                          className="py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 text-sm font-bold shadow-md"
+                        >
+                          <span>💬</span> Contact
                         </button>
-                        <button className="py-2 border rounded-md text-sm font-medium">
-                          View Details
+                        <button 
+                          onClick={() => navigate(`/app/suppliers/${supplier.id}`)}
+                          className="py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105 text-sm font-bold shadow-md"
+                        >
+                          <span>👁️</span> View
                         </button>
                       </div>
                     </div>

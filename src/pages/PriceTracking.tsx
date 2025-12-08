@@ -373,7 +373,7 @@ const PriceTracking: React.FC = () => {
                 </div>
               </div>
             </div>
-          </SectionLayout>
+          </div>
 
           {/* Chart */}
           <div className="mb-6">
