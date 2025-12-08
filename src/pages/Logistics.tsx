@@ -591,43 +591,54 @@ const Logistics: React.FC = () => {
 
   return (
     <AppLayout>
-      <PageHeader
-        title="Logistics Planning"
-        subtitle="Plan routes, calculate costs, and optimize your supply chain"
-        breadcrumbs={[{ label: 'Supply Chain' }, { label: 'Logistics' }]}
-        actions={
-          <div className="flex items-center gap-3">
-            <ActionMenu
-              items={[
-                { id: 'export', label: 'Export Routes', icon: <Download className="h-4 w-4" />, onClick: () => console.log('Export') },
-                { id: 'import', label: 'Import Routes', icon: <Plus className="h-4 w-4" />, onClick: () => console.log('Import') }
-              ]}
-              size="sm"
-            />
+      {/* Playful Header */}
+      <div className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-4 sm:px-6 lg:px-8 py-6 shadow-lg">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2 mb-2">
+                <span>🚚</span>
+                Logistics Adventure!
+              </h1>
+              <p className="text-orange-100 flex items-center gap-2">
+                <span>🗺️</span>
+                Plan routes, calculate costs, and make your supply chain awesome!
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <ActionMenu
+                items={[
+                  { id: 'export', label: 'Export Routes', icon: <Download className="h-4 w-4" />, onClick: () => console.log('Export') },
+                  { id: 'import', label: 'Import Routes', icon: <Plus className="h-4 w-4" />, onClick: () => console.log('Import') }
+                ]}
+                size="sm"
+              />
+            </div>
           </div>
-        }
-      />
+        </div>
+      </div>
 
       <PageLayout maxWidth="full" padding="none">
-        {/* Tab Navigation */}
-        <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+        {/* Playful Tab Navigation */}
+        <div className="border-b-2 border-orange-200 dark:border-orange-800 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20">
           <div className="px-3 sm:px-4 md:px-6">
-            <nav className="flex space-x-4 sm:space-x-6 md:space-x-8 overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
+            <nav className="flex space-x-2 sm:space-x-4 md:space-x-6 overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
               {[
-                { id: 'overview', label: 'Overview', icon: BarChart3 },
-                { id: 'planner', label: 'Route Planner', icon: Route },
-                { id: 'calculator', label: 'Cost Calculator', icon: Calculator },
-                { id: 'routes', label: 'Saved Routes', icon: Save }
-              ].map(({ id, label, icon: Icon }) => (
+                { id: 'overview', label: 'Overview', icon: BarChart3, emoji: '📊' },
+                { id: 'planner', label: 'Route Planner', icon: Route, emoji: '🗺️' },
+                { id: 'calculator', label: 'Cost Calculator', icon: Calculator, emoji: '💰' },
+                { id: 'routes', label: 'Saved Routes', icon: Save, emoji: '💾' }
+              ].map(({ id, label, icon: Icon, emoji }) => (
                 <button
                   key={id}
                   onClick={() => setActiveTab(id as any)}
-                  className={`flex items-center gap-1.5 sm:gap-2 py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex-shrink-0 ${
+                  className={`flex items-center gap-1.5 sm:gap-2 py-3 sm:py-4 px-2 sm:px-4 border-b-2 font-bold text-xs sm:text-sm whitespace-nowrap flex-shrink-0 transition-all ${
                     activeTab === id
-                      ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
+                      ? 'border-orange-500 text-orange-600 dark:text-orange-400 bg-white/50 dark:bg-gray-800/50'
+                      : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:border-orange-300 dark:hover:border-orange-700'
                   }`}
                 >
+                  <span className="text-base">{emoji}</span>
                   <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   <span>{label}</span>
                 </button>
