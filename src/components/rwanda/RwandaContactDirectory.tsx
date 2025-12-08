@@ -617,9 +617,6 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
               ))}
           </div>
         )}
-              ))}
-          </div>
-        )}
 
         {/* No results */}
         {((activeTab === 'government' && getFilteredGovernment().length === 0) ||
