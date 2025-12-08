@@ -16,6 +16,7 @@ export function usePrices(filters?: {
   material?: string;
   country?: string;
   location?: string;
+  industry?: 'construction' | 'agriculture';
   limit?: number;
 }) {
   const { isAuthenticated } = useAuth();

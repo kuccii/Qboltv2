@@ -155,122 +155,160 @@ const RwandaOverview: React.FC<RwandaOverviewProps> = ({ countryCode = 'RW' }) =
 
   return (
     <div className="space-y-6">
-      {/* Quick Stats */}
+      {/* Playful Quick Stats */}
+      <div className="mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <span>📊</span>
+          Country Stats!
+        </h2>
+        <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+          <span>🎉</span>
+          See how awesome this country is!
+        </p>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white">
+        <div className="bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-blue-600 dark:via-blue-700 dark:to-blue-800 rounded-2xl shadow-2xl border-4 border-blue-300 dark:border-blue-500 p-6 text-white transform hover:scale-105 transition-transform">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-blue-100 text-sm font-medium">Total Suppliers</p>
-              <p className="text-3xl font-bold">{stats?.totalSuppliers || 0}</p>
+              <p className="text-blue-100 text-base font-bold flex items-center gap-2 mb-2">
+                <span>👥</span>
+                Total Suppliers
+              </p>
+              <p className="text-5xl font-extrabold">{stats?.totalSuppliers || 0}</p>
             </div>
-            <Users className="w-8 h-8 text-blue-200" />
+            <Users className="w-10 h-10 text-blue-200" />
           </div>
         </div>
         
-        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white">
+        <div className="bg-gradient-to-br from-green-400 via-green-500 to-green-600 dark:from-green-600 dark:via-green-700 dark:to-green-800 rounded-2xl shadow-2xl border-4 border-green-300 dark:border-green-500 p-6 text-white transform hover:scale-105 transition-transform">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-green-100 text-sm font-medium">Verified Suppliers</p>
-              <p className="text-3xl font-bold">{stats?.verifiedSuppliers || 0}</p>
+              <p className="text-green-100 text-base font-bold flex items-center gap-2 mb-2">
+                <span>✅</span>
+                Verified Suppliers
+              </p>
+              <p className="text-5xl font-extrabold">{stats?.verifiedSuppliers || 0}</p>
             </div>
-            <CheckCircle className="w-8 h-8 text-green-200" />
+            <CheckCircle className="w-10 h-10 text-green-200" />
           </div>
         </div>
         
-        <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-white">
+        <div className="bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 dark:from-purple-600 dark:via-purple-700 dark:to-purple-800 rounded-2xl shadow-2xl border-4 border-purple-300 dark:border-purple-500 p-6 text-white transform hover:scale-105 transition-transform">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-purple-100 text-sm font-medium">Infrastructure</p>
-              <p className="text-3xl font-bold">{stats?.infrastructureFacilities || 0}</p>
+              <p className="text-purple-100 text-base font-bold flex items-center gap-2 mb-2">
+                <span>🏗️</span>
+                Infrastructure
+              </p>
+              <p className="text-5xl font-extrabold">{stats?.infrastructureFacilities || 0}</p>
             </div>
-            <Building2 className="w-8 h-8 text-purple-200" />
+            <Building2 className="w-10 h-10 text-purple-200" />
           </div>
         </div>
       </div>
 
-      {/* Pricing Overview */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-          <TrendingUp className="w-5 h-5 mr-2 text-primary-600" />
-          Current Pricing
+      {/* Playful Pricing Overview */}
+      <div className="mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <span>💰</span>
+          Current Prices!
+        </h2>
+        <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+          <span>📊</span>
+          See what things cost right now!
+        </p>
+      </div>
+      <div className="bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 dark:from-yellow-600 dark:via-yellow-700 dark:to-yellow-800 rounded-2xl shadow-2xl border-4 border-yellow-300 dark:border-yellow-500 p-6">
+        <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <span>💹</span>
+          Price List
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Fuel Prices */}
-          <div>
-            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center">
-              <Fuel className="w-4 h-4 mr-2" />
+          <div className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border-2 border-white/30">
+            <h4 className="text-base font-bold text-white mb-3 flex items-center gap-2">
+              <span>⛽</span>
               Fuel Prices (USD/litre)
             </h4>
             <div className="space-y-2">
               {getFuelPrices().map((fuel, index) => (
-                <div key={index} className="flex justify-between items-center py-2 px-3 bg-gray-50 dark:bg-gray-700 rounded">
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">{fuel.item}</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">${fuel.price.toFixed(2)}</span>
+                <div key={index} className="flex justify-between items-center py-2 px-3 bg-white/20 dark:bg-white/10 rounded-lg border border-white/30">
+                  <span className="text-sm font-bold text-white">{fuel.item}</span>
+                  <span className="text-sm font-extrabold text-white">${fuel.price.toFixed(2)}</span>
                 </div>
               ))}
               {getFuelPrices().length === 0 && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">No fuel pricing data available</p>
+                <p className="text-sm text-white/80 text-center py-4">No fuel pricing data yet! 🚗</p>
               )}
             </div>
           </div>
 
           {/* Labor Costs */}
-          <div>
-            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center">
-              <Users className="w-4 h-4 mr-2" />
+          <div className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border-2 border-white/30">
+            <h4 className="text-base font-bold text-white mb-3 flex items-center gap-2">
+              <span>👷</span>
               Labor Costs (USD/day)
             </h4>
             <div className="space-y-2">
               {getLaborCosts().map((labor, index) => (
-                <div key={index} className="flex justify-between items-center py-2 px-3 bg-gray-50 dark:bg-gray-700 rounded">
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">{labor.item}</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">${labor.price.toFixed(2)}</span>
+                <div key={index} className="flex justify-between items-center py-2 px-3 bg-white/20 dark:bg-white/10 rounded-lg border border-white/30">
+                  <span className="text-sm font-bold text-white">{labor.item}</span>
+                  <span className="text-sm font-extrabold text-white">${labor.price.toFixed(2)}</span>
                 </div>
               ))}
               {getLaborCosts().length === 0 && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">No labor cost data available</p>
+                <p className="text-sm text-white/80 text-center py-4">No labor cost data yet! 💼</p>
               )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Top Suppliers */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-          <CheckCircle className="w-5 h-5 mr-2 text-green-600" />
-          Top Verified Suppliers
-        </h3>
-        
+      {/* Playful Top Suppliers */}
+      <div className="mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <span>⭐</span>
+          Top Verified Suppliers!
+        </h2>
+        <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+          <span>🏆</span>
+          The best suppliers we found for you!
+        </p>
+      </div>
+      <div className="bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-600 dark:from-emerald-600 dark:via-emerald-700 dark:to-emerald-800 rounded-2xl shadow-2xl border-4 border-emerald-300 dark:border-emerald-500 p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {getTopSuppliers().map((supplier) => (
-            <div key={supplier.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div key={supplier.id} className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border-2 border-white/30 hover:bg-white/30 transition-all transform hover:scale-105">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <h4 className="font-medium text-gray-900 dark:text-white">{supplier.name}</h4>
+                  <span className="text-lg">✅</span>
+                  <h4 className="font-bold text-white text-base">{supplier.name}</h4>
                 </div>
                 {supplier.rating && (
-                  <div className="flex items-center text-yellow-500">
-                    <span className="text-sm font-medium">{supplier.rating}</span>
+                  <div className="flex items-center text-yellow-200">
+                    <span className="text-lg">⭐</span>
+                    <span className="text-sm font-bold">{supplier.rating}</span>
                   </div>
                 )}
               </div>
               
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{supplier.location}</p>
+              <p className="text-sm text-white/90 font-medium mb-3 flex items-center gap-1">
+                <MapPin className="w-4 h-4" />
+                {supplier.location}
+              </p>
               
               <div className="flex flex-wrap gap-1 mb-3">
                 {supplier.services.slice(0, 2).map((service, index) => (
                   <span
                     key={index}
-                    className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
+                    className="px-2 py-1 bg-white/30 text-white text-xs font-bold rounded-lg border border-white/40"
                   >
                     {service}
                   </span>
                 ))}
                 {supplier.services.length > 2 && (
-                  <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs rounded-full">
+                  <span className="px-2 py-1 bg-white/20 text-white/90 text-xs font-bold rounded-lg border border-white/30">
                     +{supplier.services.length - 2}
                   </span>
                 )}
@@ -280,7 +318,7 @@ const RwandaOverview: React.FC<RwandaOverviewProps> = ({ countryCode = 'RW' }) =
                 {supplier.contact.phone && (
                   <button
                     onClick={() => window.open(`tel:${supplier.contact.phone}`)}
-                    className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    className="p-2 text-white bg-white/20 hover:bg-white/30 rounded-lg border border-white/30 transition-colors"
                     title="Call"
                   >
                     <Phone className="w-4 h-4" />
@@ -289,7 +327,7 @@ const RwandaOverview: React.FC<RwandaOverviewProps> = ({ countryCode = 'RW' }) =
                 {supplier.contact.email && (
                   <button
                     onClick={() => window.open(`mailto:${supplier.contact.email}`)}
-                    className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    className="p-2 text-white bg-white/20 hover:bg-white/30 rounded-lg border border-white/30 transition-colors"
                     title="Email"
                   >
                     <Mail className="w-4 h-4" />
@@ -298,7 +336,7 @@ const RwandaOverview: React.FC<RwandaOverviewProps> = ({ countryCode = 'RW' }) =
                 {supplier.contact.website && (
                   <button
                     onClick={() => window.open(supplier.contact.website, '_blank')}
-                    className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    className="p-2 text-white bg-white/20 hover:bg-white/30 rounded-lg border border-white/30 transition-colors"
                     title="Website"
                   >
                     <Globe className="w-4 h-4" />
@@ -310,39 +348,47 @@ const RwandaOverview: React.FC<RwandaOverviewProps> = ({ countryCode = 'RW' }) =
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
-        
+      {/* Playful Quick Actions */}
+      <div className="mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <span>⚡</span>
+          Quick Actions!
+        </h2>
+        <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+          <span>🎯</span>
+          Things you can do right away!
+        </p>
+      </div>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <button className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <Building2 className="w-5 h-5 text-primary-600 mr-3" />
+          <button className="flex items-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-2 border-blue-200 dark:border-blue-700 rounded-xl hover:shadow-md transition-all transform hover:scale-105">
+            <span className="text-2xl mr-3">🏛️</span>
             <div className="text-left">
-              <p className="font-medium text-gray-900 dark:text-white">Government Contacts</p>
+              <p className="font-bold text-gray-900 dark:text-white">Government Contacts</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Ministries & Agencies</p>
             </div>
           </button>
           
-          <button className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <Fuel className="w-5 h-5 text-primary-600 mr-3" />
+          <button className="flex items-center p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-2 border-green-200 dark:border-green-700 rounded-xl hover:shadow-md transition-all transform hover:scale-105">
+            <span className="text-2xl mr-3">⛽</span>
             <div className="text-left">
-              <p className="font-medium text-gray-900 dark:text-white">Fuel Pricing</p>
+              <p className="font-bold text-gray-900 dark:text-white">Fuel Pricing</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Current fuel costs</p>
             </div>
           </button>
           
-          <button className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <MapPin className="w-5 h-5 text-primary-600 mr-3" />
+          <button className="flex items-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-2 border-purple-200 dark:border-purple-700 rounded-xl hover:shadow-md transition-all transform hover:scale-105">
+            <span className="text-2xl mr-3">🏗️</span>
             <div className="text-left">
-              <p className="font-medium text-gray-900 dark:text-white">Infrastructure Map</p>
+              <p className="font-bold text-gray-900 dark:text-white">Infrastructure Map</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Airports & facilities</p>
             </div>
           </button>
           
-          <button className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <Users className="w-5 h-5 text-primary-600 mr-3" />
+          <button className="flex items-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-2 border-orange-200 dark:border-orange-700 rounded-xl hover:shadow-md transition-all transform hover:scale-105">
+            <span className="text-2xl mr-3">👥</span>
             <div className="text-left">
-              <p className="font-medium text-gray-900 dark:text-white">All Suppliers</p>
+              <p className="font-bold text-gray-900 dark:text-white">All Suppliers</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Complete directory</p>
             </div>
           </button>

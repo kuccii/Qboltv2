@@ -221,7 +221,7 @@ const DemandMapping: React.FC = () => {
     return coordinates[region] || [-1.2921, 36.8219];
   };
   
-  // Generate demand data - Use real data if available, fallback to mock
+  // Generate demand data - Use real data from database
   const generateDemandData = useMemo(() => {
     const data: DemandPoint[] = [];
     

@@ -108,6 +108,7 @@ export const unifiedApi = {
       material?: string;
       country?: string;
       location?: string;
+      industry?: 'construction' | 'agriculture';
       limit?: number;
       orderBy?: 'price' | 'updated_at';
       ascending?: boolean;
@@ -124,6 +125,13 @@ export const unifiedApi = {
       }
       if (filters?.location) {
         query = query.eq('location', filters.location);
+      }
+      // Industry filtering: Map materials to industries
+      if (filters?.industry) {
+        const constructionMaterials = ['Cement', 'Steel', 'Timber', 'Sand', 'Bricks', 'Tiles', 'Paint', 'Wood', 'Glass', 'Aluminum', 'Aggregates'];
+        const agricultureMaterials = ['Fertilizer', 'Seeds', 'Pesticides', 'Feed', 'Machinery', 'Irrigation Equipment', 'Storage Bags', 'Tools'];
+        const materials = filters.industry === 'construction' ? constructionMaterials : agricultureMaterials;
+        query = query.in('material', materials);
       }
 
       const orderBy = filters?.orderBy || 'updated_at';
@@ -309,6 +317,87 @@ export const unifiedApi = {
       return data;
     },
 
+    async updateReview(reviewId: string, updates: {
+      rating?: number;
+      review_text?: string;
+      quality_rating?: number;
+      delivery_rating?: number;
+      reliability_rating?: number;
+    }): Promise<SupplierReview> {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      const { data, error } = await supabase
+        .from('supplier_reviews')
+        .update(updates)
+        .eq('id', reviewId)
+        .eq('user_id', user.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async deleteReview(reviewId: string): Promise<void> {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      const { error } = await supabase
+        .from('supplier_reviews')
+        .delete()
+        .eq('id', reviewId)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+    },
+
+    async markReviewHelpful(reviewId: string): Promise<void> {
+      const { error } = await supabase.rpc('increment_helpful_count', {
+        review_id: reviewId
+      });
+      if (error) {
+        // If RPC doesn't exist, manually increment
+        const { data: review } = await supabase
+          .from('supplier_reviews')
+          .select('helpful_count')
+          .eq('id', reviewId)
+          .single();
+        
+        if (review) {
+          await supabase
+            .from('supplier_reviews')
+            .update({ helpful_count: (review.helpful_count || 0) + 1 })
+            .eq('id', reviewId);
+        }
+      }
+    },
+
+    async getReviewStats(supplierId: string) {
+      const { data, error } = await supabase
+        .from('supplier_reviews')
+        .select('rating')
+        .eq('supplier_id', supplierId);
+
+      if (error) throw error;
+
+      const reviews = data || [];
+      const total = reviews.length;
+      const average = total > 0 
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / total 
+        : 0;
+      const distribution = [1, 2, 3, 4, 5].map(rating => ({
+        rating,
+        count: reviews.filter(r => r.rating === rating).length
+      }));
+
+      return {
+        total,
+        average: Math.round(average * 10) / 10,
+        distribution
+      };
+    },
+
     async createSupplier(supplier: {
       name: string;
       country: string;
@@ -318,6 +407,12 @@ export const unifiedApi = {
       phone?: string;
       email?: string;
       website?: string;
+      verified?: boolean;
+      insurance_active?: boolean;
+      rating?: number;
+      total_reviews?: number;
+      total_orders?: number;
+      on_time_delivery_rate?: number;
     }): Promise<Supplier> {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
@@ -333,6 +428,43 @@ export const unifiedApi = {
 
       if (error) throw error;
       return data;
+    },
+
+    async update(id: string, updates: Partial<{
+      name: string;
+      country: string;
+      industry: string;
+      materials: string[];
+      description: string;
+      verified: boolean;
+      insurance_active: boolean;
+      rating: number;
+      total_reviews: number;
+      total_orders: number;
+      on_time_delivery_rate: number;
+      phone: string;
+      email: string;
+      website: string;
+      verified_at: string | null;
+    }>): Promise<Supplier> {
+      const { data, error } = await supabase
+        .from('suppliers')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async deleteSupplier(id: string): Promise<void> {
+      const { error } = await supabase
+        .from('suppliers')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
     },
   },
 
@@ -400,6 +532,81 @@ export const unifiedApi = {
 
       if (error) throw error;
       return data as any;
+    },
+
+    // Admin CRUD methods
+    async getAll(filters?: { limit?: number }) {
+      let query = supabase
+        .from('logistics_routes')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
+    },
+
+    async create(route: {
+      origin: string;
+      destination: string;
+      origin_country: string;
+      destination_country: string;
+      distance_km?: number;
+      estimated_days?: number;
+      cost_per_ton?: number;
+      status?: string;
+    }) {
+      const { data, error } = await supabase
+        .from('logistics_routes')
+        .insert(route)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async update(id: string, updates: any) {
+      const { data, error } = await supabase
+        .from('logistics_routes')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async delete(id: string) {
+      const { error } = await supabase
+        .from('logistics_routes')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+
+    async getShipmentsAdmin(filters?: { status?: string; limit?: number }) {
+      let query = supabase
+        .from('shipments')
+        .select('*, logistics_routes(*), user_profiles(*)')
+        .order('created_at', { ascending: false });
+
+      if (filters?.status) {
+        query = query.eq('status', filters.status);
+      }
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
     },
 
     async createShipment(shipment: {
@@ -775,6 +982,452 @@ export const unifiedApi = {
         };
       }
     },
+
+    // Insurance Quotes
+    async getQuotes(filters?: {
+      quoteType?: string;
+      status?: string;
+      limit?: number;
+    }) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      let query = supabase
+        .from('insurance_quotes')
+        .select('*, insurance_providers(*)')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (filters?.quoteType) {
+        query = query.eq('quote_type', filters.quoteType);
+      }
+      if (filters?.status) {
+        query = query.eq('status', filters.status);
+      }
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
+    },
+
+    async requestQuote(request: {
+      providerId: string;
+      quoteType: 'cargo' | 'liability' | 'property' | 'general' | 'trade_credit';
+      coverageAmount: number;
+      termDays: number;
+      currency?: string;
+      additionalData?: any;
+    }) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // Get user profile for quote data
+      const profile = await unifiedApi.user.getProfile(user.id);
+      
+      // Import insurance partner service
+      const { insurancePartnerService } = await import('./insurancePartners');
+      
+      // Request quote from partner
+      const quoteResponse = await insurancePartnerService.requestQuote(
+        request.providerId,
+        {
+          quoteType: request.quoteType,
+          coverageAmount: request.coverageAmount,
+          termDays: request.termDays,
+          currency: request.currency || 'KES',
+          userData: {
+            name: profile.name,
+            email: profile.email,
+            company: profile.company || '',
+            country: profile.country,
+            industry: profile.industry || 'construction'
+          },
+          additionalData: request.additionalData
+        }
+      );
+
+      if (!quoteResponse.success) {
+        throw new Error(quoteResponse.error || 'Failed to get quote');
+      }
+
+      // Save quote to database
+      const expiresAt = quoteResponse.expiresAt 
+        ? new Date(quoteResponse.expiresAt)
+        : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // Default 7 days
+
+      const { data, error } = await supabase
+        .from('insurance_quotes')
+        .insert({
+          user_id: user.id,
+          provider_id: request.providerId,
+          quote_type: request.quoteType,
+          coverage_amount: quoteResponse.coverageAmount || request.coverageAmount,
+          premium: quoteResponse.premium || 0,
+          currency: quoteResponse.currency || request.currency || 'KES',
+          term_days: request.termDays,
+          deductible: quoteResponse.deductible,
+          coverage_details: quoteResponse.coverageDetails || {},
+          requirements: quoteResponse.requirements || [],
+          exclusions: quoteResponse.exclusions || [],
+          quote_data: quoteResponse,
+          status: 'pending',
+          expires_at: expiresAt,
+          partner_quote_id: quoteResponse.quoteId
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    // Insurance Applications
+    async getApplications(filters?: {
+      status?: string;
+      limit?: number;
+    }) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      let query = supabase
+        .from('insurance_applications')
+        .select('*, insurance_quotes(*), insurance_providers(*)')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (filters?.status) {
+        query = query.eq('status', filters.status);
+      }
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
+    },
+
+    async submitApplication(request: {
+      quoteId: string;
+      additionalData?: any;
+    }) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // Get quote
+      const { data: quote, error: quoteError } = await supabase
+        .from('insurance_quotes')
+        .select('*, insurance_providers(*)')
+        .eq('id', request.quoteId)
+        .eq('user_id', user.id)
+        .single();
+
+      if (quoteError || !quote) {
+        throw new Error('Quote not found');
+      }
+
+      // Check if quote is still valid
+      if (quote.status !== 'pending' || new Date(quote.expires_at) < new Date()) {
+        throw new Error('Quote expired or no longer valid');
+      }
+
+      // Get user profile
+      const profile = await unifiedApi.user.getProfile(user.id);
+
+      // Import insurance partner service
+      const { insurancePartnerService } = await import('./insurancePartners');
+
+      // Submit application to partner
+      const appResponse = await insurancePartnerService.submitApplication(
+        quote.provider_id,
+        {
+          quoteId: request.quoteId,
+          userData: {
+            name: profile.name,
+            email: profile.email,
+            company: profile.company || '',
+            country: profile.country,
+            industry: profile.industry || 'construction'
+          },
+          additionalData: request.additionalData
+        }
+      );
+
+      if (!appResponse.success) {
+        throw new Error(appResponse.error || 'Failed to submit application');
+      }
+
+      // Save application to database
+      const { data, error } = await supabase
+        .from('insurance_applications')
+        .insert({
+          user_id: user.id,
+          quote_id: request.quoteId,
+          provider_id: quote.provider_id,
+          application_type: quote.quote_type,
+          coverage_amount: quote.coverage_amount,
+          requested_premium: quote.premium,
+          currency: quote.currency,
+          term_days: quote.term_days,
+          application_data: request.additionalData || {},
+          status: 'pending',
+          partner_application_id: appResponse.partnerApplicationId
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Update quote status
+      await supabase
+        .from('insurance_quotes')
+        .update({ status: 'accepted' })
+        .eq('id', request.quoteId);
+
+      // Log activity
+      unifiedApi.user.logActivity('insurance_applied', 'insurance_application', data.id);
+
+      // Return data with redirect URL if available
+      return {
+        ...data,
+        redirectUrl: appResponse.redirectUrl
+      };
+    },
+
+    // Insurance Policies (enhanced to use new table)
+    async getPoliciesEnhanced(filters?: {
+      active?: boolean;
+      limit?: number;
+    }) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      let query = supabase
+        .from('insurance_policies')
+        .select('*, insurance_providers(*), insurance_applications(*)')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (filters?.active !== undefined) {
+        if (filters.active) {
+          query = query.eq('status', 'active');
+        } else {
+          query = query.neq('status', 'active');
+        }
+      }
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
+    },
+
+    // Insurance Claims
+    async getClaims(filters?: {
+      status?: string;
+      limit?: number;
+    }) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      let query = supabase
+        .from('insurance_claims')
+        .select('*, insurance_policies(*), insurance_providers(*)')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (filters?.status) {
+        query = query.eq('status', filters.status);
+      }
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
+    },
+
+    async submitClaim(request: {
+      policyId: string;
+      claimType: 'cargo_loss' | 'cargo_damage' | 'liability' | 'property_damage' | 'other';
+      claimAmount: number;
+      description: string;
+      incidentDate: string;
+      incidentLocation?: string;
+      supportingDocuments?: string[];
+    }) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // Get policy
+      const { data: policy, error: policyError } = await supabase
+        .from('insurance_policies')
+        .select('*, insurance_providers(*)')
+        .eq('id', request.policyId)
+        .eq('user_id', user.id)
+        .single();
+
+      if (policyError || !policy) {
+        throw new Error('Policy not found');
+      }
+
+      if (policy.status !== 'active') {
+        throw new Error('Policy is not active');
+      }
+
+      // Save claim to database
+      const { data, error } = await supabase
+        .from('insurance_claims')
+        .insert({
+          user_id: user.id,
+          policy_id: request.policyId,
+          provider_id: policy.provider_id,
+          claim_type: request.claimType,
+          claim_amount: request.claimAmount,
+          currency: policy.currency,
+          description: request.description,
+          incident_date: request.incidentDate,
+          incident_location: request.incidentLocation,
+          supporting_documents: request.supportingDocuments || [],
+          status: 'submitted'
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Log activity
+      unifiedApi.user.logActivity('insurance_claim_submitted', 'insurance_claim', data.id);
+
+      return data;
+    },
+
+    // Insurance Providers (public)
+    async getProviders(filters?: {
+      coverageType?: string;
+      country?: string;
+      active?: boolean;
+    }) {
+      let query = supabase
+        .from('insurance_providers')
+        .select('*')
+        .order('rating', { ascending: false });
+
+      if (filters?.active !== undefined) {
+        query = query.eq('active', filters.active);
+      } else {
+        query = query.eq('active', true); // Default to active only
+      }
+
+      if (filters?.coverageType) {
+        query = query.contains('coverage_types', [filters.coverageType]);
+      }
+
+      if (filters?.country) {
+        query = query.contains('countries', [filters.country]);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
+    },
+
+    // Admin methods for insurance applications
+    async getApplicationsAdmin(filters?: { status?: string; limit?: number }) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // Check admin role
+      const profile = await unifiedApi.user.getProfile(user.id);
+      if (profile.role !== 'admin') {
+        throw new Error('Admin access required');
+      }
+
+      let query = supabase
+        .from('insurance_applications')
+        .select('*, insurance_providers(*), insurance_quotes(*), user_profiles(*)')
+        .order('created_at', { ascending: false });
+
+      if (filters?.status) {
+        query = query.eq('status', filters.status);
+      }
+
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
+    },
+
+    async updateApplicationStatus(id: string, status: string, notes?: string) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // Check admin role
+      const profile = await unifiedApi.user.getProfile(user.id);
+      if (profile.role !== 'admin') {
+        throw new Error('Admin access required');
+      }
+
+      const { data, error } = await supabase
+        .from('insurance_applications')
+        .update({ status, approval_notes: notes, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select('*, insurance_providers(*), insurance_quotes(*), user_profiles(*)')
+        .single();
+
+      if (error) throw error;
+
+      // Create notification for user
+      if (data.user_id) {
+        try {
+          const statusMessages: Record<string, { title: string; message: string }> = {
+            approved: {
+              title: 'Insurance Application Approved',
+              message: `Your insurance application for ${data.insurance_providers?.name || 'insurance'} has been approved!${notes ? ` ${notes}` : ''}`
+            },
+            rejected: {
+              title: 'Insurance Application Rejected',
+              message: `Your insurance application for ${data.insurance_providers?.name || 'insurance'} was rejected.${notes ? ` Reason: ${notes}` : ''}`
+            },
+            under_review: {
+              title: 'Insurance Application Under Review',
+              message: `Your insurance application for ${data.insurance_providers?.name || 'insurance'} is now under review.`
+            }
+          };
+
+          const statusInfo = statusMessages[status];
+          if (statusInfo) {
+            await unifiedApi.notifications.create({
+              user_id: data.user_id,
+              type: status === 'approved' ? 'success' : status === 'rejected' ? 'error' : 'info',
+              title: statusInfo.title,
+              message: statusInfo.message,
+              action_url: '/app/risk',
+              priority: status === 'approved' ? 'high' : 'normal'
+            });
+          }
+        } catch (notifError) {
+          console.error('Failed to create notification:', notifError);
+        }
+      }
+
+      // If approved, create policy (future enhancement)
+      if (status === 'approved' && data) {
+        // TODO: Create insurance policy from approved application
+        // This would involve creating a record in insurance_policies table
+      }
+
+      return data;
+    },
   },
 
   // ============================================
@@ -891,6 +1544,86 @@ export const unifiedApi = {
         if (error) throw error;
         return data;
       }
+    },
+
+    // Admin methods for risk alerts
+    async getAllAlerts(filters?: { severity?: string; resolved?: boolean; limit?: number }) {
+      let query = supabase
+        .from('risk_alerts')
+        .select('*, user_profiles(*)')
+        .order('created_at', { ascending: false });
+
+      if (filters?.severity) {
+        query = query.eq('severity', filters.severity);
+      }
+      if (filters?.resolved !== undefined) {
+        query = query.eq('resolved', filters.resolved);
+      }
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
+    },
+
+    async createAlert(alert: {
+      alert_type: string;
+      severity: string;
+      title: string;
+      description?: string;
+      affected_resource_type?: string;
+      affected_resource_id?: string;
+      region?: string;
+      country?: string;
+      metadata?: any;
+    }) {
+      const { data, error } = await supabase
+        .from('risk_alerts')
+        .insert(alert)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async updateAlert(id: string, updates: any) {
+      const { data, error } = await supabase
+        .from('risk_alerts')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async deleteAlert(id: string) {
+      const { error } = await supabase
+        .from('risk_alerts')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+
+    async resolveAlert(id: string, resolvedBy?: string) {
+      const { data, error } = await supabase
+        .from('risk_alerts')
+        .update({
+          resolved: true,
+          resolved_at: new Date().toISOString(),
+          resolved_by: resolvedBy || null
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
     },
   },
 
@@ -1342,6 +2075,63 @@ export const unifiedApi = {
       if (error) throw error;
       return data || [];
     },
+
+    // Admin CRUD methods
+    async getAll(filters?: { limit?: number }) {
+      let query = supabase
+        .from('demand_data')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
+    },
+
+    async create(demand: {
+      region: string;
+      country: string;
+      material: string;
+      industry: string;
+      demand_quantity?: number;
+      demand_period?: string;
+      source?: string;
+      metadata?: any;
+    }) {
+      const { data, error } = await supabase
+        .from('demand_data')
+        .insert(demand)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async update(id: string, updates: any) {
+      const { data, error } = await supabase
+        .from('demand_data')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async delete(id: string) {
+      const { error } = await supabase
+        .from('demand_data')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    },
   },
 
   // ============================================
@@ -1473,12 +2263,26 @@ export const unifiedApi = {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      const { error } = await supabase
+      // Check if user is admin
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      const isAdmin = profile?.role === 'admin';
+
+      let query = supabase
         .from('documents')
         .delete()
-        .eq('id', id)
-        .eq('user_id', user.id);
+        .eq('id', id);
 
+      // Only restrict by user_id if not admin
+      if (!isAdmin) {
+        query = query.eq('user_id', user.id);
+      }
+
+      const { error } = await query;
       if (error) throw error;
     },
 
@@ -1496,6 +2300,38 @@ export const unifiedApi = {
 
       if (error) throw error;
       return data;
+    },
+
+    // Admin methods
+    async getAll(filters?: { limit?: number }) {
+      let query = supabase
+        .from('documents')
+        .select('*, user_profiles(id, name, email)')
+        .order('created_at', { ascending: false });
+
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
+    },
+
+    async getByUser(userId: string, filters?: { limit?: number }) {
+      let query = supabase
+        .from('documents')
+        .select('*, user_profiles(id, name, email)')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
     },
   },
 
@@ -1585,6 +2421,76 @@ export const unifiedApi = {
       if (error) throw error;
       return data || [];
     },
+
+    // Admin CRUD methods
+    async getAll(filters?: { limit?: number }) {
+      let query = supabase
+        .from('agents')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
+    },
+
+    async create(agent: {
+      name: string;
+      service_type: string;
+      country: string;
+      regions?: string[];
+      description?: string;
+      verified?: boolean;
+      rating?: number;
+      phone?: string;
+      email?: string;
+      website?: string;
+    }) {
+      const { data, error } = await supabase
+        .from('agents')
+        .insert(agent)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async update(id: string, updates: Partial<{
+      name: string;
+      service_type: string;
+      country: string;
+      regions: string[];
+      description: string;
+      verified: boolean;
+      rating: number;
+      phone: string;
+      email: string;
+      website: string;
+    }>) {
+      const { data, error } = await supabase
+        .from('agents')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async delete(id: string) {
+      const { error } = await supabase
+        .from('agents')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    },
   },
 
   // ============================================
@@ -1656,12 +2562,68 @@ export const unifiedApi = {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
+      // Get offer to find provider
+      const { data: offer, error: offerError } = await supabase
+        .from('financing_offers')
+        .select('*')
+        .eq('id', offerId)
+        .single();
+
+      if (offerError || !offer) {
+        throw new Error('Financing offer not found');
+      }
+
+      // Get user profile
+      const profile = await unifiedApi.user.getProfile(user.id);
+
+      // Try to forward to partner if provider has partner integration
+      let partnerApplicationId: string | undefined;
+      let redirectUrl: string | undefined;
+      
+      try {
+        // Import financing partner service
+        const { financingPartnerService } = await import('./financingPartners');
+        
+        // Check if offer has partner_id or provider_name matches a partner
+        // For now, we'll check if provider_type suggests partner integration
+        if (offer.provider_type === 'fintech' || offer.provider_type === 'bank') {
+          // Try to forward to partner (this will fail gracefully if no partner configured)
+          const partnerResponse = await financingPartnerService.forwardApplication(
+            offer.provider_name, // Use provider name as partner identifier
+            {
+              offerId,
+              amount: application.amount,
+              termDays: application.term_days,
+              purpose: application.purpose,
+              userData: {
+                name: profile.name,
+                email: profile.email,
+                company: profile.company || '',
+                country: profile.country,
+                industry: profile.industry || 'construction'
+              }
+            }
+          );
+
+          if (partnerResponse.success) {
+            partnerApplicationId = partnerResponse.partnerApplicationId;
+            redirectUrl = partnerResponse.redirectUrl;
+          }
+        }
+      } catch (err) {
+        // Partner integration failed, continue with internal application
+        console.warn('Partner integration failed, using internal application:', err);
+      }
+
+      // Save application to database
       const { data, error } = await supabase
         .from('financing_applications')
         .insert({
           ...application,
           user_id: user.id,
           offer_id: offerId,
+          partner_application_id: partnerApplicationId,
+          metadata: redirectUrl ? { redirectUrl } : {}
         })
         .select()
         .single();
@@ -1671,7 +2633,11 @@ export const unifiedApi = {
       // Log activity
       unifiedApi.user.logActivity('financing_applied', 'financing_application', data.id);
 
-      return data;
+      // Return data with redirect URL if available
+      return {
+        ...data,
+        redirectUrl
+      };
     },
 
     async getApplications(filters?: {
@@ -1694,6 +2660,140 @@ export const unifiedApi = {
       const { data, error } = await query;
       if (error) throw error;
       return data || [];
+    },
+
+    // Admin CRUD methods
+    async getAll(filters?: { limit?: number }) {
+      let query = supabase
+        .from('financing_offers')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
+    },
+
+    async create(offer: {
+      provider_name: string;
+      provider_type: 'bank' | 'fintech' | 'platform';
+      industry?: string[];
+      countries?: string[];
+      min_amount?: number;
+      max_amount?: number;
+      interest_rate?: number;
+      term_days?: number;
+      requirements?: any;
+      features?: any;
+      active?: boolean;
+      metadata?: any;
+    }) {
+      const { data, error } = await supabase
+        .from('financing_offers')
+        .insert(offer)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async update(id: string, updates: any) {
+      const { data, error } = await supabase
+        .from('financing_offers')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async delete(id: string) {
+      const { error } = await supabase
+        .from('financing_offers')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+
+    async getApplicationsAdmin(filters?: { status?: string; limit?: number }) {
+      let query = supabase
+        .from('financing_applications')
+        .select('*, financing_offers(*), user_profiles(*)')
+        .order('created_at', { ascending: false });
+
+      if (filters?.status) {
+        query = query.eq('status', filters.status);
+      }
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
+    },
+
+    async updateApplicationStatus(id: string, status: string, notes?: string) {
+      const { data, error } = await supabase
+        .from('financing_applications')
+        .update({ status, approval_notes: notes, reviewed_at: new Date().toISOString() })
+        .eq('id', id)
+        .select('*, financing_offers(*), user_profiles(*)')
+        .single();
+
+      if (error) throw error;
+
+      // Create notification for user
+      if (data.user_id) {
+        try {
+          const statusMessages: Record<string, { title: string; message: string }> = {
+            approved: {
+              title: 'Financing Application Approved',
+              message: `Your financing application for ${data.financing_offers?.provider_name || 'financing'} has been approved!${data.approved_amount ? ` Approved amount: ${data.approved_amount}` : ''}`
+            },
+            rejected: {
+              title: 'Financing Application Rejected',
+              message: `Your financing application for ${data.financing_offers?.provider_name || 'financing'} was rejected.${notes ? ` Reason: ${notes}` : ''}`
+            },
+            under_review: {
+              title: 'Financing Application Under Review',
+              message: `Your financing application for ${data.financing_offers?.provider_name || 'financing'} is now under review.`
+            }
+          };
+
+          const statusInfo = statusMessages[status];
+          if (statusInfo) {
+            await supabase
+              .from('notifications')
+              .insert({
+                user_id: data.user_id,
+                type: status === 'approved' ? 'success' : status === 'rejected' ? 'error' : 'info',
+                title: statusInfo.title,
+                message: statusInfo.message,
+                action_url: '/app/financing',
+                priority: status === 'approved' ? 'high' : 'medium',
+                metadata: {
+                  application_id: id,
+                  status: status,
+                  offer_id: data.offer_id
+                }
+              });
+          }
+        } catch (notifError) {
+          // Don't fail the status update if notification fails
+          console.error('Error creating notification:', notifError);
+        }
+      }
+
+      return data;
     },
   },
 
@@ -1735,9 +2835,15 @@ export const unifiedApi = {
     async create(alert: {
       material: string;
       country: string;
+      location?: string;
       condition: 'above' | 'below' | 'change';
       threshold?: number;
       change_percent?: number;
+      notification_preferences?: {
+        email?: boolean;
+        in_app?: boolean;
+        sms?: boolean;
+      };
     }) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
@@ -1745,10 +2851,19 @@ export const unifiedApi = {
       const { data, error } = await supabase
         .from('price_alerts')
         .insert({
-          ...alert,
+          material: alert.material,
+          country: alert.country,
+          location: alert.location || null,
+          condition: alert.condition,
+          threshold: alert.threshold || null,
+          change_percent: alert.change_percent || null,
           user_id: user.id,
           active: true,
-          threshold: alert.threshold || 0,
+          notification_preferences: alert.notification_preferences || {
+            email: true,
+            in_app: true,
+            sms: false
+          },
         })
         .select()
         .single();
@@ -1765,6 +2880,12 @@ export const unifiedApi = {
       active?: boolean;
       threshold?: number;
       change_percent?: number;
+      location?: string;
+      notification_preferences?: {
+        email?: boolean;
+        in_app?: boolean;
+        sms?: boolean;
+      };
     }) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
@@ -1779,6 +2900,24 @@ export const unifiedApi = {
 
       if (error) throw error;
       return data;
+    },
+
+    async getHistory(alertId: string) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // Get notifications for this alert
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('type', 'price_alert')
+        .eq('metadata->>alert_id', alertId)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (error) throw error;
+      return data || [];
     },
 
     async delete(id: string): Promise<void> {
@@ -2114,6 +3253,177 @@ export const unifiedApi = {
       // Sort by score and return
       return results.sort((a, b) => b.score - a.score);
     }
+  },
+
+  // ============================================
+  // ADMIN (User Management & System Admin)
+  // ============================================
+
+  admin: {
+    async getUsers(filters?: {
+      role?: string;
+      status?: string;
+      search?: string;
+      limit?: number;
+    }) {
+      let query = supabase
+        .from('user_profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (filters?.role) {
+        query = query.eq('role', filters.role);
+      }
+      if (filters?.search) {
+        query = query.or(`name.ilike.%${filters.search}%,company.ilike.%${filters.search}%`);
+      }
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
+    },
+
+    async getUserById(id: string) {
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async updateUser(id: string, updates: {
+      name?: string;
+      company?: string;
+      industry?: string;
+      role?: string;
+      is_active?: boolean;
+    }) {
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async updateUserRole(id: string, role: string) {
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .update({ role })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async getUserCount() {
+      const { count, error } = await supabase
+        .from('user_profiles')
+        .select('*', { count: 'exact', head: true });
+
+      if (error) throw error;
+      return count || 0;
+    },
+
+    async getUserActivity(userId: string, filters?: { limit?: number }) {
+      let query = supabase
+        .from('user_activities')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return { data: data || [] };
+    },
+
+    // Count methods for admin dashboard
+    async getPriceCount() {
+      const { count, error } = await supabase
+        .from('prices')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      return count || 0;
+    },
+
+    async getSupplierCount() {
+      const { count, error } = await supabase
+        .from('suppliers')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      return count || 0;
+    },
+
+    async getAgentCount() {
+      const { count, error } = await supabase
+        .from('agents')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      return count || 0;
+    },
+
+    async getDocumentCount() {
+      const { count, error } = await supabase
+        .from('documents')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      return count || 0;
+    },
+
+    async getLogisticsRouteCount() {
+      const { count, error } = await supabase
+        .from('logistics_routes')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      return count || 0;
+    },
+
+    async getFinancingOfferCount() {
+      const { count, error } = await supabase
+        .from('financing_offers')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      return count || 0;
+    },
+
+    async getRiskAlertCount() {
+      const { count, error } = await supabase
+        .from('risk_alerts')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      return count || 0;
+    },
+
+    async getDemandDataCount() {
+      const { count, error } = await supabase
+        .from('demand_data')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      return count || 0;
+    },
+
+    async getNotificationCount() {
+      const { count, error } = await supabase
+        .from('notifications')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      return count || 0;
+    },
   },
 };
 

@@ -300,7 +300,8 @@ const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '', cou
     console.log('Alert action:', alert);
   };
 
-  if (loading) {
+  // Only show loading on initial load
+  if (loading && recommendations.length === 0 && costComparisons.length === 0 && alerts.length === 0) {
     return (
       <div className={`flex items-center justify-center h-64 ${className}`}>
         <div className="text-center">
@@ -313,48 +314,56 @@ const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '', cou
 
   return (
     <div className={`space-y-6 ${className}`}>
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      {/* Playful Header */}
+      <div className="mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <span>⚡</span>
+          Smart Intelligence!
+        </h2>
+        <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+          <span>🧠</span>
+          Cool ideas and tips to help you make smart decisions!
+        </p>
+      </div>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-            <Zap className="w-6 h-6 mr-2 text-primary-600" />
-            Smart Intelligence
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400">AI-powered insights and recommendations for Rwanda logistics</p>
         </div>
-        
         <div className="flex items-center space-x-2">
-          <button className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+          <button className="flex items-center px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all transform hover:scale-105 border-2 border-gray-300 dark:border-gray-600 font-bold">
             <Settings className="w-4 h-4 mr-2" />
             Settings
           </button>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex space-x-8">
+      {/* Playful Tabs */}
+      <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-purple-200 dark:border-gray-700 shadow-lg mb-6">
+        <nav className="flex space-x-2 overflow-x-auto scrollbar-hide">
           {[
-            { id: 'recommendations', label: 'Recommendations', icon: Lightbulb, count: recommendations.length },
-            { id: 'comparisons', label: 'Cost Analysis', icon: Calculator, count: costComparisons.length },
-            { id: 'alerts', label: 'Alerts', icon: Bell, count: alerts.length },
-            { id: 'demand', label: 'Demand Mapping', icon: MapPin, count: 0 }
+            { id: 'recommendations', label: 'Recommendations', icon: Lightbulb, count: recommendations.length, emoji: '💡' },
+            { id: 'comparisons', label: 'Cost Analysis', icon: Calculator, count: costComparisons.length, emoji: '💰' },
+            { id: 'alerts', label: 'Alerts', icon: Bell, count: alerts.length, emoji: '🔔' },
+            { id: 'demand', label: 'Demand Mapping', icon: MapPin, count: 0, emoji: '🗺️' }
           ].map((tab) => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setSelectedTab(tab.id as any)}
-                className={`flex items-center py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`flex items-center gap-2 py-3 px-4 sm:px-6 rounded-xl font-bold text-sm sm:text-base whitespace-nowrap flex-shrink-0 transition-all transform hover:scale-105 ${
                   selectedTab === tab.id
-                    ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                    ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg scale-105'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-purple-100 dark:hover:bg-gray-700 hover:text-purple-700 dark:hover:text-purple-300'
                 }`}
                 aria-label={`Switch to ${tab.label} tab`}
               >
-                <Icon className="w-4 h-4 mr-2" />
+                <span className="text-lg">{tab.emoji}</span>
                 {tab.label}
-                <span className="ml-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 py-0.5 px-2 rounded-full text-xs">
+                <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
+                  selectedTab === tab.id
+                    ? 'bg-white/30 text-white'
+                    : 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
+                }`}>
                   {tab.count}
                 </span>
               </button>
@@ -372,25 +381,25 @@ const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '', cou
               return (
                 <div 
                   key={recommendation.id} 
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+                  className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all transform hover:scale-[1.02]"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-lg">
-                        <Icon className="w-5 h-5" />
+                      <div className="p-3 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-blue-600 dark:text-blue-400 rounded-xl border-2 border-blue-300 dark:border-blue-700">
+                        <Icon className="w-6 h-6" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                           {recommendation.title}
                         </h3>
-                        <p className="text-gray-600 dark:text-gray-400">
+                        <p className="text-gray-600 dark:text-gray-400 font-medium">
                           {recommendation.description}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPriorityColor(recommendation.priority)}`}>
-                        {recommendation.priority}
+                      <span className={`px-3 py-1 text-xs font-bold rounded-xl border-2 ${getPriorityColor(recommendation.priority)}`}>
+                        {recommendation.priority.toUpperCase()}
                       </span>
                     </div>
                   </div>

@@ -56,6 +56,7 @@ const PriceTracking: React.FC = () => {
     refetch: refetchPrices
   } = usePrices({
     country: region !== 'All Regions' ? region : undefined,
+    industry: currentIndustry,
     limit: 100
   });
   
@@ -255,33 +256,43 @@ const PriceTracking: React.FC = () => {
   
   return (
     <AppLayout>
-      <PageHeader
-        title={`${getIndustryTerm('pricing')} Tracking`}
-        subtitle={`Monitor ${getIndustryTerm('materials').toLowerCase()} prices across East Africa`}
-        breadcrumbs={[{ label: 'Dashboard', href: '/' }, { label: getIndustryTerm('pricing') }]}
-        actions={
-          <div className="flex items-center gap-3">
-            <div className="hidden md:block text-sm text-gray-500 items-center md:flex">
-              <RefreshCw className="h-4 w-4 mr-1" />
-              Updated: {formatDate(lastUpdated)}
+      {/* Playful Header */}
+      <div className="px-3 sm:px-4 md:px-6 pt-4 sm:pt-5">
+        <div className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 dark:from-green-600 dark:via-emerald-600 dark:to-teal-600 rounded-2xl p-4 sm:p-5 md:p-6 shadow-2xl border-4 border-white/20 dark:border-white/10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
+                <span>💰</span>
+                {getIndustryTerm('pricing')} Adventure!
+              </h1>
+              <p className="text-base text-white/90 dark:text-white/80 mt-2 flex items-center gap-2">
+                <span>📊</span>
+                Watch how {getIndustryTerm('materials').toLowerCase()} prices change like magic! ✨
+              </p>
             </div>
-            <SearchInput
-              value={searchTerm}
-              onChange={setSearchTerm}
-              placeholder={`Search ${getIndustryTerm('materials').toLowerCase()}...`}
-              size="sm"
-            />
-            <button
-              onClick={() => setShowFilters(true)}
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-            >
-              <FilterIcon className="h-4 w-4" />
-              Filters
-            </button>
-            <ActionMenu items={actionMenuItems} size="sm" />
+            <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+              <div className="hidden md:flex text-sm text-white/90 items-center gap-1 bg-white/20 px-3 py-2 rounded-xl border-2 border-white/30">
+                <RefreshCw className="h-4 w-4" />
+                Updated: {formatDate(lastUpdated)}
+              </div>
+              <SearchInput
+                value={searchTerm}
+                onChange={setSearchTerm}
+                placeholder={`Search ${getIndustryTerm('materials').toLowerCase()}...`}
+                size="sm"
+              />
+              <button
+                onClick={() => setShowFilters(true)}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-white/20 hover:bg-white/30 rounded-xl border-2 border-white/30 transition-all transform hover:scale-105"
+              >
+                <FilterIcon className="h-4 w-4" />
+                Filters
+              </button>
+              <ActionMenu items={actionMenuItems} size="sm" />
+            </div>
           </div>
-        }
-      />
+        </div>
+      </div>
 
       <PageLayout maxWidth="full" padding="none">
         <RailLayout
@@ -330,9 +341,19 @@ const PriceTracking: React.FC = () => {
           )}
 
           {/* Controls */}
-          <SectionLayout title="Controls" subtitle="Adjust the time range and region">
+          <div className="mb-6">
+            <div className="mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <span>🎛️</span>
+                Time Controls!
+              </h2>
+              <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                <span>⏰</span>
+                Pick how far back you want to look!
+              </p>
+            </div>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="flex items-center space-x-1">
+              <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-blue-200 dark:border-gray-700">
                 <TimeRangeButton value="1m" selected={timeRange === '1m'} onClick={() => setTimeRange('1m')} />
                 <TimeRangeButton value="3m" selected={timeRange === '3m'} onClick={() => setTimeRange('3m')} />
                 <TimeRangeButton value="6m" selected={timeRange === '6m'} onClick={() => setTimeRange('6m')} />
@@ -355,11 +376,23 @@ const PriceTracking: React.FC = () => {
           </SectionLayout>
 
           {/* Chart */}
-          <SectionLayout title="Price Trends" subtitle="Historical prices by material" className="">
-            <div className="h-96">
-              <PriceChart data={priceDataToUse} dataKeys={filteredDataKeys} height={384} />
+          <div className="mb-6">
+            <div className="mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <span>📈</span>
+                Price Adventure Chart!
+              </h2>
+              <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                <span>🎢</span>
+                See how prices go up and down over time!
+              </p>
             </div>
-          </SectionLayout>
+            <div className="bg-gradient-to-br from-indigo-400 via-indigo-500 to-indigo-600 dark:from-indigo-600 dark:via-indigo-700 dark:to-indigo-800 rounded-2xl shadow-2xl border-4 border-indigo-300 dark:border-indigo-500 p-6">
+              <div className="h-96 bg-white/10 dark:bg-white/5 rounded-xl p-4">
+                <PriceChart data={priceDataToUse} dataKeys={filteredDataKeys} height={384} />
+              </div>
+            </div>
+          </div>
 
           {/* Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -415,65 +448,84 @@ const PriceTracking: React.FC = () => {
           </div>
 
           {/* Insights */}
-          <SectionLayout title="Price Insights" subtitle="Market summary and alerts" actions={
-            <div className="flex items-center gap-2">
-              <input
-                value={savedViewName}
-                onChange={(e) => setSavedViewName(e.target.value)}
-                placeholder="Save current view"
-                className="text-sm px-2 py-1 border rounded"
-              />
-              <button onClick={saveView} className="px-2 py-1 text-sm border rounded">Save</button>
-            </div>
-          }>
-            <div className="space-y-6">
-              <div className="border-l-4 border-blue-500 pl-4 py-1">
-                <h3 className="font-medium text-gray-800 mb-1">Market Summary</h3>
-                <p className="text-gray-600">
-                  {currentIndustry === 'construction'
-                    ? 'Construction material prices continue to trend upward across East Africa, with cement showing the highest volatility. Regional differences are significant, with urban centers experiencing higher price points due to increased demand.'
-                    : 'Agricultural input prices show seasonal variations with fertilizer costs stabilizing after recent global supply chain improvements. Seed price fluctuations continue to present challenges for seasonal planning.'}
+          <div className="mb-6">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                  <span>💡</span>
+                  Price Insights!
+                </h2>
+                <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                  <span>🔍</span>
+                  Cool things we found about the market!
                 </p>
               </div>
+              <div className="flex items-center gap-2">
+                <input
+                  value={savedViewName}
+                  onChange={(e) => setSavedViewName(e.target.value)}
+                  placeholder="Save current view"
+                  className="text-sm px-3 py-2 border-2 border-gray-300 rounded-xl"
+                />
+                <button onClick={saveView} className="px-4 py-2 text-sm font-bold bg-blue-500 text-white rounded-xl hover:bg-blue-600">Save</button>
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 dark:from-yellow-600 dark:via-yellow-700 dark:to-yellow-800 rounded-2xl shadow-2xl border-4 border-yellow-300 dark:border-yellow-500 p-6">
+              <div className="space-y-6">
+                <div className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border-2 border-white/30">
+                  <h3 className="font-bold text-white text-lg mb-2 flex items-center gap-2">
+                    <span>📊</span>
+                    Market Summary
+                  </h3>
+                  <p className="text-white/90 font-medium">
+                    {currentIndustry === 'construction'
+                      ? 'Construction material prices are going up! 🏗️ Cement is changing the most. Big cities have higher prices because lots of people are building!'
+                      : 'Fertilizer prices are getting better! 🌾 But seed prices still change a lot, which makes planning tricky!'}
+                  </p>
+                </div>
 
-              <div>
-                <h3 className="font-medium text-gray-800 mb-3">Price Alerts</h3>
-                <div className="space-y-4">
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                    <div className="flex items-start gap-3">
-                      <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
-                      <div>
-                        <h4 className="font-medium text-gray-800">{currentIndustry === 'construction' ? 'Cement Price Surge' : 'Fertilizer Availability'}</h4>
-                        <p className="text-sm text-gray-600 mt-1">
-                          {currentIndustry === 'construction'
-                            ? 'Cement prices have increased 5.2% over the past month, exceeding the typical seasonal adjustment of 2-3%. This is largely due to increased construction activity in urban centers and ongoing supply chain constraints.'
-                            : 'While fertilizer prices have stabilized, availability in rural areas remains inconsistent. Consider securing supplies early for the upcoming planting season to avoid potential shortages.'}
-                        </p>
-                        <div className="mt-2 flex items-center gap-2">
-                          <StatusBadge type="warning" text="MONITORING" />
-                          <span className="text-xs text-gray-500">Updated 2 days ago</span>
+                <div>
+                  <h3 className="font-bold text-white text-lg mb-3 flex items-center gap-2">
+                    <span>🔔</span>
+                    Price Alerts
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border-2 border-white/30">
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl">⚠️</span>
+                        <div>
+                          <h4 className="font-bold text-white text-lg">{currentIndustry === 'construction' ? 'Cement Price Surge!' : 'Fertilizer Alert!'}</h4>
+                          <p className="text-sm text-white/90 font-medium mt-1">
+                            {currentIndustry === 'construction'
+                              ? 'Cement prices went up 5.2% this month! 🚨 That\'s more than usual! Big cities are building a lot, so prices are higher!'
+                              : 'Fertilizer is getting better, but it\'s still hard to find in some places! 🌾 Get yours early before planting season!'}
+                          </p>
+                          <div className="mt-2 flex items-center gap-2">
+                            <StatusBadge type="warning" text="WATCHING" />
+                            <span className="text-xs text-white/80">Updated 2 days ago</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-start gap-3">
-                      <Calendar className="h-5 w-5 text-gray-500 mt-0.5" />
-                      <div>
-                        <h4 className="font-medium text-gray-800">Price Forecast</h4>
-                        <p className="text-sm text-gray-600 mt-1">
-                          {currentIndustry === 'construction'
-                            ? 'Based on current trends and supplier data, we forecast continued moderate increases in material prices over the next quarter, with possible stabilization by Q4 as new supply comes online.'
-                            : 'Seed and pesticide prices are expected to rise slightly (3-5%) in the coming quarter due to import constraints and seasonal demand patterns. Equipment rental rates are forecasted to remain stable.'}
-                        </p>
+                    <div className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border-2 border-white/30">
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl">🔮</span>
+                        <div>
+                          <h4 className="font-bold text-white text-lg">Price Forecast</h4>
+                          <p className="text-sm text-white/90 font-medium mt-1">
+                            {currentIndustry === 'construction'
+                              ? 'Prices will probably keep going up a little bit, but might get better by the end of the year! 📈'
+                              : 'Seed and pesticide prices might go up 3-5% soon! But equipment rental should stay the same! 💰'}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </SectionLayout>
+          </div>
         </div>
         </RailLayout>
       </PageLayout>

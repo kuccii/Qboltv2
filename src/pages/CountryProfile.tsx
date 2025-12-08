@@ -110,10 +110,14 @@ const CountryProfile: React.FC = () => {
     navigate(`/app/countries/${countryCode?.toLowerCase()}/${tab}`);
   };
 
-  if (loading) {
+  // Only show loading on initial load, not when switching tabs
+  if (loading && !countryProfile && !error) {
     return (
       <div className="flex items-center justify-center h-64">
-        <RefreshCw className="animate-spin h-8 w-8 text-gray-400" />
+        <div className="text-center">
+          <RefreshCw className="animate-spin h-8 w-8 text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-600 dark:text-gray-400">Loading country profile...</p>
+        </div>
       </div>
     );
   }
@@ -136,43 +140,54 @@ const CountryProfile: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      {/* Header */}
+      {/* Playful Header */}
       <div className="mb-6">
-        <HeaderStrip
-          title={`${currentCountry.flag} ${currentCountry.name}`}
-          subtitle={countryProfile?.description || 'Country Profile'}
-          chips={[
-            { label: normalizedCountryCode, variant: 'info' },
-            ...(countryProfile ? [
-              { label: 'Active', variant: 'success' as const }
-            ] : [])
-          ]}
-          right={
-            <div className="flex items-center gap-2">
+        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 dark:from-blue-600 dark:via-purple-600 dark:to-pink-600 rounded-2xl p-5 sm:p-6 shadow-2xl border-4 border-white/20 dark:border-white/10 mb-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+                <span className="text-4xl">{currentCountry.flag}</span>
+                <span>{currentCountry.name} Explorer! 🌍</span>
+              </h1>
+              <p className="text-base text-white/90 dark:text-white/80 mt-2 flex items-center gap-2">
+                <span>✨</span>
+                {countryProfile?.description || 'Learn all about this amazing country!'}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="text-sm px-4 py-2 rounded-xl border-2 border-white/30 bg-white/20 text-white font-bold">
+                {normalizedCountryCode}
+              </div>
+              {countryProfile && (
+                <div className="text-sm px-4 py-2 rounded-xl border-2 border-green-300 bg-green-500/30 text-white font-bold flex items-center gap-2">
+                  <CheckCircle size={16} />
+                  Active
+                </div>
+              )}
               {prevCountry && (
                 <button
                   onClick={() => handleCountryChange(prevCountry.code)}
-                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white/20 hover:bg-white/30 text-white rounded-md border border-white/30 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white/20 hover:bg-white/30 text-white rounded-xl border-2 border-white/30 transition-all transform hover:scale-105"
                   title={`Previous: ${prevCountry.name}`}
                 >
-                  <ArrowLeft size={16} />
+                  <ArrowLeft size={18} />
                   <span className="hidden sm:inline">{prevCountry.name}</span>
                 </button>
               )}
               {nextCountry && (
                 <button
                   onClick={() => handleCountryChange(nextCountry.code)}
-                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white/20 hover:bg-white/30 text-white rounded-md border border-white/30 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white/20 hover:bg-white/30 text-white rounded-xl border-2 border-white/30 transition-all transform hover:scale-105"
                   title={`Next: ${nextCountry.name}`}
                 >
                   <span className="hidden sm:inline">{nextCountry.name}</span>
-                  <ArrowRight size={16} />
+                  <ArrowRight size={18} />
                 </button>
               )}
               <select
                 value={normalizedCountryCode}
                 onChange={(e) => handleCountryChange(e.target.value)}
-                className="px-3 py-2 text-sm font-medium bg-white/20 hover:bg-white/30 text-white rounded-md border border-white/30 transition-colors cursor-pointer"
+                className="px-4 py-2 text-sm font-bold bg-white/20 hover:bg-white/30 text-white rounded-xl border-2 border-white/30 transition-colors cursor-pointer"
                 style={{ color: 'white' }}
               >
                 {availableCountries.map(c => (
@@ -182,64 +197,64 @@ const CountryProfile: React.FC = () => {
                 ))}
               </select>
             </div>
-          }
-        />
+          </div>
+        </div>
 
-        {/* Tabs */}
-        <div className="flex items-center gap-1 border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide">
+        {/* Playful Tabs */}
+        <div className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-blue-200 dark:border-gray-700 shadow-lg overflow-x-auto scrollbar-hide">
           <button
             onClick={() => handleTabChange('overview')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
               activeTab === 'overview'
-                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-300'
             }`}
           >
-            <BarChart3 size={14} className="sm:w-4 sm:h-4" />
+            <span>📊</span>
             <span>Overview</span>
           </button>
           <button
             onClick={() => handleTabChange('infrastructure')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
               activeTab === 'infrastructure'
-                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg scale-105'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-purple-100 dark:hover:bg-gray-700 hover:text-purple-700 dark:hover:text-purple-300'
             }`}
           >
-            <Building2 size={14} className="sm:w-4 sm:h-4" />
+            <span>🏗️</span>
             <span>Infrastructure</span>
           </button>
           <button
             onClick={() => handleTabChange('pricing')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
               activeTab === 'pricing'
-                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg scale-105'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-green-100 dark:hover:bg-gray-700 hover:text-green-700 dark:hover:text-green-300'
             }`}
           >
-            <TrendingUp size={14} className="sm:w-4 sm:h-4" />
+            <span>💰</span>
             <span>Pricing</span>
           </button>
           <button
             onClick={() => handleTabChange('contacts')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
               activeTab === 'contacts'
-                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg scale-105'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-orange-100 dark:hover:bg-gray-700 hover:text-orange-700 dark:hover:text-orange-300'
             }`}
           >
-            <Users size={14} className="sm:w-4 sm:h-4" />
+            <span>👥</span>
             <span>Contacts</span>
           </button>
           <button
             onClick={() => handleTabChange('intelligence')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
               activeTab === 'intelligence'
-                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg scale-105'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-gray-700 hover:text-red-700 dark:hover:text-red-300'
             }`}
           >
-            <Shield size={14} className="sm:w-4 sm:h-4" />
+            <span>🛡️</span>
             <span>Intelligence</span>
           </button>
         </div>

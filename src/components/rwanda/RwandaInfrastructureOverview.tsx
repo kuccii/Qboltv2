@@ -202,7 +202,8 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
     }
   };
 
-  if (loading) {
+  // Only show loading on initial load, not when switching tabs
+  if (loading && infrastructure.length === 0) {
     return (
       <div className={`flex items-center justify-center h-64 ${className}`}>
         <div className="text-center">
@@ -233,13 +234,18 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
 
   return (
     <div className={`space-y-6 ${className}`}>
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Infrastructure Overview</h2>
-          <p className="text-gray-600 dark:text-gray-400">Rwanda's logistics infrastructure and facilities</p>
-        </div>
-        
+      {/* Playful Header */}
+      <div className="mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <span>🏗️</span>
+          Infrastructure Explorer!
+        </h2>
+        <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+          <span>📍</span>
+          Discover all the amazing facilities and places!
+        </p>
+      </div>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div className="flex items-center space-x-3">
           <button
             onClick={loadInfrastructureData}
@@ -310,16 +316,20 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
             <button
               key={type.value}
               onClick={() => setSelectedType(type.value)}
-              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center px-4 py-2 rounded-xl text-sm font-bold transition-all transform hover:scale-105 ${
                 selectedType === type.value
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105'
+                  : 'bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border-2 border-gray-200 dark:border-gray-600'
               }`}
               aria-label={`Filter by ${type.label}`}
             >
               <Icon className="w-4 h-4 mr-2" />
               {type.label}
-              <span className="ml-2 bg-white/20 dark:bg-gray-600 text-xs px-2 py-0.5 rounded-full">
+              <span className={`ml-2 text-xs px-2 py-0.5 rounded-full font-bold ${
+                selectedType === type.value
+                  ? 'bg-white/30 text-white'
+                  : 'bg-white/50 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
+              }`}>
                 {count}
               </span>
             </button>
@@ -333,7 +343,7 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
           {getFilteredInfrastructure().map((facility) => (
             <div 
               key={facility.id} 
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow cursor-pointer"
+              className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all transform hover:scale-105 cursor-pointer"
               onClick={() => setSelectedFacility(facility)}
               role="button"
               tabIndex={0}
@@ -347,73 +357,78 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  {getTypeIcon(facility.type)}
+                  <div className="text-2xl">
+                    {facility.type === 'airport' ? '✈️' : facility.type === 'storage' ? '📦' : facility.type === 'milling' ? '🏭' : facility.type === 'port' ? '🚢' : facility.type === 'warehouse' ? '🏢' : '🏗️'}
+                  </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                       {facility.name}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{facility.location}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                      <MapPin className="w-3 h-3" />
+                      {facility.location}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
                   {getStatusIcon(facility.status)}
-                  <span className={`text-sm font-medium ${getStatusColor(facility.status)}`}>
+                  <span className={`text-sm font-bold ${getStatusColor(facility.status)}`}>
                     {facility.status.replace('_', ' ')}
                   </span>
                 </div>
               </div>
 
               <div className="mb-4">
-                <span className={`px-2 py-1 text-xs font-medium rounded-full ${getTypeColor(facility.type)}`}>
+                <span className={`px-3 py-1 text-xs font-bold rounded-xl border-2 ${getTypeColor(facility.type)}`}>
                   {facility.type.charAt(0).toUpperCase() + facility.type.slice(1)}
                 </span>
               </div>
 
               <div className="space-y-2 mb-4">
-                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                  <Package className="w-4 h-4 mr-2" />
+                <div className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <span className="mr-2">📊</span>
                   <span>Capacity: {facility.capacity}</span>
                 </div>
                 
                 {facility.operatingHours && (
-                  <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                    <Clock className="w-4 h-4 mr-2" />
+                  <div className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <span className="mr-2">⏰</span>
                     <span>{facility.operatingHours}</span>
                   </div>
                 )}
               </div>
 
               <div className="mb-4">
-                <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">Services:</p>
+                <p className="text-sm font-bold text-gray-900 dark:text-white mb-2">Services:</p>
                 <div className="flex flex-wrap gap-1">
                   {facility.services.slice(0, 3).map((service, index) => (
                     <span
                       key={index}
-                      className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
+                      className="px-2 py-1 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-blue-800 dark:text-blue-200 text-xs font-bold rounded-lg border border-blue-300 dark:border-blue-700"
                     >
                       {service}
                     </span>
                   ))}
                   {facility.services.length > 3 && (
-                    <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs rounded-full">
+                    <span className="px-2 py-1 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 text-gray-700 dark:text-gray-300 text-xs font-bold rounded-lg border border-gray-300 dark:border-gray-600">
                       +{facility.services.length - 3}
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="flex space-x-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex space-x-2 pt-4 border-t-2 border-gray-200 dark:border-gray-700">
                 {facility.contact.phone && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleContact('phone', facility.contact.phone);
                     }}
-                    className="flex items-center justify-center w-8 h-8 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+                    className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-green-400 to-green-500 text-white rounded-xl hover:from-green-500 hover:to-green-600 transition-all transform hover:scale-110 shadow-md"
                     title={`Call ${facility.contact.phone}`}
                     aria-label={`Call ${facility.contact.phone}`}
                   >
-                    <Phone className="w-4 h-4" />
+                    <Phone className="w-5 h-5" />
                   </button>
                 )}
                 {facility.contact.email && (
@@ -422,11 +437,11 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
                       e.stopPropagation();
                       handleContact('email', facility.contact.email);
                     }}
-                    className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                    className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-500 text-white rounded-xl hover:from-blue-500 hover:to-blue-600 transition-all transform hover:scale-110 shadow-md"
                     title={`Email ${facility.contact.email}`}
                     aria-label={`Email ${facility.contact.email}`}
                   >
-                    <Mail className="w-4 h-4" />
+                    <Mail className="w-5 h-5" />
                   </button>
                 )}
                 {facility.contact.website && (
@@ -435,11 +450,11 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
                       e.stopPropagation();
                       handleContact('website', facility.contact.website);
                     }}
-                    className="flex items-center justify-center w-8 h-8 bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 rounded-full hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
+                    className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-500 text-white rounded-xl hover:from-purple-500 hover:to-purple-600 transition-all transform hover:scale-110 shadow-md"
                     title={`Visit ${facility.contact.website}`}
                     aria-label={`Visit ${facility.contact.website}`}
                   >
-                    <Globe className="w-4 h-4" />
+                    <Globe className="w-5 h-5" />
                   </button>
                 )}
               </div>

@@ -31,7 +31,6 @@ import { useExport } from '../hooks/useExport';
 import { useNotifications } from '../hooks/useNotifications';
 import { useDashboard, usePrices, useSuppliers, useShipments, useRiskAlerts, useTradeOpportunities } from '../hooks/useData';
 import { useAuth } from '../contexts/AuthContext';
-import IndustryDashboard from '../components/IndustryDashboard';
 import PriceChart from '../components/PriceChart';
 import StatusBadge from '../components/StatusBadge';
 import OnboardingTour from '../components/OnboardingTour';
@@ -57,6 +56,7 @@ const Dashboard: React.FC = () => {
   const { metrics: dashboardMetricsData, loading: metricsLoading, refetch: refetchMetrics } = useDashboard();
   const { prices: realPrices, loading: pricesLoading, isConnected: pricesConnected, refetch: refetchPrices } = usePrices({
     country: authState.user?.country,
+    industry: currentIndustry,
     limit: 10,
   });
   const { suppliers: realSuppliers, loading: suppliersLoading, isConnected: suppliersConnected, refetch: refetchSuppliers } = useSuppliers({
@@ -303,13 +303,19 @@ const Dashboard: React.FC = () => {
 
   return (
     <AppLayout>
-      {/* New compact header strip */}
+      {/* Playful header strip */}
       <div className="px-3 sm:px-4 md:px-6 pt-4 sm:pt-5">
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-xl p-3 sm:p-4 md:p-5 shadow-lg border border-blue-500 dark:border-blue-600">
+        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 dark:from-blue-600 dark:via-purple-600 dark:to-pink-600 rounded-2xl p-4 sm:p-5 md:p-6 shadow-2xl border-2 border-white/20 dark:border-white/10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-xl md:text-2xl font-bold text-white">{description.title}</h1>
-              <p className="text-sm text-blue-100 dark:text-blue-200 mt-1">{description.subtitle}</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
+                <span>🎯</span>
+                {description.title}
+              </h1>
+              <p className="text-base text-white/90 dark:text-white/80 mt-2 flex items-center gap-2">
+                <span>✨</span>
+                {description.subtitle}
+              </p>
             </div>
             <div className="flex items-center gap-2 md:gap-3 flex-wrap">
               {authState.user?.country && (
@@ -380,11 +386,17 @@ const Dashboard: React.FC = () => {
         <RailLayout
           right={
             <div className="space-y-4">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Quick Filters</h3>
-                <div className="space-y-3">
+              <div className="bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-blue-600 dark:via-blue-700 dark:to-blue-800 rounded-2xl shadow-2xl border-4 border-blue-300 dark:border-blue-500 p-5">
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <span>🔍</span>
+                  Quick Filters
+                </h3>
+                <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time Range</label>
+                    <label className="block text-sm font-bold text-white mb-2 flex items-center gap-2">
+                      <span>⏰</span>
+                      Time Range
+                    </label>
                     <SelectInput
                       value={timeRange}
                       onChange={(value: string) => setTimeRange(value as any)}
@@ -397,10 +409,13 @@ const Dashboard: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Countries</label>
-                    <div className="space-y-2">
+                    <label className="block text-sm font-bold text-white mb-2 flex items-center gap-2">
+                      <span>🌍</span>
+                      Countries
+                    </label>
+                    <div className="space-y-2 bg-white/10 dark:bg-white/5 rounded-xl p-3">
                       {countries.slice(1).map(country => (
-                        <label key={country} className="flex items-center">
+                        <label key={country} className="flex items-center cursor-pointer hover:bg-white/10 rounded-lg p-2 transition-colors">
                           <input
                             type="checkbox"
                             checked={selectedCountries.includes(country)}
@@ -411,9 +426,9 @@ const Dashboard: React.FC = () => {
                                 setSelectedCountries(selectedCountries.filter(c => c !== country));
                               }
                             }}
-                            className="mr-2"
+                            className="mr-2 w-4 h-4"
                           />
-                          <span className="text-sm text-gray-600 dark:text-gray-400">{country}</span>
+                          <span className="text-sm text-white font-medium">{country}</span>
                         </label>
                       ))}
                     </div>
@@ -421,29 +436,43 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Top Suppliers</h3>
+              <div className="bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 dark:from-purple-600 dark:via-purple-700 dark:to-purple-800 rounded-2xl shadow-2xl border-4 border-purple-300 dark:border-purple-500 p-5">
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <span>⭐</span>
+                  Top Suppliers
+                </h3>
                 <div className="space-y-3">
                   {topSuppliers.length === 0 && (
-                    <div className="text-sm text-gray-500 dark:text-gray-400">No suppliers to show.</div>
+                    <div className="text-sm text-white/80 text-center py-4">No suppliers to show yet! 🎯</div>
                   )}
-                  {topSuppliers.map((supplier: any) => (
-                    <div key={supplier.id} className="flex items-center justify-between">
-                      <div>
-                        <div className="text-sm font-medium text-gray-800 dark:text-gray-200">{supplier.name || supplier.company_name}</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{supplier.location || supplier.country}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm font-bold text-gray-800 dark:text-gray-200">{supplier.rating || supplier.score || 'N/A'}</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{supplier.rating ? 'Rating' : 'Score'}</div>
+                  {topSuppliers.map((supplier: any, index: number) => (
+                    <div key={supplier.id} className="bg-white/20 dark:bg-white/10 rounded-xl p-3 border-2 border-white/30 hover:bg-white/30 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-lg">🏆</span>
+                            <div className="text-sm font-bold text-white">{supplier.name || supplier.company_name}</div>
+                          </div>
+                          <div className="text-xs text-white/80 flex items-center gap-1">
+                            <MapPin size={12} />
+                            {supplier.location || supplier.country}
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-extrabold text-white">{supplier.rating || supplier.score || 'N/A'}</div>
+                          <div className="text-xs text-white/80">{supplier.rating ? '⭐ Rating' : '📊 Score'}</div>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Recent Activity</h3>
+              <div className="bg-gradient-to-br from-green-400 via-green-500 to-green-600 dark:from-green-600 dark:via-green-700 dark:to-green-800 rounded-2xl shadow-2xl border-4 border-green-300 dark:border-green-500 p-5">
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <span>📝</span>
+                  Recent Activity
+                </h3>
                 <div className="space-y-3">
                   {Array.isArray(recentActivities) && recentActivities.length > 0 ? (
                     recentActivities.slice(0, 5).map((activity: any, index: number) => {
@@ -453,23 +482,26 @@ const Dashboard: React.FC = () => {
                         : 'Recently';
                       const message = activity.details?.message || activity.action || 'Activity';
                       
+                      let emoji = '📌';
+                      if (actionType.includes('price')) emoji = '💰';
+                      else if (actionType.includes('supplier')) emoji = '👥';
+                      else if (actionType.includes('alert')) emoji = '🔔';
+                      
                       return (
-                        <div key={activity.id || index} className="flex items-start gap-2">
-                          <div className="mt-1">
-                            {actionType.includes('price') && <TrendingUp size={14} className="text-blue-500" />}
-                            {actionType.includes('supplier') && <Users size={14} className="text-green-500" />}
-                            {actionType.includes('alert') && <Bell size={14} className="text-orange-500" />}
-                            {!actionType.includes('price') && !actionType.includes('supplier') && !actionType.includes('alert') && <Activity size={14} className="text-gray-500" />}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm text-gray-800 dark:text-gray-200">{message}</div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">{timeAgo}</div>
+                        <div key={activity.id || index} className="bg-white/20 dark:bg-white/10 rounded-xl p-3 border-2 border-white/30 hover:bg-white/30 transition-colors">
+                          <div className="flex items-start gap-2">
+                            <span className="text-lg">{emoji}</span>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-bold text-white">{message}</div>
+                              <div className="text-xs text-white/80 mt-1">{timeAgo}</div>
+                            </div>
                           </div>
                         </div>
                       );
                     })
                   ) : (
-                    <div className="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">
+                    <div className="text-center py-4 text-white/80 text-sm">
+                      <span className="text-2xl block mb-2">😴</span>
                       No recent activity
                     </div>
                   )}
@@ -479,243 +511,314 @@ const Dashboard: React.FC = () => {
           }
         >
           <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
-            {/* Tab Navigation */}
-            <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 w-full sm:w-fit overflow-x-auto scrollbar-hide">
+            {/* Playful Tab Navigation */}
+            <div className="flex bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 w-full sm:w-fit overflow-x-auto scrollbar-hide border-2 border-blue-200 dark:border-gray-700 shadow-lg">
               <button 
-                className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${selectedTab === 'overview' 
-                  ? 'bg-blue-600 text-white shadow-sm' 
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200'}`}
+                className={`px-4 sm:px-6 py-3 rounded-xl text-sm sm:text-base font-bold transition-all whitespace-nowrap flex-shrink-0 flex items-center gap-2 transform hover:scale-105 ${selectedTab === 'overview' 
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105' 
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-300'}`}
                 onClick={() => setSelectedTab('overview')}
               >
+                <span>📊</span>
                 Overview
               </button>
               <button 
-                className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${selectedTab === 'insights' 
-                  ? 'bg-purple-600 text-white shadow-sm' 
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200'}`}
+                className={`px-4 sm:px-6 py-3 rounded-xl text-sm sm:text-base font-bold transition-all whitespace-nowrap flex-shrink-0 flex items-center gap-2 transform hover:scale-105 ${selectedTab === 'insights' 
+                  ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg scale-105' 
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-purple-100 dark:hover:bg-gray-700 hover:text-purple-700 dark:hover:text-purple-300'}`}
                 onClick={() => setSelectedTab('insights')}
               >
+                <span>💡</span>
                 Insights
               </button>
               <button 
-                className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${selectedTab === 'alerts' 
-                  ? 'bg-red-600 text-white shadow-sm' 
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200'}`}
+                className={`px-4 sm:px-6 py-3 rounded-xl text-sm sm:text-base font-bold transition-all whitespace-nowrap flex-shrink-0 flex items-center gap-2 transform hover:scale-105 ${selectedTab === 'alerts' 
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg scale-105' 
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-gray-700 hover:text-red-700 dark:hover:text-red-300'}`}
                 onClick={() => setSelectedTab('alerts')}
               >
+                <span>🔔</span>
                 Alerts
               </button>
             </div>
             {/* Tab Content */}
             {selectedTab === 'overview' && (
               <>
-                {/* Industry-specific dashboard */}
-                <IndustryDashboard />
-                
-                {/* KPI Cards */}
-                <SectionLayout title="Key Performance Indicators" subtitle={`Real-time metrics for your ${getIndustryTerm('materials')} supply chain`}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg shadow-sm border-2 border-blue-200 dark:border-blue-700 p-6">
+                {/* Playful KPI Cards */}
+                <div className="mb-6">
+                  <div className="mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <span>📈</span>
+                      Your Amazing Numbers!
+                    </h2>
+                    <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                      <span>🎉</span>
+                      See how awesome your {getIndustryTerm('materials')} business is doing!
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-6">
+                    <div className="bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-blue-600 dark:via-blue-700 dark:to-blue-800 rounded-2xl shadow-2xl border-4 border-blue-300 dark:border-blue-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">{description.metrics.transactions}</h3>
-                        <ShoppingCart size={20} className="text-blue-600 dark:text-blue-400" />
+                        <h3 className="text-base font-bold text-white flex items-center gap-2">
+                          <span>🛒</span>
+                          {description.metrics.transactions}
+                        </h3>
+                        <ShoppingCart size={24} className="text-white/80" />
                       </div>
-                      <div className="text-3xl font-bold text-blue-900 dark:text-blue-100">{metrics.totalTransactions}</div>
-                      <div className="mt-1 text-sm text-blue-700 dark:text-blue-300">Last 30 days</div>
-                      <div className="flex items-center mt-2 text-sm text-green-600 dark:text-green-400">
-                        <TrendingUp size={16} className="mr-1" />
-                        +12% from last month
+                      <div className="text-4xl font-extrabold text-white mb-2">{metrics.totalTransactions}</div>
+                      <div className="text-sm text-blue-100 font-medium mb-2">Last 30 days</div>
+                      <div className="flex items-center text-sm text-green-200 font-bold">
+                        <TrendingUp size={18} className="mr-1" />
+                        +12% from last month 🚀
                       </div>
                     </div>
                     
-                    <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg shadow-sm border-2 border-green-200 dark:border-green-700 p-6">
+                    <div className="bg-gradient-to-br from-green-400 via-green-500 to-green-600 dark:from-green-600 dark:via-green-700 dark:to-green-800 rounded-2xl shadow-2xl border-4 border-green-300 dark:border-green-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-green-800 dark:text-green-200">Price Points Tracked</h3>
-                        <TrendingUp size={20} className="text-green-600 dark:text-green-400" />
+                        <h3 className="text-base font-bold text-white flex items-center gap-2">
+                          <span>💰</span>
+                          Prices We're Watching
+                        </h3>
+                        <TrendingUp size={24} className="text-white/80" />
                       </div>
-                      <div className="text-3xl font-bold text-green-900 dark:text-green-100">{realPrices?.length || 0}</div>
-                      <div className="mt-1 text-sm text-green-700 dark:text-green-300">Active price points</div>
-                      <div className="flex items-center mt-2 text-sm text-green-600 dark:text-green-400">
-                        <TrendingUp size={16} className="mr-1" />
-                        +{Math.floor((realPrices?.length || 0) * 0.15)} this month
+                      <div className="text-4xl font-extrabold text-white mb-2">{realPrices?.length || 0}</div>
+                      <div className="text-sm text-green-100 font-medium mb-2">Active price points</div>
+                      <div className="flex items-center text-sm text-green-200 font-bold">
+                        <TrendingUp size={18} className="mr-1" />
+                        +{Math.floor((realPrices?.length || 0) * 0.15)} this month 📊
                       </div>
                     </div>
                     
-                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg shadow-sm border-2 border-purple-200 dark:border-purple-700 p-6">
+                    <div className="bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 dark:from-purple-600 dark:via-purple-700 dark:to-purple-800 rounded-2xl shadow-2xl border-4 border-purple-300 dark:border-purple-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-purple-800 dark:text-purple-200">{description.metrics.suppliers}</h3>
-                        <Users size={20} className="text-purple-600 dark:text-purple-400" />
+                        <h3 className="text-base font-bold text-white flex items-center gap-2">
+                          <span>👥</span>
+                          {description.metrics.suppliers}
+                        </h3>
+                        <Users size={24} className="text-white/80" />
                       </div>
-                      <div className="text-3xl font-bold text-purple-900 dark:text-purple-100">{metrics.activeSuppliersCount}</div>
-                      <div className="mt-1 text-sm text-purple-700 dark:text-purple-300">Active network</div>
-                      <div className="flex items-center mt-2 text-sm text-green-600 dark:text-green-400">
-                        <TrendingUp size={16} className="mr-1" />
-                        +5 new this month
+                      <div className="text-4xl font-extrabold text-white mb-2">{metrics.activeSuppliersCount}</div>
+                      <div className="text-sm text-purple-100 font-medium mb-2">Active network</div>
+                      <div className="flex items-center text-sm text-purple-200 font-bold">
+                        <TrendingUp size={18} className="mr-1" />
+                        +5 new this month 🎊
                       </div>
                     </div>
                     
-                    <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-lg shadow-sm border-2 border-orange-200 dark:border-orange-700 p-6">
+                    <div className="bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 dark:from-orange-600 dark:via-orange-700 dark:to-orange-800 rounded-2xl shadow-2xl border-4 border-orange-300 dark:border-orange-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-orange-800 dark:text-orange-200">{description.metrics.volatility}</h3>
-                        <Activity size={20} className="text-orange-600 dark:text-orange-400" />
+                        <h3 className="text-base font-bold text-white flex items-center gap-2">
+                          <span>⚡</span>
+                          {description.metrics.volatility}
+                        </h3>
+                        <Activity size={24} className="text-white/80" />
                       </div>
-                      <div className="text-3xl font-bold text-orange-900 dark:text-orange-100">{metrics.priceVolatility}%</div>
-                      <div className="mt-1 text-sm text-orange-700 dark:text-orange-300">30-day average</div>
-                      <div className="flex items-center mt-2 text-sm text-orange-600 dark:text-orange-400">
-                        <AlertTriangle size={16} className="mr-1" />
-                        High volatility
+                      <div className="text-4xl font-extrabold text-white mb-2">{metrics.priceVolatility}%</div>
+                      <div className="text-sm text-orange-100 font-medium mb-2">30-day average</div>
+                      <div className="flex items-center text-sm text-orange-200 font-bold">
+                        <AlertTriangle size={18} className="mr-1" />
+                        Keep an eye on this! 👀
                       </div>
                     </div>
                     
-                    <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 dark:from-cyan-900/20 dark:to-cyan-800/20 rounded-lg shadow-sm border-2 border-cyan-200 dark:border-cyan-700 p-6">
+                    <div className="bg-gradient-to-br from-cyan-400 via-cyan-500 to-cyan-600 dark:from-cyan-600 dark:via-cyan-700 dark:to-cyan-800 rounded-2xl shadow-2xl border-4 border-cyan-300 dark:border-cyan-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-cyan-800 dark:text-cyan-200">Active Shipments</h3>
-                        <Package size={20} className="text-cyan-600 dark:text-cyan-400" />
+                        <h3 className="text-base font-bold text-white flex items-center gap-2">
+                          <span>📦</span>
+                          Active Shipments
+                        </h3>
+                        <Package size={24} className="text-white/80" />
                       </div>
-                      <div className="text-3xl font-bold text-cyan-900 dark:text-cyan-100">{realShipments?.length || 0}</div>
-                      <div className="mt-1 text-sm text-cyan-700 dark:text-cyan-300">In transit</div>
-                      <div className="flex items-center mt-2 text-sm text-green-600 dark:text-green-400">
-                        <TrendingUp size={16} className="mr-1" />
-                        On track
+                      <div className="text-4xl font-extrabold text-white mb-2">{realShipments?.length || 0}</div>
+                      <div className="text-sm text-cyan-100 font-medium mb-2">On the way!</div>
+                      <div className="flex items-center text-sm text-cyan-200 font-bold">
+                        <TrendingUp size={18} className="mr-1" />
+                        All on track! ✅
                       </div>
                     </div>
                     
-                    <div className="bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/20 dark:to-rose-800/20 rounded-lg shadow-sm border-2 border-rose-200 dark:border-rose-700 p-6">
+                    <div className="bg-gradient-to-br from-rose-400 via-rose-500 to-rose-600 dark:from-rose-600 dark:via-rose-700 dark:to-rose-800 rounded-2xl shadow-2xl border-4 border-rose-300 dark:border-rose-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-rose-800 dark:text-rose-200">Risk Alerts</h3>
-                        <AlertTriangle size={20} className="text-rose-600 dark:text-rose-400" />
+                        <h3 className="text-base font-bold text-white flex items-center gap-2">
+                          <span>⚠️</span>
+                          Risk Alerts
+                        </h3>
+                        <AlertTriangle size={24} className="text-white/80" />
                       </div>
-                      <div className="text-3xl font-bold text-rose-900 dark:text-rose-100">{Array.isArray(realAlerts) ? realAlerts.length : 0}</div>
-                      <div className="mt-1 text-sm text-rose-700 dark:text-rose-300">Active alerts</div>
-                      <div className="flex items-center mt-2 text-sm text-red-600 dark:text-red-400">
-                        <AlertTriangle size={16} className="mr-1" />
-                        {Array.isArray(realAlerts) && realAlerts.length > 0 ? 'Action needed' : 'All clear'}
+                      <div className="text-4xl font-extrabold text-white mb-2">{Array.isArray(realAlerts) ? realAlerts.length : 0}</div>
+                      <div className="text-sm text-rose-100 font-medium mb-2">Active alerts</div>
+                      <div className="flex items-center text-sm text-rose-200 font-bold">
+                        <AlertTriangle size={18} className="mr-1" />
+                        {Array.isArray(realAlerts) && realAlerts.length > 0 ? 'Check them out! 👆' : 'All good! 🎉'}
                       </div>
                     </div>
                   </div>
-                </SectionLayout>
+                </div>
 
-                {/* Price Trends and Changes */}
-                <SectionLayout title="Market Analysis" subtitle="Price trends and market movements">
+                {/* Playful Price Trends and Changes */}
+                <div className="mb-6">
+                  <div className="mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <span>📊</span>
+                      Price Adventure!
+                    </h2>
+                    <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                      <span>🎢</span>
+                      Watch how prices go up and down like a fun roller coaster!
+                    </p>
+                  </div>
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-lg shadow-sm border-2 border-indigo-200 dark:border-indigo-700 p-6 lg:col-span-2">
-                      <div className="flex items-center gap-2 mb-4">
-                        <BarChart3 size={20} className="text-indigo-600 dark:text-indigo-400" />
-                        <h3 className="text-lg font-semibold text-indigo-900 dark:text-indigo-100">Price Trends</h3>
+                    <div className="bg-gradient-to-br from-indigo-400 via-indigo-500 to-indigo-600 dark:from-indigo-600 dark:via-indigo-700 dark:to-indigo-800 rounded-2xl shadow-2xl border-4 border-indigo-300 dark:border-indigo-500 p-6 lg:col-span-2">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-2xl">📈</span>
+                        <h3 className="text-xl font-bold text-white">Price Trends Chart</h3>
                       </div>
                       {isLoading ? (
-                        <div className="h-[300px] animate-pulse bg-indigo-50 dark:bg-indigo-900/20 rounded" />
+                        <div className="h-[300px] animate-pulse bg-indigo-400/30 dark:bg-indigo-700/30 rounded-xl flex items-center justify-center">
+                          <span className="text-white text-lg">Loading chart... 🎨</span>
+                        </div>
                       ) : (
-                        <PriceChart 
-                          data={priceChartData} 
-                          dataKeys={dataKeys} 
-                          height={300}
-                        />
+                        <div className="bg-white/10 dark:bg-white/5 rounded-xl p-4">
+                          <PriceChart 
+                            data={priceChartData} 
+                            dataKeys={dataKeys} 
+                            height={300}
+                          />
+                        </div>
                       )}
                     </div>
                     
-                    <div className="bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-900/20 dark:to-pink-800/20 rounded-lg shadow-sm border-2 border-pink-200 dark:border-pink-700 p-6">
-                      <div className="flex items-center gap-2 mb-4">
-                        <TrendingUp size={20} className="text-pink-600 dark:text-pink-400" />
-                        <h3 className="text-lg font-semibold text-pink-900 dark:text-pink-100">Price Changes</h3>
+                    <div className="bg-gradient-to-br from-pink-400 via-pink-500 to-pink-600 dark:from-pink-600 dark:via-pink-700 dark:to-pink-800 rounded-2xl shadow-2xl border-4 border-pink-300 dark:border-pink-500 p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-2xl">💹</span>
+                        <h3 className="text-xl font-bold text-white">Price Changes</h3>
                       </div>
-                      <div className="space-y-1 mt-2">
-                        {Object.entries(priceChangeData).map(([key, value]) => (
-                          <div key={`price-change-${key}`}>
-                            {renderPriceChange(key.charAt(0).toUpperCase() + key.slice(1), value as number)}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </SectionLayout>
-
-                {/* Supply Alerts */}
-                <SectionLayout title="Supply Alerts" subtitle="Critical supply chain notifications">
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                      <AlertTriangle size={20} className="text-gray-400" />
-                      <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Active Alerts</h3>
-                    </div>
-                    <div className="space-y-4 mt-2">
-                      {metrics.materialShortages.map((shortage: any, index: number) => (
-                        <div key={`shortage-${index}-${shortage.material || shortage.id || index}`} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                          <div className="mt-0.5">
-                            <AlertTriangle 
-                              size={18} 
-                              className={shortage.severity === 'high' 
-                                ? 'text-red-500' 
-                                : shortage.severity === 'medium' 
-                                  ? 'text-orange-500' 
-                                  : 'text-gray-400'
-                              } 
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <h4 className="font-medium text-gray-800 dark:text-gray-200">{shortage.material} Shortage</h4>
-                              <StatusBadge 
-                                type={shortage.severity === 'high' 
-                                  ? 'error' 
-                                  : shortage.severity === 'medium' 
-                                    ? 'warning' 
-                                    : 'info'
-                                } 
-                                text={shortage.severity.toUpperCase()} 
-                              />
+                      <div className="space-y-3 mt-4">
+                        {Object.entries(priceChangeData).map(([key, value]) => {
+                          const isPositive = value >= 0;
+                          return (
+                            <div key={`price-change-${key}`} className="bg-white/20 dark:bg-white/10 rounded-xl p-3 border-2 border-white/30">
+                              <div className="flex items-center justify-between">
+                                <span className="text-white font-bold text-sm">{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                                <span className={`flex items-center font-extrabold text-lg ${isPositive ? 'text-red-200' : 'text-green-200'}`}>
+                                  {isPositive ? '📈' : '📉'} {isPositive ? '+' : ''}{value}%
+                                </span>
+                              </div>
                             </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Region: {shortage.region}</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                              {shortage.severity === 'high' 
-                                ? 'Critical shortage affecting prices and availability.' 
-                                : shortage.severity === 'medium' 
-                                  ? 'Moderate supply constraints expected.' 
-                                  : 'Minor supply issues reported.'
-                              }
-                            </p>
-                          </div>
-                        </div>
-                      ))}
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
-                </SectionLayout>
+                </div>
 
-                {/* Trade Opportunities */}
-                <SectionLayout title="Trade Opportunities" subtitle="Verified projects and demand opportunities">
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                {/* Playful Supply Alerts */}
+                <div className="mb-6">
+                  <div className="mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <span>⚠️</span>
+                      Important Alerts!
+                    </h2>
+                    <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                      <span>🔔</span>
+                      Things you need to know about your supply chain!
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 dark:from-orange-600 dark:via-orange-700 dark:to-orange-800 rounded-2xl shadow-2xl border-4 border-orange-300 dark:border-orange-500 p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-2xl">🚨</span>
+                      <h3 className="text-xl font-bold text-white">Active Alerts</h3>
+                    </div>
+                    <div className="space-y-4 mt-4">
+                      {metrics.materialShortages.map((shortage: any, index: number) => {
+                        const severityEmoji = shortage.severity === 'high' ? '🔴' : shortage.severity === 'medium' ? '🟡' : '🟢';
+                        return (
+                          <div key={`shortage-${index}-${shortage.material || shortage.id || index}`} className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border-2 border-white/30">
+                            <div className="flex items-start gap-3">
+                              <span className="text-2xl">{severityEmoji}</span>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <h4 className="font-bold text-white text-lg">{shortage.material} Shortage</h4>
+                                  <StatusBadge 
+                                    type={shortage.severity === 'high' 
+                                      ? 'error' 
+                                      : shortage.severity === 'medium' 
+                                        ? 'warning' 
+                                        : 'info'
+                                    } 
+                                    text={shortage.severity.toUpperCase()} 
+                                  />
+                                </div>
+                                <p className="text-sm text-white/90 font-medium mb-1 flex items-center gap-1">
+                                  <MapPin size={14} />
+                                  Region: {shortage.region}
+                                </p>
+                                <p className="text-sm text-white/80 mt-2">
+                                  {shortage.severity === 'high' 
+                                    ? '🚨 Critical shortage affecting prices and availability!' 
+                                    : shortage.severity === 'medium' 
+                                      ? '⚠️ Moderate supply constraints expected.' 
+                                      : 'ℹ️ Minor supply issues reported.'
+                                  }
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Playful Trade Opportunities */}
+                <div className="mb-6">
+                  <div className="mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <span>💼</span>
+                      Amazing Opportunities!
+                    </h2>
+                    <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                      <span>🎁</span>
+                      Cool projects and deals waiting for you!
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-600 dark:from-emerald-600 dark:via-emerald-700 dark:to-emerald-800 rounded-2xl shadow-2xl border-4 border-emerald-300 dark:border-emerald-500 p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <Briefcase size={20} className="text-gray-400" />
-                        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Active Opportunities</h3>
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">🌟</span>
+                        <h3 className="text-xl font-bold text-white">Active Opportunities</h3>
                       </div>
-                      <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
-                        View All
+                      <button className="text-sm text-white font-bold bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl border-2 border-white/30 transition-colors">
+                        View All 👉
                       </button>
                     </div>
                     
                     <div className="space-y-4">
                       {Array.isArray(realOpportunities) && realOpportunities.length > 0 ? (
                         realOpportunities.slice(0, 3).map((opportunity: any) => (
-                        <div key={opportunity.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
+                        <div key={opportunity.id} className="bg-white/20 dark:bg-white/10 rounded-xl p-5 border-2 border-white/30 hover:bg-white/30 transition-all transform hover:scale-[1.02]">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex-1">
-                              <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-1">{opportunity.title || opportunity.opportunity_type}</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{opportunity.description || 'Trade opportunity'}</p>
-                              <div className="flex items-center gap-4 text-xs text-gray-500">
+                              <h4 className="font-bold text-white text-lg mb-2 flex items-center gap-2">
+                                <span>🎯</span>
+                                {opportunity.title || opportunity.opportunity_type}
+                              </h4>
+                              <p className="text-sm text-white/90 mb-3">{opportunity.description || 'Trade opportunity'}</p>
+                              <div className="flex items-center gap-4 text-xs text-white/80 flex-wrap">
                                 {opportunity.location && (
-                                  <div className="flex items-center gap-1">
+                                  <div className="flex items-center gap-1 bg-white/20 px-2 py-1 rounded-lg">
                                     <MapPin size={12} />
                                     {opportunity.location}
                                   </div>
                                 )}
                                 {opportunity.deadline && (
-                                  <div className="flex items-center gap-1">
+                                  <div className="flex items-center gap-1 bg-white/20 px-2 py-1 rounded-lg">
                                     <Calendar size={12} />
                                     Due: {new Date(opportunity.deadline).toLocaleDateString()}
                                   </div>
                                 )}
                                 {opportunity.country && (
-                                  <div className="flex items-center gap-1">
+                                  <div className="flex items-center gap-1 bg-white/20 px-2 py-1 rounded-lg">
                                     <Briefcase size={12} />
                                     {opportunity.country}
                                   </div>
@@ -723,26 +826,26 @@ const Dashboard: React.FC = () => {
                               </div>
                             </div>
                             {(opportunity.budget_min || opportunity.budget_max) && (
-                              <div className="text-right">
-                                <div className="text-lg font-bold text-gray-800 dark:text-gray-200">
+                              <div className="text-right bg-white/20 rounded-xl p-3 border-2 border-white/30">
+                                <div className="text-2xl font-extrabold text-white">
                                   ${opportunity.budget_max ? (opportunity.budget_max / 1000000).toFixed(1) : (opportunity.budget_min / 1000000).toFixed(1)}M
                                 </div>
-                                <div className="text-xs text-gray-500">{opportunity.currency || 'USD'}</div>
+                                <div className="text-xs text-white/80">{opportunity.currency || 'USD'}</div>
                               </div>
                             )}
                           </div>
                           
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
                               {opportunity.material && (
                                 <div className="flex flex-wrap gap-1">
-                                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                                    {opportunity.material}
+                                  <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold bg-white/30 text-white border-2 border-white/40">
+                                    📦 {opportunity.material}
                                   </span>
                                 </div>
                               )}
                               {opportunity.insurance_required && (
-                                <div className="flex items-center gap-1 text-xs text-blue-600">
+                                <div className="flex items-center gap-1 text-xs text-white font-bold bg-white/20 px-2 py-1 rounded-lg">
                                   <Shield size={12} />
                                   Insurance Required
                                 </div>
@@ -753,83 +856,104 @@ const Dashboard: React.FC = () => {
                                 type={opportunity.status === 'active' ? 'success' : opportunity.status === 'matched' ? 'warning' : 'info'} 
                                 text={opportunity.status?.toUpperCase() || 'ACTIVE'} 
                               />
-                              <button className="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100">
-                                View
+                              <button className="px-4 py-2 text-sm font-bold text-emerald-600 bg-white rounded-xl hover:bg-emerald-50 border-2 border-white/50 transition-colors">
+                                View 👀
                               </button>
                             </div>
                           </div>
                         </div>
                         ))
                       ) : (
-                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                          <Briefcase size={32} className="mx-auto mb-2 opacity-50" />
-                          <p className="text-sm">No trade opportunities available</p>
+                        <div className="text-center py-8 text-white/80">
+                          <span className="text-4xl block mb-2">📭</span>
+                          <p className="text-base font-medium">No trade opportunities available yet</p>
+                          <p className="text-sm mt-1">Check back soon for new opportunities! 🎉</p>
                         </div>
                       )}
                     </div>
                   </div>
-                </SectionLayout>
+                </div>
               </>
             )}
 
             {selectedTab === 'insights' && (
               <div className="space-y-6">
-                <SectionLayout title="Market Insights" subtitle="Strategic analysis and recommendations">
+                {/* Playful Market Insights */}
+                <div className="mb-6">
+                  <div className="mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <span>💡</span>
+                      Smart Ideas & Tips!
+                    </h2>
+                    <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                      <span>🧠</span>
+                      Learn cool things about your market and how to grow!
+                    </p>
+                  </div>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg shadow-sm border-2 border-blue-200 dark:border-blue-700 p-6">
-                      <div className="flex items-center gap-2 mb-4">
-                        <BarChart3 size={20} className="text-blue-600 dark:text-blue-400" />
-                        <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">Key Takeaways</h3>
+                    <div className="bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-blue-600 dark:via-blue-700 dark:to-blue-800 rounded-2xl shadow-2xl border-4 border-blue-300 dark:border-blue-500 p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-2xl">📊</span>
+                        <h3 className="text-xl font-bold text-white">Key Takeaways</h3>
                       </div>
-                      <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-800">
-                        <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-2">Market Analysis</h3>
-                        <ul className="space-y-2 text-blue-800 dark:text-blue-200">
+                      <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
+                        <h3 className="font-bold text-white mb-3 flex items-center gap-2">
+                          <span>🔍</span>
+                          Market Analysis
+                        </h3>
+                        <ul className="space-y-3 text-white">
                           <li className="flex items-start gap-2">
-                            <span className="text-blue-600 mt-1">•</span>
-                            <span>{currentIndustry === 'construction' 
-                              ? 'Cement prices continue to rise due to increased demand in urban construction projects across Kenya.'
-                              : 'Fertilizer prices are stabilizing after recent supply chain disruptions from global markets.'
+                            <span className="text-xl">💡</span>
+                            <span className="font-medium">{currentIndustry === 'construction' 
+                              ? 'Cement prices are going up because lots of people are building in cities! 🏗️'
+                              : 'Fertilizer prices are getting better after some problems with shipping! 🌾'
                             }</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <span className="text-blue-600 mt-1">•</span>
-                            <span>{currentIndustry === 'construction' 
-                              ? 'Steel suppliers are offering bulk discounts to counter recent price increases.'
-                              : 'Seed prices remain volatile due to seasonal demand fluctuations and import constraints.'
+                            <span className="text-xl">💡</span>
+                            <span className="font-medium">{currentIndustry === 'construction' 
+                              ? 'Steel sellers are giving discounts if you buy a lot! 💰'
+                              : 'Seed prices change a lot because of seasons and shipping! 🌱'
                             }</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <span className="text-blue-600 mt-1">•</span>
-                            <span>{currentIndustry === 'construction' 
-                              ? 'New regulations on imported materials expected to impact supply chain in Q4 2023.'
-                              : 'New governmental subsidies for small-scale farmers announced in Rwanda and Uganda.'
+                            <span className="text-xl">💡</span>
+                            <span className="font-medium">{currentIndustry === 'construction' 
+                              ? 'New rules about buying from other countries are coming! 📋'
+                              : 'The government is helping farmers with money in Rwanda and Uganda! 🎁'
                             }</span>
                           </li>
                         </ul>
                       </div>
                     </div>
                     
-                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg shadow-sm border-2 border-purple-200 dark:border-purple-700 p-6">
-                      <div className="flex items-center gap-2 mb-4">
-                        <TrendingUp size={20} className="text-purple-600 dark:text-purple-400" />
-                        <h3 className="text-lg font-semibold text-purple-900 dark:text-purple-100">Growth Opportunities</h3>
+                    <div className="bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 dark:from-purple-600 dark:via-purple-700 dark:to-purple-800 rounded-2xl shadow-2xl border-4 border-purple-300 dark:border-purple-500 p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-2xl">🚀</span>
+                        <h3 className="text-xl font-bold text-white">Growth Opportunities</h3>
                       </div>
                       <div className="space-y-3">
-                        <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg border border-purple-200 dark:border-purple-800">
-                          <h4 className="font-medium text-purple-900 dark:text-purple-100 mb-1">Market Expansion</h4>
-                          <p className="text-sm text-purple-800 dark:text-purple-200">
+                        <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
+                          <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                            <span>🌍</span>
+                            Market Expansion
+                          </h4>
+                          <p className="text-sm text-white/90 font-medium">
                             {currentIndustry === 'construction' 
-                              ? 'Growing demand in Tanzania and Uganda presents expansion opportunities.'
-                              : 'Export potential for organic fertilizers to neighboring countries.'
+                              ? 'More people need stuff in Tanzania and Uganda - great chance to grow! 📈'
+                              : 'You can sell organic fertilizers to nearby countries! 🌿'
                             }
                           </p>
                         </div>
-                        <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg border border-purple-200 dark:border-purple-800">
-                          <h4 className="font-medium text-purple-900 dark:text-purple-100 mb-1">Cost Optimization</h4>
-                          <p className="text-sm text-purple-800 dark:text-purple-200">
+                        <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
+                          <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                            <span>💰</span>
+                            Save Money!
+                          </h4>
+                          <p className="text-sm text-white/90 font-medium">
                             {currentIndustry === 'construction' 
-                              ? 'Bulk purchasing can reduce material costs by up to 15%.'
-                              : 'Direct sourcing from producers can cut input costs by 20%.'
+                              ? 'Buying lots at once can save you 15%! 🎉'
+                              : 'Buying directly from farmers can save 20%! 🌾'
                             }
                           </p>
                         </div>
@@ -838,99 +962,142 @@ const Dashboard: React.FC = () => {
                   </div>
                   
                   <div className="mt-6">
-                    <h3 className="font-medium text-gray-800 dark:text-gray-200 mb-4">Recommended Actions</h3>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                      <span>✅</span>
+                      Things You Should Do!
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg border-2 border-green-200 dark:border-green-700 p-4 hover:shadow-md transition-shadow">
-                        <h4 className="font-medium text-green-900 dark:text-green-100 mb-1">Procurement Strategy</h4>
-                        <p className="text-sm text-green-800 dark:text-green-200">
+                      <div className="bg-gradient-to-br from-green-400 via-green-500 to-green-600 dark:from-green-600 dark:via-green-700 dark:to-green-800 rounded-2xl shadow-2xl border-4 border-green-300 dark:border-green-500 p-5 hover:scale-105 transition-transform">
+                        <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                          <span>🛒</span>
+                          Buying Strategy
+                        </h4>
+                        <p className="text-sm text-white/90 font-medium">
                           {currentIndustry === 'construction' 
-                            ? 'Consider locking in cement prices with suppliers showing stable supply chains.' 
-                            : 'Secure fertilizer stocks ahead of the growing season to avoid seasonal price increases.'
+                            ? 'Lock in cement prices with reliable suppliers! 🔒' 
+                            : 'Get fertilizer before the busy season starts! ⏰'
                           }
                         </p>
                       </div>
-                      <div className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-lg border-2 border-amber-200 dark:border-amber-700 p-4 hover:shadow-md transition-shadow">
-                        <h4 className="font-medium text-amber-900 dark:text-amber-100 mb-1">Supplier Relationships</h4>
-                        <p className="text-sm text-amber-800 dark:text-amber-200">
+                      <div className="bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 dark:from-amber-600 dark:via-amber-700 dark:to-amber-800 rounded-2xl shadow-2xl border-4 border-amber-300 dark:border-amber-500 p-5 hover:scale-105 transition-transform">
+                        <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                          <span>🤝</span>
+                          Make Friends!
+                        </h4>
+                        <p className="text-sm text-white/90 font-medium">
                           {currentIndustry === 'construction' 
-                            ? 'Diversify steel suppliers to mitigate risk from volatile market conditions.' 
-                            : 'Explore partnerships with local seed producers to reduce import dependency.'
+                            ? 'Work with different steel sellers to stay safe! 🛡️' 
+                            : 'Partner with local seed growers! 🌱'
                           }
                         </p>
                       </div>
-                      <div className="bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/20 dark:to-teal-800/20 rounded-lg border-2 border-teal-200 dark:border-teal-700 p-4 hover:shadow-md transition-shadow">
-                        <h4 className="font-medium text-teal-900 dark:text-teal-100 mb-1">Risk Management</h4>
-                        <p className="text-sm text-teal-800 dark:text-teal-200">
+                      <div className="bg-gradient-to-br from-teal-400 via-teal-500 to-teal-600 dark:from-teal-600 dark:via-teal-700 dark:to-teal-800 rounded-2xl shadow-2xl border-4 border-teal-300 dark:border-teal-500 p-5 hover:scale-105 transition-transform">
+                        <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                          <span>🛡️</span>
+                          Stay Safe!
+                        </h4>
+                        <p className="text-sm text-white/90 font-medium">
                           {currentIndustry === 'construction' 
-                            ? 'Implement price hedging strategies for volatile materials.' 
-                            : 'Establish backup suppliers for critical inputs during peak seasons.'
+                            ? 'Protect yourself from price changes! 📊' 
+                            : 'Have backup suppliers ready! 🔄'
                           }
                         </p>
                       </div>
                     </div>
                   </div>
-                </SectionLayout>
+                </div>
 
-                <SectionLayout title="Performance Metrics" subtitle="Detailed performance analysis">
+                {/* Playful Performance Metrics */}
+                <div className="mb-6">
+                  <div className="mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <span>📈</span>
+                      How Awesome You're Doing!
+                    </h2>
+                    <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                      <span>🎯</span>
+                      Check out your amazing scores!
+                    </p>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 rounded-lg shadow-sm border-2 border-emerald-200 dark:border-emerald-700 p-6">
+                    <div className="bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-600 dark:from-emerald-600 dark:via-emerald-700 dark:to-emerald-800 rounded-2xl shadow-2xl border-4 border-emerald-300 dark:border-emerald-500 p-6">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-emerald-800 dark:text-emerald-200">Efficiency Score</h3>
-                        <Activity size={20} className="text-emerald-600 dark:text-emerald-400" />
+                        <h3 className="text-base font-bold text-white flex items-center gap-2">
+                          <span>⚡</span>
+                          Efficiency Score
+                        </h3>
+                        <Activity size={24} className="text-white/80" />
                       </div>
-                      <div className="text-3xl font-bold text-emerald-900 dark:text-emerald-100">87%</div>
-                      <div className="mt-1 text-sm text-emerald-700 dark:text-emerald-300">Above average</div>
+                      <div className="text-5xl font-extrabold text-white mb-2">87%</div>
+                      <div className="text-sm text-emerald-100 font-bold">You're doing great! 🎉</div>
                     </div>
                     
-                    <div className="bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-900/20 dark:to-violet-800/20 rounded-lg shadow-sm border-2 border-violet-200 dark:border-violet-700 p-6">
+                    <div className="bg-gradient-to-br from-violet-400 via-violet-500 to-violet-600 dark:from-violet-600 dark:via-violet-700 dark:to-violet-800 rounded-2xl shadow-2xl border-4 border-violet-300 dark:border-violet-500 p-6">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-violet-800 dark:text-violet-200">Cost Savings</h3>
-                        <DollarSign size={20} className="text-violet-600 dark:text-violet-400" />
+                        <h3 className="text-base font-bold text-white flex items-center gap-2">
+                          <span>💰</span>
+                          Money Saved!
+                        </h3>
+                        <DollarSign size={24} className="text-white/80" />
                       </div>
-                      <div className="text-3xl font-bold text-violet-900 dark:text-violet-100">12%</div>
-                      <div className="mt-1 text-sm text-violet-700 dark:text-violet-300">vs last quarter</div>
+                      <div className="text-5xl font-extrabold text-white mb-2">12%</div>
+                      <div className="text-sm text-violet-100 font-bold">vs last quarter 🚀</div>
                     </div>
                     
-                    <div className="bg-gradient-to-br from-sky-50 to-sky-100 dark:from-sky-900/20 dark:to-sky-800/20 rounded-lg shadow-sm border-2 border-sky-200 dark:border-sky-700 p-6">
+                    <div className="bg-gradient-to-br from-sky-400 via-sky-500 to-sky-600 dark:from-sky-600 dark:via-sky-700 dark:to-sky-800 rounded-2xl shadow-2xl border-4 border-sky-300 dark:border-sky-500 p-6">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-sky-800 dark:text-sky-200">Market Share</h3>
-                        <BarChart3 size={20} className="text-sky-600 dark:text-sky-400" />
+                        <h3 className="text-base font-bold text-white flex items-center gap-2">
+                          <span>📊</span>
+                          Market Share
+                        </h3>
+                        <BarChart3 size={24} className="text-white/80" />
                       </div>
-                      <div className="text-3xl font-bold text-sky-900 dark:text-sky-100">24%</div>
-                      <div className="mt-1 text-sm text-sky-700 dark:text-sky-300">Regional market</div>
+                      <div className="text-5xl font-extrabold text-white mb-2">24%</div>
+                      <div className="text-sm text-sky-100 font-bold">In your region 🌍</div>
                     </div>
                   </div>
-                </SectionLayout>
+                </div>
               </div>
             )}
 
             {selectedTab === 'alerts' && (
               <div className="space-y-6">
-                <SectionLayout title="Alert Center" subtitle="Manage your supply chain notifications">
+                {/* Playful Alert Center */}
+                <div className="mb-6">
+                  <div className="mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <span>🔔</span>
+                      Important Alerts!
+                    </h2>
+                    <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                      <span>⚠️</span>
+                      Things you need to know about right away!
+                    </p>
+                  </div>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-lg shadow-sm border-2 border-orange-200 dark:border-orange-700 p-6">
-                      <div className="flex items-center gap-2 mb-4">
-                        <Bell size={20} className="text-orange-600 dark:text-orange-400" />
-                        <h3 className="text-lg font-semibold text-orange-900 dark:text-orange-100">Price Alerts</h3>
+                    <div className="bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 dark:from-orange-600 dark:via-orange-700 dark:to-orange-800 rounded-2xl shadow-2xl border-4 border-orange-300 dark:border-orange-500 p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-2xl">💰</span>
+                        <h3 className="text-xl font-bold text-white">Price Alerts</h3>
                       </div>
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between p-3 bg-orange-100 dark:bg-orange-900/30 rounded-lg border border-orange-300 dark:border-orange-800">
+                        <div className="flex items-center justify-between p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <div className="flex items-center gap-3">
-                            <AlertCircle size={20} className="text-orange-600" />
+                            <span className="text-2xl">📈</span>
                             <div>
-                              <h4 className="font-medium text-orange-900 dark:text-orange-100">Cement Price Surge</h4>
-                              <p className="text-sm text-orange-800 dark:text-orange-200">Prices increased 5.2% in the last 24 hours</p>
+                              <h4 className="font-bold text-white text-lg">Cement Price Surge!</h4>
+                              <p className="text-sm text-white/90 font-medium">Prices went up 5.2% in one day! ⚡</p>
                             </div>
                           </div>
                           <StatusBadge type="warning" text="ACTIVE" />
                         </div>
                         
-                        <div className="flex items-center justify-between p-3 bg-red-100 dark:bg-red-900/30 rounded-lg border border-red-300 dark:border-red-800">
+                        <div className="flex items-center justify-between p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <div className="flex items-center gap-3">
-                            <AlertTriangle size={20} className="text-red-600" />
+                            <span className="text-2xl">🚨</span>
                             <div>
-                              <h4 className="font-medium text-red-900 dark:text-red-100">Supply Disruption</h4>
-                              <p className="text-sm text-red-800 dark:text-red-200">Steel delivery delayed by 3 days</p>
+                              <h4 className="font-bold text-white text-lg">Supply Problem!</h4>
+                              <p className="text-sm text-white/90 font-medium">Steel delivery is 3 days late! 😰</p>
                             </div>
                           </div>
                           <StatusBadge type="error" text="CRITICAL" />
@@ -938,159 +1105,183 @@ const Dashboard: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-lg shadow-sm border-2 border-yellow-200 dark:border-yellow-700 p-6">
-                      <div className="flex items-center gap-2 mb-4">
-                        <AlertTriangle size={20} className="text-yellow-600 dark:text-yellow-400" />
-                        <h3 className="text-lg font-semibold text-yellow-900 dark:text-yellow-100">Risk Assessment</h3>
+                    <div className="bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 dark:from-yellow-600 dark:via-yellow-700 dark:to-yellow-800 rounded-2xl shadow-2xl border-4 border-yellow-300 dark:border-yellow-500 p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-2xl">🛡️</span>
+                        <h3 className="text-xl font-bold text-white">Risk Check</h3>
                       </div>
                       <div className="space-y-3">
-                        <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg border border-yellow-300 dark:border-yellow-800">
+                        <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm font-medium text-yellow-900 dark:text-yellow-100">Supply Disruption</span>
+                            <span className="text-sm font-bold text-white flex items-center gap-2">
+                              <span>⚠️</span>
+                              Supply Disruption
+                            </span>
                             <StatusBadge type="warning" text="MEDIUM" />
                           </div>
-                          <p className="text-xs text-yellow-800 dark:text-yellow-200">Monitor supplier performance closely</p>
+                          <p className="text-xs text-white/90 font-medium">Watch your suppliers closely! 👀</p>
                         </div>
-                        <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg border border-yellow-300 dark:border-yellow-800">
+                        <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm font-medium text-yellow-900 dark:text-yellow-100">Price Volatility</span>
+                            <span className="text-sm font-bold text-white flex items-center gap-2">
+                              <span>📊</span>
+                              Price Volatility
+                            </span>
                             <StatusBadge 
                               type={metrics.priceVolatility > 10 ? "error" : "warning"} 
                               text={metrics.priceVolatility > 10 ? "HIGH" : "MEDIUM"} 
                             />
                           </div>
-                          <p className="text-xs text-yellow-800 dark:text-yellow-200">Consider price hedging strategies</p>
+                          <p className="text-xs text-white/90 font-medium">Prices are changing a lot! 💹</p>
                         </div>
-                        <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg border border-green-300 dark:border-green-800">
+                        <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm font-medium text-green-900 dark:text-green-100">Quality Consistency</span>
+                            <span className="text-sm font-bold text-white flex items-center gap-2">
+                              <span>✅</span>
+                              Quality Consistency
+                            </span>
                             <StatusBadge type="success" text="LOW" />
                           </div>
-                          <p className="text-xs text-green-800 dark:text-green-200">Quality monitoring active</p>
+                          <p className="text-xs text-white/90 font-medium">Everything looks good! 🎉</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                </SectionLayout>
+                </div>
 
-                <SectionLayout title="Active Risk Alerts" subtitle="Real-time risk alerts from your supply chain">
+                {/* Playful Active Risk Alerts */}
+                <div className="mb-6">
+                  <div className="mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <span>🚨</span>
+                      Active Risk Alerts!
+                    </h2>
+                    <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                      <span>⚡</span>
+                      Real-time alerts from your supply chain!
+                    </p>
+                  </div>
                   <div className="space-y-4">
                     {Array.isArray(realAlerts) && realAlerts.length > 0 ? (
-                      realAlerts.slice(0, 5).map((alert: any, index: number) => (
-                        <div 
-                          key={alert.id || `alert-${index}`}
-                          className={`p-4 rounded-lg border-2 ${
-                            alert.severity === 'high' 
-                              ? 'bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-red-300 dark:border-red-700'
-                              : alert.severity === 'medium'
-                                ? 'bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-orange-300 dark:border-orange-700'
-                                : 'bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 border-yellow-300 dark:border-yellow-700'
-                          }`}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex items-start gap-3 flex-1">
-                              <AlertTriangle 
-                                size={20} 
-                                className={
-                                  alert.severity === 'high' 
-                                    ? 'text-red-600 dark:text-red-400 mt-0.5'
-                                    : alert.severity === 'medium'
-                                      ? 'text-orange-600 dark:text-orange-400 mt-0.5'
-                                      : 'text-yellow-600 dark:text-yellow-400 mt-0.5'
-                                } 
-                              />
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <h4 className="font-semibold text-gray-900 dark:text-white">
-                                    {alert.title || alert.alert_type || 'Risk Alert'}
-                                  </h4>
-                                  <StatusBadge 
-                                    type={alert.severity === 'high' ? 'error' : alert.severity === 'medium' ? 'warning' : 'info'}
-                                    text={alert.severity?.toUpperCase() || 'ALERT'}
-                                  />
-                                </div>
-                                <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                                  {alert.message || alert.description || 'No description available'}
-                                </p>
-                                <div className="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
-                                  {alert.region && (
-                                    <div className="flex items-center gap-1">
-                                      <MapPin size={12} />
-                                      {alert.region}
-                                    </div>
-                                  )}
-                                  {alert.material && (
-                                    <div className="flex items-center gap-1">
-                                      <Package size={12} />
-                                      {alert.material}
-                                    </div>
-                                  )}
-                                  {alert.created_at && (
-                                    <div className="flex items-center gap-1">
-                                      <Clock size={12} />
-                                      {new Date(alert.created_at).toLocaleDateString()}
-                                    </div>
-                                  )}
+                      realAlerts.slice(0, 5).map((alert: any, index: number) => {
+                        const severityEmoji = alert.severity === 'high' ? '🔴' : alert.severity === 'medium' ? '🟡' : '🟢';
+                        const bgGradient = alert.severity === 'high' 
+                          ? 'from-red-400 via-red-500 to-red-600 dark:from-red-600 dark:via-red-700 dark:to-red-800 border-red-300 dark:border-red-500'
+                          : alert.severity === 'medium'
+                            ? 'from-orange-400 via-orange-500 to-orange-600 dark:from-orange-600 dark:via-orange-700 dark:to-orange-800 border-orange-300 dark:border-orange-500'
+                            : 'from-yellow-400 via-yellow-500 to-yellow-600 dark:from-yellow-600 dark:via-yellow-700 dark:to-yellow-800 border-yellow-300 dark:border-yellow-500';
+                        return (
+                          <div 
+                            key={alert.id || `alert-${index}`}
+                            className={`bg-gradient-to-br ${bgGradient} rounded-2xl shadow-2xl border-4 p-5`}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start gap-3 flex-1">
+                                <span className="text-3xl">{severityEmoji}</span>
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <h4 className="font-bold text-white text-lg">
+                                      {alert.title || alert.alert_type || 'Risk Alert'}
+                                    </h4>
+                                    <StatusBadge 
+                                      type={alert.severity === 'high' ? 'error' : alert.severity === 'medium' ? 'warning' : 'info'}
+                                      text={alert.severity?.toUpperCase() || 'ALERT'}
+                                    />
+                                  </div>
+                                  <p className="text-sm text-white/90 font-medium mb-3">
+                                    {alert.message || alert.description || 'No description available'}
+                                  </p>
+                                  <div className="flex items-center gap-4 text-xs text-white/80 flex-wrap">
+                                    {alert.region && (
+                                      <div className="flex items-center gap-1 bg-white/20 px-2 py-1 rounded-lg">
+                                        <MapPin size={12} />
+                                        {alert.region}
+                                      </div>
+                                    )}
+                                    {alert.material && (
+                                      <div className="flex items-center gap-1 bg-white/20 px-2 py-1 rounded-lg">
+                                        <Package size={12} />
+                                        {alert.material}
+                                      </div>
+                                    )}
+                                    {alert.created_at && (
+                                      <div className="flex items-center gap-1 bg-white/20 px-2 py-1 rounded-lg">
+                                        <Clock size={12} />
+                                        {new Date(alert.created_at).toLocaleDateString()}
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
+                              <button
+                                onClick={() => {
+                                  // Handle alert resolution
+                                  console.log('Resolve alert:', alert.id);
+                                }}
+                                className="ml-4 px-4 py-2 text-sm font-bold bg-white text-gray-700 rounded-xl hover:bg-gray-100 border-2 border-white/50 transition-colors"
+                              >
+                                Fix It! ✅
+                              </button>
                             </div>
-                            <button
-                              onClick={() => {
-                                // Handle alert resolution
-                                console.log('Resolve alert:', alert.id);
-                              }}
-                              className="ml-4 px-3 py-1.5 text-xs font-medium bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600"
-                            >
-                              Resolve
-                            </button>
                           </div>
-                        </div>
-                      ))
+                        );
+                      })
                     ) : (
-                      <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg border-2 border-green-200 dark:border-green-700 p-8 text-center">
-                        <CheckCircle size={48} className="text-green-600 dark:text-green-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-semibold text-green-900 dark:text-green-100 mb-2">All Clear!</h3>
-                        <p className="text-sm text-green-800 dark:text-green-200">
-                          No active risk alerts at this time. Your supply chain is operating normally.
+                      <div className="bg-gradient-to-br from-green-400 via-green-500 to-green-600 dark:from-green-600 dark:via-green-700 dark:to-green-800 rounded-2xl shadow-2xl border-4 border-green-300 dark:border-green-500 p-8 text-center">
+                        <span className="text-6xl block mb-4">🎉</span>
+                        <h3 className="text-2xl font-bold text-white mb-2">All Clear!</h3>
+                        <p className="text-base text-white/90 font-medium">
+                          No active risk alerts right now! Everything is working great! ✨
                         </p>
                       </div>
                     )}
                   </div>
-                </SectionLayout>
+                </div>
 
-                <SectionLayout title="Mitigation Actions" subtitle="Recommended actions to address risks">
+                {/* Playful Mitigation Actions */}
+                <div className="mb-6">
+                  <div className="mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <span>🛡️</span>
+                      How to Stay Safe!
+                    </h2>
+                    <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                      <span>💪</span>
+                      Things you can do to protect your business!
+                    </p>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg border-2 border-blue-200 dark:border-blue-700 p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle size={18} className="text-blue-600 dark:text-blue-400" />
-                        <h4 className="font-medium text-blue-900 dark:text-blue-100">Diversified Supplier Base</h4>
+                    <div className="bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-blue-600 dark:via-blue-700 dark:to-blue-800 rounded-2xl shadow-2xl border-4 border-blue-300 dark:border-blue-500 p-5 hover:scale-105 transition-transform">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-2xl">✅</span>
+                        <h4 className="font-bold text-white text-lg">Work with Many Suppliers</h4>
                       </div>
-                      <p className="text-sm text-blue-800 dark:text-blue-200">
-                        Multiple suppliers reduce dependency risk
+                      <p className="text-sm text-white/90 font-medium">
+                        Having lots of suppliers keeps you safe! 🛡️
                       </p>
                     </div>
                     
-                    <div className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-lg border-2 border-amber-200 dark:border-amber-700 p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <AlertTriangle size={18} className="text-amber-600 dark:text-amber-400" />
-                        <h4 className="font-medium text-amber-900 dark:text-amber-100">Price Hedging Needed</h4>
+                    <div className="bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 dark:from-amber-600 dark:via-amber-700 dark:to-amber-800 rounded-2xl shadow-2xl border-4 border-amber-300 dark:border-amber-500 p-5 hover:scale-105 transition-transform">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-2xl">💰</span>
+                        <h4 className="font-bold text-white text-lg">Protect Your Prices!</h4>
                       </div>
-                      <p className="text-sm text-amber-800 dark:text-amber-200">
-                        Consider implementing price hedging strategies
+                      <p className="text-sm text-white/90 font-medium">
+                        Use price protection to stay safe from changes! 📊
                       </p>
                     </div>
                     
-                    <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg border-2 border-green-200 dark:border-green-700 p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle size={18} className="text-green-600 dark:text-green-400" />
-                        <h4 className="font-medium text-green-900 dark:text-green-100">Quality Monitoring Active</h4>
+                    <div className="bg-gradient-to-br from-green-400 via-green-500 to-green-600 dark:from-green-600 dark:via-green-700 dark:to-green-800 rounded-2xl shadow-2xl border-4 border-green-300 dark:border-green-500 p-5 hover:scale-105 transition-transform">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-2xl">✅</span>
+                        <h4 className="font-bold text-white text-lg">Quality Check Active!</h4>
                       </div>
-                      <p className="text-sm text-green-800 dark:text-green-200">
-                        Quality assurance processes are in place
+                      <p className="text-sm text-white/90 font-medium">
+                        We're watching quality for you! 👀
                       </p>
                     </div>
                   </div>
-                </SectionLayout>
+                </div>
               </div>
             )}
           </div>

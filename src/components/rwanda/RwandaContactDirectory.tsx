@@ -217,7 +217,8 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
     { id: 'trade-services', label: 'Trade Services' }
   ];
 
-  if (loading) {
+  // Only show loading on initial load, not when switching tabs
+  if (loading && suppliers.length === 0 && government.length === 0) {
     return (
       <div className={`flex items-center justify-center h-64 ${className}`}>
         <div className="text-center">
@@ -248,14 +249,21 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
 
   return (
     <div className={`space-y-6 ${className}`}>
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      {/* Playful Header */}
+      <div className="mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <span>📞</span>
+          Contact Directory!
+        </h2>
+        <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+          <span>👥</span>
+          Find all the people and places you need to contact!
+        </p>
+      </div>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Contact Directory</h2>
-          <p className="text-gray-600 dark:text-gray-400">Complete directory of Rwanda logistics contacts</p>
         </div>
-        
-        <button className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+        <button className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg font-bold">
           <Download className="w-4 h-4 mr-2" />
           Export Contacts
         </button>
@@ -290,26 +298,38 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
         )}
       </div>
 
-      {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex space-x-2 sm:space-x-4 md:space-x-8 overflow-x-auto scrollbar-hide">
+      {/* Playful Tabs */}
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-blue-200 dark:border-gray-700 shadow-lg mb-6">
+        <nav className="flex space-x-2 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => {
             const Icon = getTabIcon(tab.id);
             const count = getTabCount(tab.id);
+            const tabEmojis: Record<ContactTab, string> = {
+              'government': '🏛️',
+              'suppliers': '👥',
+              'logistics': '🚚',
+              'quality': '🔬',
+              'financial': '💳',
+              'trade-services': '📄'
+            };
             
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1 sm:gap-1.5 py-2 px-2 sm:px-3 md:px-4 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex-shrink-0 transition-colors ${
+                className={`flex items-center gap-2 py-3 px-4 sm:px-6 rounded-xl font-bold text-sm sm:text-base whitespace-nowrap flex-shrink-0 transition-all transform hover:scale-105 ${
                   activeTab === tab.id
-                    ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-300'
                 }`}
               >
-                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="text-lg">{tabEmojis[tab.id]}</span>
                 <span>{tab.label}</span>
-                <span className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 py-0.5 px-1.5 sm:px-2 rounded-full text-[10px] sm:text-xs">
+                <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
+                  activeTab === tab.id
+                    ? 'bg-white/30 text-white'
+                    : 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
+                }`}>
                   {count}
                 </span>
               </button>
@@ -320,53 +340,78 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
 
       {/* Content */}
       <div className="space-y-4">
+        {/* Results Count - Playful */}
+        <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-3 border-2 border-blue-200 dark:border-blue-800">
+          <p className="text-sm font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+            <span>📋</span>
+            {activeTab === 'government' 
+              ? `${getFilteredGovernment().length} ${getFilteredGovernment().length === 1 ? 'contact' : 'contacts'} found!`
+              : `${getFilteredSuppliers().filter(supplier => {
+                  switch (activeTab) {
+                    case 'suppliers': return supplier.category === 'construction' || supplier.category === 'agriculture';
+                    case 'logistics': return supplier.category === 'transport' || supplier.category === 'logistics' || supplier.category === 'warehousing';
+                    case 'quality': return supplier.category === 'laboratory' || supplier.category === 'testing' || supplier.category === 'certification';
+                    case 'financial': return supplier.category === 'bank' || supplier.category === 'fintech' || supplier.category === 'insurance' || supplier.category === 'finance';
+                    case 'trade-services': return supplier.category === 'customs' || supplier.category === 'clearing' || supplier.category === 'broker' || supplier.category === 'documentation';
+                    default: return true;
+                  }
+                }).length} ${getFilteredSuppliers().filter(supplier => {
+                  switch (activeTab) {
+                    case 'suppliers': return supplier.category === 'construction' || supplier.category === 'agriculture';
+                    case 'logistics': return supplier.category === 'transport' || supplier.category === 'logistics' || supplier.category === 'warehousing';
+                    case 'quality': return supplier.category === 'laboratory' || supplier.category === 'testing' || supplier.category === 'certification';
+                    case 'financial': return supplier.category === 'bank' || supplier.category === 'fintech' || supplier.category === 'insurance' || supplier.category === 'finance';
+                    case 'trade-services': return supplier.category === 'customs' || supplier.category === 'clearing' || supplier.category === 'broker' || supplier.category === 'documentation';
+                    default: return true;
+                  }
+                }).length === 1 ? 'contact' : 'contacts'} found!`
+            }
+          </p>
+        </div>
+
         {activeTab === 'government' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {getFilteredGovernment().map((contact) => (
-              <div key={contact.id} className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-gray-200 dark:border-gray-600 p-5 sm:p-6 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 transform hover:-translate-y-2 hover:scale-[1.02] overflow-hidden group">
-                {/* Subtle gradient overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-purple-50/0 group-hover:from-blue-50/50 group-hover:to-purple-50/30 dark:group-hover:from-blue-950/20 dark:group-hover:to-purple-950/10 transition-all duration-300 pointer-events-none rounded-2xl"></div>
-                <div className="relative z-10">
+              <div key={contact.id} className="bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-800 dark:to-blue-900/20 rounded-xl shadow-lg border-2 border-blue-200 dark:border-blue-700 p-5 hover:shadow-xl hover:border-blue-400 dark:hover:border-blue-600 transition-all transform hover:scale-[1.02]">
                 {/* Header */}
-                <div className="mb-5">
+                <div className="mb-4">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1 min-w-0 pr-3">
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 leading-tight tracking-tight">{contact.name}</h3>
-                      <p className="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300 mb-2 leading-relaxed">{contact.title}</p>
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-primary-50 dark:bg-primary-900/30 rounded-lg border border-primary-200 dark:border-primary-800">
-                        <Building2 className="w-3.5 h-3.5 text-primary-600 dark:text-primary-400" />
-                        <p className="text-xs sm:text-sm font-semibold text-primary-700 dark:text-primary-300 uppercase tracking-wide">{contact.ministry}</p>
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+                        <span>👤</span>
+                        {contact.name}
+                      </h3>
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{contact.title}</p>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 rounded-lg border-2 border-blue-300 dark:border-blue-700">
+                        <Building2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                        <p className="text-xs font-bold text-blue-700 dark:text-blue-300 uppercase">{contact.ministry}</p>
                       </div>
                     </div>
-                    <div className="flex items-center text-green-600 dark:text-green-400 ml-2 flex-shrink-0 bg-green-50 dark:bg-green-900/20 px-2 py-1.5 rounded-lg">
-                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="text-xs font-semibold ml-1.5 hidden sm:inline">Verified</span>
-                    </div>
+                    {contact.verified && (
+                      <div className="flex items-center text-green-600 dark:text-green-400 flex-shrink-0 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/40 dark:to-green-800/40 px-2 py-1 rounded-lg border-2 border-green-300 dark:border-green-700">
+                        <CheckCircle className="w-4 h-4" />
+                      </div>
+                    )}
                   </div>
                 </div>
                 
-                {/* Contact Actions - Mobile Optimized */}
-                <div className="space-y-3 mb-4">
+                {/* Contact Actions */}
+                <div className="space-y-2 mb-4">
                   {contact.contact.phone && (
                     <button
                       onClick={() => handleContact('phone', contact.contact.phone)}
-                      className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/30 dark:to-blue-800/20 rounded-xl hover:from-blue-100 hover:to-blue-200/50 dark:hover:from-blue-900/40 dark:hover:to-blue-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-blue-200/50 dark:border-blue-700/50"
+                      className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 rounded-lg hover:from-blue-200 hover:to-blue-300 dark:hover:from-blue-900/50 dark:hover:to-blue-800/50 transition-all border-2 border-blue-300 dark:border-blue-700 transform hover:scale-[1.02]"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md">
-                          <Phone className="w-5 h-5 text-white" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Phone</p>
-                          <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{contact.contact.phone}</p>
-                        </div>
+                        <span className="text-xl">📞</span>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{contact.contact.phone}</p>
                       </div>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           copyToClipboard(contact.contact.phone);
                         }}
-                        className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        className="flex-shrink-0 p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                         title="Copy"
                       >
                         <Copy className="w-4 h-4" />
@@ -377,23 +422,18 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                   {contact.contact.email && (
                     <button
                       onClick={() => handleContact('email', contact.contact.email)}
-                      className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-green-50 to-emerald-100/50 dark:from-green-900/30 dark:to-emerald-800/20 rounded-xl hover:from-green-100 hover:to-emerald-200/50 dark:hover:from-green-900/40 dark:hover:to-emerald-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-green-200/50 dark:border-green-700/50"
+                      className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/40 dark:to-green-800/40 rounded-lg hover:from-green-200 hover:to-green-300 dark:hover:from-green-900/50 dark:hover:to-green-800/50 transition-all border-2 border-green-300 dark:border-green-700 transform hover:scale-[1.02]"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-green-600 to-emerald-700 rounded-xl flex items-center justify-center shadow-md">
-                          <Mail className="w-5 h-5 text-white" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Email</p>
-                          <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{contact.contact.email}</p>
-                        </div>
+                        <span className="text-xl">✉️</span>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{contact.contact.email}</p>
                       </div>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           copyToClipboard(contact.contact.email);
                         }}
-                        className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        className="flex-shrink-0 p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                         title="Copy"
                       >
                         <Copy className="w-4 h-4" />
@@ -404,43 +444,37 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                   {contact.contact.website && (
                     <button
                       onClick={() => handleContact('website', contact.contact.website)}
-                      className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-purple-50 to-indigo-100/50 dark:from-purple-900/30 dark:to-indigo-800/20 rounded-xl hover:from-purple-100 hover:to-indigo-200/50 dark:hover:from-purple-900/40 dark:hover:to-indigo-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-purple-200/50 dark:border-purple-700/50"
+                      className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-purple-100 to-purple-200 dark:from-purple-900/40 dark:to-purple-800/40 rounded-lg hover:from-purple-200 hover:to-purple-300 dark:hover:from-purple-900/50 dark:hover:to-purple-800/50 transition-all border-2 border-purple-300 dark:border-purple-700 transform hover:scale-[1.02]"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-md">
-                          <Globe className="w-5 h-5 text-white" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Website</p>
-                          <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{contact.contact.website}</p>
-                        </div>
+                        <span className="text-xl">🌐</span>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{contact.contact.website}</p>
                       </div>
-                      <ExternalLink className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <ExternalLink className="w-4 h-4 text-gray-500 flex-shrink-0" />
                     </button>
                   )}
                 </div>
                 
                 {contact.services.length > 0 && (
-                  <div className="pt-4 border-t-2 border-gray-200 dark:border-gray-700">
-                    <p className="text-xs font-bold text-gray-600 dark:text-gray-300 mb-3 uppercase tracking-wider">Services Offered</p>
+                  <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Services</p>
                     <div className="flex flex-wrap gap-2">
                       {contact.services.slice(0, 3).map((service, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-800/50 text-blue-800 dark:text-blue-200 text-xs font-semibold rounded-lg border border-blue-200 dark:border-blue-700 shadow-sm"
+                          className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-xs font-medium rounded border border-blue-200 dark:border-blue-700"
                         >
                           {service}
                         </span>
                       ))}
                       {contact.services.length > 3 && (
-                        <span className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-bold rounded-lg border border-gray-300 dark:border-gray-600">
-                          +{contact.services.length - 3} more
+                        <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded border border-gray-300 dark:border-gray-600">
+                          +{contact.services.length - 3}
                         </span>
                       )}
                     </div>
                   </div>
                 )}
-                </div>
               </div>
             ))}
           </div>
@@ -466,62 +500,56 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                 }
               })
               .map((supplier) => (
-                <div key={supplier.id} className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-gray-200 dark:border-gray-600 p-5 sm:p-6 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 transform hover:-translate-y-2 hover:scale-[1.02] overflow-hidden group">
-                  {/* Subtle gradient overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-purple-50/0 group-hover:from-blue-50/50 group-hover:to-purple-50/30 dark:group-hover:from-blue-950/20 dark:group-hover:to-purple-950/10 transition-all duration-300 pointer-events-none rounded-2xl"></div>
-                  <div className="relative z-10">
+                <div key={supplier.id} className="bg-gradient-to-br from-white to-purple-50/30 dark:from-gray-800 dark:to-purple-900/20 rounded-xl shadow-lg border-2 border-purple-200 dark:border-purple-700 p-5 hover:shadow-xl hover:border-purple-400 dark:hover:border-purple-600 transition-all transform hover:scale-[1.02]">
                   {/* Header */}
-                  <div className="mb-5">
+                  <div className="mb-4">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1 min-w-0 pr-3">
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 leading-tight tracking-tight">{supplier.name}</h3>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+                          <span>🏢</span>
+                          {supplier.name}
+                        </h3>
                         <div className="flex items-center gap-2 mb-2">
-                          <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0" />
-                          <p className="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300 truncate">{supplier.location}</p>
+                          <MapPin className="w-4 h-4 text-purple-600 dark:text-purple-400 flex-shrink-0" />
+                          <p className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">{supplier.location}</p>
                         </div>
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-primary-50 dark:bg-primary-900/30 rounded-lg border border-primary-200 dark:border-primary-800">
-                          <span className="text-xs sm:text-sm font-bold text-primary-700 dark:text-primary-300 uppercase tracking-wide">{supplier.category}</span>
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-purple-100 to-purple-200 dark:from-purple-900/40 dark:to-purple-800/40 rounded-lg border-2 border-purple-300 dark:border-purple-700">
+                          <span className="text-xs font-bold text-purple-700 dark:text-purple-300 uppercase">{supplier.category}</span>
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2 ml-2 flex-shrink-0">
                         {supplier.verified && (
-                          <div className="flex items-center text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1.5 rounded-lg">
-                            <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                            <span className="text-xs font-semibold ml-1.5 hidden sm:inline">Verified</span>
+                          <div className="flex items-center text-green-600 dark:text-green-400 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/40 dark:to-green-800/40 px-2 py-1 rounded-lg border-2 border-green-300 dark:border-green-700">
+                            <CheckCircle className="w-4 h-4" />
                           </div>
                         )}
                         {supplier.rating && (
-                          <div className="flex items-center gap-1.5 bg-yellow-50 dark:bg-yellow-900/20 px-2.5 py-1.5 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                            <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-500 text-yellow-500" />
-                            <span className="text-sm sm:text-base font-bold text-yellow-700 dark:text-yellow-400">{supplier.rating}</span>
+                          <div className="flex items-center gap-1.5 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900/40 dark:to-yellow-800/40 px-2 py-1 rounded-lg border-2 border-yellow-300 dark:border-yellow-700">
+                            <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                            <span className="text-sm font-bold text-yellow-700 dark:text-yellow-400">{supplier.rating}</span>
                           </div>
                         )}
                       </div>
                     </div>
                   </div>
                   
-                  {/* Contact Actions - Mobile Optimized */}
-                  <div className="space-y-3 mb-4">
+                  {/* Contact Actions */}
+                  <div className="space-y-2 mb-4">
                     {supplier.contact.phone && (
                       <button
                         onClick={() => handleContact('phone', supplier.contact.phone)}
-                        className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/30 dark:to-blue-800/20 rounded-xl hover:from-blue-100 hover:to-blue-200/50 dark:hover:from-blue-900/40 dark:hover:to-blue-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-blue-200/50 dark:border-blue-700/50"
+                        className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 rounded-lg hover:from-blue-200 hover:to-blue-300 dark:hover:from-blue-900/50 dark:hover:to-blue-800/50 transition-all border-2 border-blue-300 dark:border-blue-700 transform hover:scale-[1.02]"
                       >
                         <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md">
-                            <Phone className="w-5 h-5 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Phone</p>
-                            <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{supplier.contact.phone}</p>
-                          </div>
+                          <span className="text-xl">📞</span>
+                          <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{supplier.contact.phone}</p>
                         </div>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             copyToClipboard(supplier.contact.phone);
                           }}
-                          className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                          className="flex-shrink-0 p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                           title="Copy"
                         >
                           <Copy className="w-4 h-4" />
@@ -532,23 +560,18 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                     {supplier.contact.email && (
                       <button
                         onClick={() => handleContact('email', supplier.contact.email)}
-                        className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-green-50 to-emerald-100/50 dark:from-green-900/30 dark:to-emerald-800/20 rounded-xl hover:from-green-100 hover:to-emerald-200/50 dark:hover:from-green-900/40 dark:hover:to-emerald-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-green-200/50 dark:border-green-700/50"
+                        className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/40 dark:to-green-800/40 rounded-lg hover:from-green-200 hover:to-green-300 dark:hover:from-green-900/50 dark:hover:to-green-800/50 transition-all border-2 border-green-300 dark:border-green-700 transform hover:scale-[1.02]"
                       >
                         <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-green-600 to-emerald-700 rounded-xl flex items-center justify-center shadow-md">
-                            <Mail className="w-5 h-5 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Email</p>
-                            <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{supplier.contact.email}</p>
-                          </div>
+                          <span className="text-xl">✉️</span>
+                          <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{supplier.contact.email}</p>
                         </div>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             copyToClipboard(supplier.contact.email);
                           }}
-                          className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                          className="flex-shrink-0 p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                           title="Copy"
                         >
                           <Copy className="w-4 h-4" />
@@ -559,44 +582,41 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                     {supplier.contact.website && (
                       <button
                         onClick={() => handleContact('website', supplier.contact.website)}
-                        className="w-full flex items-center justify-between p-3.5 bg-gradient-to-r from-purple-50 to-indigo-100/50 dark:from-purple-900/30 dark:to-indigo-800/20 rounded-xl hover:from-purple-100 hover:to-indigo-200/50 dark:hover:from-purple-900/40 dark:hover:to-indigo-800/30 transition-all duration-200 shadow-sm hover:shadow-md border border-purple-200/50 dark:border-purple-700/50"
+                        className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-purple-100 to-purple-200 dark:from-purple-900/40 dark:to-purple-800/40 rounded-lg hover:from-purple-200 hover:to-purple-300 dark:hover:from-purple-900/50 dark:hover:to-purple-800/50 transition-all border-2 border-purple-300 dark:border-purple-700 transform hover:scale-[1.02]"
                       >
                         <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-md">
-                            <Globe className="w-5 h-5 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[10px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Website</p>
-                            <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate leading-tight">{supplier.contact.website}</p>
-                          </div>
+                          <span className="text-xl">🌐</span>
+                          <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{supplier.contact.website}</p>
                         </div>
-                        <ExternalLink className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        <ExternalLink className="w-4 h-4 text-gray-500 flex-shrink-0" />
                       </button>
                     )}
                   </div>
                   
                   {supplier.services.length > 0 && (
-                    <div className="pt-4 border-t-2 border-gray-200 dark:border-gray-700">
-                      <p className="text-xs font-bold text-gray-600 dark:text-gray-300 mb-3 uppercase tracking-wider">Services Offered</p>
+                    <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                      <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Services</p>
                       <div className="flex flex-wrap gap-2">
                         {supplier.services.slice(0, 2).map((service, index) => (
                           <span
                             key={index}
-                            className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-800/50 text-blue-800 dark:text-blue-200 text-xs font-semibold rounded-lg border border-blue-200 dark:border-blue-700 shadow-sm"
+                            className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-xs font-medium rounded border border-blue-200 dark:border-blue-700"
                           >
                             {service}
                           </span>
                         ))}
                         {supplier.services.length > 2 && (
-                          <span className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-bold rounded-lg border border-gray-300 dark:border-gray-600">
-                            +{supplier.services.length - 2} more
+                          <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded border border-gray-300 dark:border-gray-600">
+                            +{supplier.services.length - 2}
                           </span>
                         )}
                       </div>
                     </div>
                   )}
-                  </div>
                 </div>
+              ))}
+          </div>
+        )}
               ))}
           </div>
         )}

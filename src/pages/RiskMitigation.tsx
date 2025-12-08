@@ -34,6 +34,7 @@ import { useRiskAlerts } from '../hooks/useData';
 import { unifiedApi } from '../services/unifiedApi';
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
+import { useToast } from '../contexts/ToastContext';
 import HeaderStrip from '../components/HeaderStrip';
 import {
   AppLayout,
@@ -48,6 +49,7 @@ const RiskMitigation: React.FC = () => {
   const navigate = useNavigate();
   const { authState } = useAuth();
   const { currentIndustry } = useIndustry();
+  const { addToast } = useToast();
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
   const [selectedRiskLevel, setSelectedRiskLevel] = useState<string>('all');
   const [selectedAlertType, setSelectedAlertType] = useState<string>('all');
@@ -64,6 +66,18 @@ const RiskMitigation: React.FC = () => {
   const [showRiskProfileModal, setShowRiskProfileModal] = useState(false);
   const [riskProfile, setRiskProfile] = useState<any>(null);
   const [riskProfileLoading, setRiskProfileLoading] = useState(false);
+  const [insuranceProviders, setInsuranceProviders] = useState<any[]>([]);
+  const [insuranceQuotes, setInsuranceQuotes] = useState<any[]>([]);
+  const [insuranceApplications, setInsuranceApplications] = useState<any[]>([]);
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState<any>(null);
+  const [quoteRequest, setQuoteRequest] = useState({
+    quoteType: 'cargo' as 'cargo' | 'liability' | 'property' | 'general' | 'trade_credit',
+    coverageAmount: 1000000,
+    termDays: 365,
+    currency: 'KES'
+  });
+  const [requestingQuote, setRequestingQuote] = useState(false);
 
   // Fetch real risk alerts from backend
   const { alerts: realAlerts, loading: alertsLoading, error: alertsError, refetch: refetchAlerts, resolveAlert } = useRiskAlerts({ resolved: false });
@@ -95,6 +109,166 @@ const RiskMitigation: React.FC = () => {
 
     fetchInsuranceData();
   }, []);
+
+  // Fetch insurance providers
+  useEffect(() => {
+    const fetchProviders = async () => {
+      try {
+        const providers = await unifiedApi.insurance.getProviders({
+          active: true,
+          country: authState.user?.country
+        });
+        setInsuranceProviders(providers);
+      } catch (err) {
+        console.error('Error fetching insurance providers:', err);
+        // Use fallback providers if API fails
+        setInsuranceProviders([
+          {
+            id: '1',
+            name: 'East Africa Trade Insurance',
+            provider_type: 'insurance_company',
+            coverage_types: ['cargo', 'trade_credit', 'liability'],
+            description: 'Specialized in cargo and trade insurance across East African corridors.',
+            rating: 4.5
+          },
+          {
+            id: '2',
+            name: 'Pan-African Risk Solutions',
+            provider_type: 'broker',
+            coverage_types: ['business_interruption', 'price_risk', 'supplier_risk'],
+            description: 'Comprehensive coverage for supply chain and business risks.',
+            rating: 4.3
+          }
+        ]);
+      }
+    };
+
+    if (selectedTab === 'insurance') {
+      fetchProviders();
+    }
+  }, [selectedTab, authState.user?.country]);
+
+  // Fetch insurance quotes
+  useEffect(() => {
+    const fetchQuotes = async () => {
+      try {
+        const quotes = await unifiedApi.insurance.getQuotes({ limit: 10 });
+        setInsuranceQuotes(quotes);
+      } catch (err) {
+        console.error('Error fetching insurance quotes:', err);
+        setInsuranceQuotes([]);
+      }
+    };
+
+    if (selectedTab === 'insurance') {
+      fetchQuotes();
+    }
+  }, [selectedTab]);
+
+  // Fetch insurance applications
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const applications = await unifiedApi.insurance.getApplications({ limit: 10 });
+        setInsuranceApplications(applications);
+      } catch (err) {
+        console.error('Error fetching insurance applications:', err);
+        setInsuranceApplications([]);
+      }
+    };
+
+    if (selectedTab === 'insurance') {
+      fetchApplications();
+    }
+  }, [selectedTab]);
+
+  // Handle quote request
+  const handleRequestQuote = async (providerId: string) => {
+    try {
+      setRequestingQuote(true);
+      setSelectedProvider(insuranceProviders.find(p => p.id === providerId));
+      setShowQuoteModal(true);
+    } catch (err) {
+      console.error('Error opening quote modal:', err);
+    } finally {
+      setRequestingQuote(false);
+    }
+  };
+
+  // Submit quote request
+  const handleSubmitQuote = async () => {
+    if (!selectedProvider) return;
+    
+    try {
+      setRequestingQuote(true);
+      const quote = await unifiedApi.insurance.requestQuote({
+        providerId: selectedProvider.id,
+        quoteType: quoteRequest.quoteType,
+        coverageAmount: quoteRequest.coverageAmount,
+        termDays: quoteRequest.termDays,
+        currency: quoteRequest.currency
+      });
+      
+      // Refresh quotes list
+      const quotes = await unifiedApi.insurance.getQuotes({ limit: 10 });
+      setInsuranceQuotes(quotes);
+      
+      setShowQuoteModal(false);
+      setSelectedProvider(null);
+      
+      addToast({
+        type: 'success',
+        title: 'Quote Requested',
+        message: 'Your insurance quote request has been submitted. You will receive a response shortly.',
+      });
+    } catch (err: any) {
+      console.error('Error requesting quote:', err);
+      addToast({
+        type: 'error',
+        title: 'Quote Request Failed',
+        message: err.message || 'Failed to request quote. Please try again.',
+      });
+    } finally {
+      setRequestingQuote(false);
+    }
+  };
+
+  // Submit application from quote
+  const handleSubmitApplication = async (quoteId: string) => {
+    try {
+      const result = await unifiedApi.insurance.submitApplication({ quoteId });
+      
+      // Refresh applications list
+      const applications = await unifiedApi.insurance.getApplications({ limit: 10 });
+      setInsuranceApplications(applications);
+      
+      // Refresh quotes list
+      const quotes = await unifiedApi.insurance.getQuotes({ limit: 10 });
+      setInsuranceQuotes(quotes);
+      
+      if (result.redirectUrl) {
+        addToast({
+          type: 'info',
+          title: 'Redirecting to Partner',
+          message: 'You will be redirected to complete your insurance application with the partner.',
+        });
+        window.open(result.redirectUrl, '_blank');
+      } else {
+        addToast({
+          type: 'success',
+          title: 'Application Submitted',
+          message: 'Your insurance application has been submitted successfully. We\'ll notify you once it\'s reviewed.',
+        });
+      }
+    } catch (err: any) {
+      console.error('Error submitting application:', err);
+      addToast({
+        type: 'error',
+        title: 'Application Failed',
+        message: err.message || 'Failed to submit application. Please try again.',
+      });
+    }
+  };
 
   // Fetch risk profile from backend
   useEffect(() => {
@@ -463,45 +637,44 @@ const RiskMitigation: React.FC = () => {
             </div>
           )}
 
-          {/* CRITICAL ALERTS BANNER - Most Important, Always Visible */}
+          {/* CRITICAL ALERTS BANNER - Fun and Playful */}
           {(!loading && (!alertsLoading || initialLoadTimeout)) && criticalAlerts.length > 0 && (
-            <div className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-2 border-red-200 dark:border-red-800 rounded-xl p-6 shadow-lg">
+            <div className="bg-gradient-to-br from-red-100 via-orange-100 to-yellow-100 dark:from-red-900/30 dark:via-orange-900/30 dark:to-yellow-900/30 border-4 border-red-400 dark:border-red-700 rounded-2xl p-6 shadow-2xl animate-pulse">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
-                  <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-full">
-                    <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400 animate-pulse" />
-                  </div>
+                  <div className="text-5xl animate-bounce">🚨</div>
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-bold text-red-900 dark:text-red-100">
-                      {criticalAlerts.length} Critical Risk{criticalAlerts.length !== 1 ? 's' : ''} Require Immediate Attention
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-2xl font-extrabold text-red-900 dark:text-red-100 flex items-center gap-3">
+                      <span>{criticalAlerts.length} Super Important Thing{criticalAlerts.length !== 1 ? 's' : ''} Need Your Help!</span>
+                      <span className="text-3xl">⚡</span>
                     </h3>
-                    <StatusBadge type="error" text="URGENT" />
+                    <div className="px-4 py-2 bg-red-500 text-white rounded-full text-sm font-bold animate-pulse">URGENT!</div>
                   </div>
-                  <p className="text-sm text-red-800 dark:text-red-200 mb-4">
-                    High-severity risks detected. Review and take action immediately to prevent potential supply chain disruptions.
+                  <p className="text-base text-red-800 dark:text-red-200 mb-5 font-medium leading-relaxed">
+                    🎯 We found some really important problems! Check them out and fix them so nothing bad happens! 🛡️
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-3">
                     {criticalAlerts.slice(0, 3).map((alert) => (
-                      <div key={alert.id} className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-800 rounded-lg border border-red-200 dark:border-red-800">
-                        <AlertTriangle className="h-4 w-4 text-red-600" />
-                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{alert.title}</span>
+                      <div key={alert.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-red-300 dark:border-red-800 shadow-lg">
+                        <span className="text-2xl">⚠️</span>
+                        <span className="text-sm font-bold text-gray-900 dark:text-gray-100">{alert.title}</span>
                         <button
                           onClick={() => handleResolveAlert(alert.id)}
-                          className="ml-2 text-xs px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                          className="ml-2 text-xs font-bold px-3 py-1.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-lg hover:from-red-600 hover:to-orange-600 transition-all shadow-md transform hover:scale-105"
                         >
-                          Resolve
+                          ✅ Fix It!
                         </button>
                       </div>
                     ))}
                     {criticalAlerts.length > 3 && (
                       <button
                         onClick={() => setSelectedTab('alerts')}
-                        className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100"
+                        className="flex items-center gap-2 px-5 py-3 text-base font-bold text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 bg-white dark:bg-gray-800 rounded-xl border-2 border-red-300 dark:border-red-800 shadow-lg hover:scale-105 transition-all"
                       >
-                        View All {criticalAlerts.length} Critical Alerts
-                        <ArrowRight className="h-4 w-4" />
+                        <span>👀 See All {criticalAlerts.length} Problems</span>
+                        <ArrowRight className="h-5 w-5" />
                       </button>
                     )}
                   </div>
@@ -550,188 +723,326 @@ const RiskMitigation: React.FC = () => {
               {(!loading && (!alertsLoading || initialLoadTimeout || alertsError)) && (
                 <>
                 {selectedTab === 'overview' && (
-              <div className="space-y-8">
-                {/* Value Proposition Banner */}
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                      <Shield className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">What You're Getting</h3>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-                        Real-time risk intelligence to protect your supply chain and save costs. Get alerts on price spikes, supply disruptions, 
-                        compliance issues, and supplier risks before they impact your business.
-                      </p>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-                          <div className="flex items-center gap-2 mb-2">
-                            <TrendingUp className="h-4 w-4 text-blue-600" />
-                            <span className="text-sm font-medium text-gray-900 dark:text-white">Price Protection</span>
-                          </div>
-                          <p className="text-xs text-gray-600 dark:text-gray-400">Get notified when prices spike so you can lock in contracts early and avoid cost overruns</p>
+              <div className="space-y-6">
+                {/* Insurance Coverage Summary - Quick View */}
+                {riskMetrics.insuranceCoverage && (
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-6 border border-green-200 dark:border-green-800">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start gap-4 flex-1">
+                        <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                          <ShieldCheck className="h-6 w-6 text-green-600 dark:text-green-400" />
                         </div>
-                        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Activity className="h-4 w-4 text-blue-600" />
-                            <span className="text-sm font-medium text-gray-900 dark:text-white">Supply Alerts</span>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Insurance Coverage Summary</h3>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                            <div>
+                              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                                {riskMetrics.insuranceCoverage.activePolicies || 0}
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">Active Policies</div>
+                            </div>
+                            <div>
+                              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                                ${((riskMetrics.insuranceCoverage.totalCoverage || 0) / 1000000).toFixed(1)}M
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">Total Coverage</div>
+                            </div>
+                            <div>
+                              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                                {riskMetrics.insuranceCoverage.coverageGaps || 0}
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">Coverage Gaps</div>
+                            </div>
+                            <div>
+                              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                                {riskMetrics.insuranceCoverage.expiringSoon || 0}
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">Expiring Soon</div>
+                            </div>
                           </div>
-                          <p className="text-xs text-gray-600 dark:text-gray-400">Know about port delays, border closures, and supplier issues before they disrupt your operations</p>
-                        </div>
-                        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-                          <div className="flex items-center gap-2 mb-2">
-                            <CheckCircle className="h-4 w-4 text-blue-600" />
-                            <span className="text-sm font-medium text-gray-900 dark:text-white">Compliance Tracking</span>
-                          </div>
-                          <p className="text-xs text-gray-600 dark:text-gray-400">Monitor regulatory changes and document expiry to avoid penalties and delays</p>
+                          {(riskMetrics.insuranceCoverage.coverageGaps > 0 || riskMetrics.insuranceCoverage.expiringSoon > 0) && (
+                            <button
+                              onClick={() => setSelectedTab('insurance')}
+                              className="mt-4 text-sm text-green-700 dark:text-green-300 hover:text-green-900 dark:hover:text-green-100 font-medium flex items-center gap-1"
+                            >
+                              Manage Insurance <ArrowRight className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
 
-                {/* Key Metrics - Visual Priority */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">High Risk Items</h3>
-                      <AlertTriangle className="h-5 w-5 text-red-500" />
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 dark:text-white">{riskMetrics.highRisk}</div>
-                    <div className="mt-2 flex items-center text-sm">
-                      {riskMetrics.highRisk > 0 ? (
-                        <>
-                          <TrendingUp className="h-4 w-4 text-red-500 mr-1" />
-                          <span className="text-red-600 dark:text-red-400">+{riskMetrics.highRisk * 5}%</span>
-                        </>
-                      ) : (
-                        <span className="text-gray-500 dark:text-gray-400">No high risk items</span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Alerts</h3>
-                      <Shield className={`h-5 w-5 ${riskMetrics.totalAlerts > 0 ? 'text-yellow-500' : 'text-green-500'}`} />
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 dark:text-white">{riskMetrics.totalAlerts}</div>
-                    <div className="mt-2 flex items-center text-sm">
-                      {riskMetrics.totalAlerts > 0 ? (
-                        <span className="text-yellow-600 dark:text-yellow-400">Requires attention</span>
-                      ) : (
-                        <span className="text-green-600 dark:text-green-400">All clear</span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Price Alerts</h3>
-                      <Bell className="h-5 w-5 text-blue-500" />
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 dark:text-white">{riskMetrics.priceAlerts}</div>
-                    <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                      {riskMetrics.priceAlerts > 0 ? (
-                        <span className="text-blue-600 dark:text-blue-400">Price volatility detected</span>
-                      ) : (
-                        'No price risks'
-                      )}
-                    </div>
-                    {riskMetrics.priceAlerts > 0 && (
-                      <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">
-                        Potential cost impact: High
-                      </div>
-                    )}
-                  </div>
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Compliance Score</h3>
-                      <Activity className={`h-5 w-5 ${
-                        riskMetrics.complianceScore >= 90 ? 'text-green-500' : 
-                        riskMetrics.complianceScore >= 80 ? 'text-yellow-500' : 'text-red-500'
-                      }`} />
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 dark:text-white">{riskMetrics.complianceScore}%</div>
-                    <div className="mt-2 flex items-center text-sm">
-                      {riskMetrics.complianceScore >= 90 ? (
-                        <>
-                          <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-                          <span className="text-green-600 dark:text-green-400">Excellent</span>
-                        </>
-                      ) : riskMetrics.complianceScore >= 80 ? (
-                        <span className="text-yellow-600 dark:text-yellow-400">Good</span>
-                      ) : (
-                        <span className="text-red-600 dark:text-red-400">Needs improvement</span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Insurance Coverage</h3>
-                      <ShieldCheck className={`h-5 w-5 ${
-                        riskMetrics.insuranceCoverage.coverageGaps === 0 ? 'text-green-500' : 'text-yellow-500'
-                      }`} />
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                      ${(riskMetrics.insuranceCoverage.totalCoverage / 1000000).toFixed(1)}M
-                    </div>
-                    <div className="mt-2 flex items-center text-sm">
-                      {riskMetrics.insuranceCoverage.coverageGaps === 0 ? (
-                        <span className="text-green-600 dark:text-green-400">Fully covered</span>
-                      ) : (
-                        <span className="text-yellow-600 dark:text-yellow-400">
-                          {riskMetrics.insuranceCoverage.coverageGaps} gap{riskMetrics.insuranceCoverage.coverageGaps !== 1 ? 's' : ''}
-                        </span>
-                      )}
-                    </div>
-                    {riskMetrics.insuranceCoverage.expiringSoon > 0 && (
-                      <div className="mt-2 text-xs text-orange-600 dark:text-orange-400">
-                        {riskMetrics.insuranceCoverage.expiringSoon} policy expiring soon
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Quick Actions - Most Important Actions First */}
-                {criticalAlerts.length > 0 && (
+                {/* Recent Alerts Preview - Quick View */}
+                {processedAlerts.length > 0 && (
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <Zap className="h-5 w-5 text-yellow-500" />
-                        Immediate Actions Required
+                        <Bell className="h-5 w-5 text-primary-600" />
+                        Recent Alerts
                       </h3>
                       <button
                         onClick={() => setSelectedTab('alerts')}
                         className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-1"
                       >
-                        View All
-                        <ArrowRight className="h-4 w-4" />
+                        View All <ArrowRight className="h-4 w-4" />
                       </button>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {criticalAlerts.slice(0, 3).map((alert) => (
-                        <div key={alert.id} className="p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg">
-                          <div className="flex items-start justify-between mb-2">
-                            <h4 className="font-medium text-gray-900 dark:text-white text-sm">{alert.title}</h4>
-                            <StatusBadge type="error" text="HIGH" />
+                    <div className="space-y-3">
+                      {processedAlerts.slice(0, 5).map((alert) => (
+                        <div key={alert.id} className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                          <div className={`p-1.5 rounded ${
+                            alert.severity === 'critical' ? 'bg-red-100 dark:bg-red-900/30' :
+                            alert.severity === 'high' ? 'bg-orange-100 dark:bg-orange-900/30' :
+                            'bg-yellow-100 dark:bg-yellow-900/30'
+                          }`}>
+                            <AlertTriangle className={`h-4 w-4 ${
+                              alert.severity === 'critical' ? 'text-red-600 dark:text-red-400' :
+                              alert.severity === 'high' ? 'text-orange-600 dark:text-orange-400' :
+                              'text-yellow-600 dark:text-yellow-400'
+                            }`} />
                           </div>
-                          <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">{alert.message}</p>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">{alert.title}</h4>
+                              <StatusBadge 
+                                type={alert.severity === 'critical' ? 'error' : alert.severity === 'high' ? 'warning' : 'warning'} 
+                                text={alert.severity?.toUpperCase() || 'MEDIUM'} 
+                                size="sm"
+                              />
+                            </div>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-1">{alert.message}</p>
+                            <div className="flex items-center gap-3 mt-2 text-xs text-gray-500 dark:text-gray-400">
+                              {alert.location && (
+                                <span className="flex items-center gap-1">
+                                  <MapPin className="h-3 w-3" />
+                                  {alert.location}
+                                </span>
+                              )}
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                {new Date(alert.created_at || alert.timestamp).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => handleResolveAlert(alert.id)}
+                            className="text-xs px-2 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            Resolve
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Fun Value Proposition Banner */}
+                <div className="bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 dark:from-purple-900/30 dark:via-pink-900/30 dark:to-blue-900/30 rounded-2xl p-6 border-4 border-purple-300 dark:border-purple-700 shadow-xl">
+                  <div className="flex items-start gap-4">
+                    <div className="text-5xl">🎯</div>
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                        <span>What You're Getting</span>
+                        <span className="text-3xl">✨</span>
+                      </h3>
+                      <p className="text-base text-gray-700 dark:text-gray-300 mb-6 font-medium">
+                        🚀 Super smart alerts that help you stay safe and save money! We'll tell you when prices go up 📈, 
+                        when things get delayed ⏰, and when you need to do something important 📋 - all before it becomes a problem! 
+                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-purple-200 dark:border-purple-800 shadow-lg transform hover:scale-105 transition-all">
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="text-3xl">💰</span>
+                            <span className="text-lg font-bold text-gray-900 dark:text-white">Price Protection</span>
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                            We'll tell you when prices go up so you can buy things before they get expensive! 💸
+                          </p>
+                        </div>
+                        <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-pink-200 dark:border-pink-800 shadow-lg transform hover:scale-105 transition-all">
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="text-3xl">🚚</span>
+                            <span className="text-lg font-bold text-gray-900 dark:text-white">Supply Alerts</span>
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Know about delays and problems before they happen! We'll keep you in the loop! 📢
+                          </p>
+                        </div>
+                        <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-blue-200 dark:border-blue-800 shadow-lg transform hover:scale-105 transition-all">
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="text-3xl">✅</span>
+                            <span className="text-lg font-bold text-gray-900 dark:text-white">Compliance Tracking</span>
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                            We'll remind you when important papers expire so you don't get in trouble! 📄
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Key Metrics - Visual Priority with Emojis and Colors */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                  <div className={`rounded-2xl shadow-lg border-2 p-6 transform hover:scale-105 transition-all ${
+                    riskMetrics.highRisk > 0 
+                      ? 'bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/30 border-red-300 dark:border-red-700' 
+                      : 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700'
+                  }`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-3xl">{riskMetrics.highRisk > 0 ? '🚨' : '✅'}</span>
+                      <AlertTriangle className={`h-6 w-6 ${riskMetrics.highRisk > 0 ? 'text-red-500' : 'text-green-500'}`} />
+                    </div>
+                    <div className="text-4xl font-extrabold text-gray-900 dark:text-white mb-1">{riskMetrics.highRisk}</div>
+                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">High Risk Items</div>
+                    <div className="flex items-center text-xs">
+                      {riskMetrics.highRisk > 0 ? (
+                        <>
+                          <TrendingUp className="h-3 w-3 text-red-500 mr-1" />
+                          <span className="text-red-600 dark:text-red-400 font-medium">⚠️ Needs Attention</span>
+                        </>
+                      ) : (
+                        <span className="text-green-600 dark:text-green-400 font-medium">✨ All Safe!</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className={`rounded-2xl shadow-lg border-2 p-6 transform hover:scale-105 transition-all ${
+                    riskMetrics.totalAlerts > 0 
+                      ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 border-yellow-300 dark:border-yellow-700' 
+                      : 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700'
+                  }`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-3xl">{riskMetrics.totalAlerts > 0 ? '🔔' : '🎉'}</span>
+                      <Bell className={`h-6 w-6 ${riskMetrics.totalAlerts > 0 ? 'text-yellow-500' : 'text-green-500'}`} />
+                    </div>
+                    <div className="text-4xl font-extrabold text-gray-900 dark:text-white mb-1">{riskMetrics.totalAlerts}</div>
+                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Active Alerts</div>
+                    <div className="text-xs font-medium">
+                      {riskMetrics.totalAlerts > 0 ? (
+                        <span className="text-yellow-600 dark:text-yellow-400">👀 Check them out!</span>
+                      ) : (
+                        <span className="text-green-600 dark:text-green-400">✨ All clear!</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-2xl shadow-lg border-2 border-blue-300 dark:border-blue-700 p-6 transform hover:scale-105 transition-all">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-3xl">💰</span>
+                      <TrendingUp className="h-6 w-6 text-blue-500" />
+                    </div>
+                    <div className="text-4xl font-extrabold text-gray-900 dark:text-white mb-1">{riskMetrics.priceAlerts}</div>
+                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Price Alerts</div>
+                    <div className="text-xs font-medium">
+                      {riskMetrics.priceAlerts > 0 ? (
+                        <span className="text-blue-600 dark:text-blue-400">📈 Prices changing!</span>
+                      ) : (
+                        <span className="text-gray-600 dark:text-gray-400">💵 Stable prices</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className={`rounded-2xl shadow-lg border-2 p-6 transform hover:scale-105 transition-all ${
+                    riskMetrics.complianceScore >= 90 
+                      ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700'
+                      : riskMetrics.complianceScore >= 80
+                      ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 border-yellow-300 dark:border-yellow-700'
+                      : 'bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/30 border-red-300 dark:border-red-700'
+                  }`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-3xl">
+                        {riskMetrics.complianceScore >= 90 ? '⭐' : riskMetrics.complianceScore >= 80 ? '👍' : '⚠️'}
+                      </span>
+                      <CheckCircle className={`h-6 w-6 ${
+                        riskMetrics.complianceScore >= 90 ? 'text-green-500' : 
+                        riskMetrics.complianceScore >= 80 ? 'text-yellow-500' : 'text-red-500'
+                      }`} />
+                    </div>
+                    <div className="text-4xl font-extrabold text-gray-900 dark:text-white mb-1">{riskMetrics.complianceScore}%</div>
+                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Compliance Score</div>
+                    <div className="text-xs font-medium">
+                      {riskMetrics.complianceScore >= 90 ? (
+                        <span className="text-green-600 dark:text-green-400">🌟 Excellent!</span>
+                      ) : riskMetrics.complianceScore >= 80 ? (
+                        <span className="text-yellow-600 dark:text-yellow-400">👍 Good job!</span>
+                      ) : (
+                        <span className="text-red-600 dark:text-red-400">📝 Needs work</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className={`rounded-2xl shadow-lg border-2 p-6 transform hover:scale-105 transition-all ${
+                    riskMetrics.insuranceCoverage.coverageGaps === 0 
+                      ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700' 
+                      : 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 border-yellow-300 dark:border-yellow-700'
+                  }`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-3xl">🛡️</span>
+                      <ShieldCheck className={`h-6 w-6 ${
+                        riskMetrics.insuranceCoverage.coverageGaps === 0 ? 'text-green-500' : 'text-yellow-500'
+                      }`} />
+                    </div>
+                    <div className="text-4xl font-extrabold text-gray-900 dark:text-white mb-1">
+                      ${(riskMetrics.insuranceCoverage.totalCoverage / 1000000).toFixed(1)}M
+                    </div>
+                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Insurance</div>
+                    <div className="text-xs font-medium">
+                      {riskMetrics.insuranceCoverage.coverageGaps === 0 ? (
+                        <span className="text-green-600 dark:text-green-400">✅ Protected!</span>
+                      ) : (
+                        <span className="text-yellow-600 dark:text-yellow-400">⚠️ {riskMetrics.insuranceCoverage.coverageGaps} gap{riskMetrics.insuranceCoverage.coverageGaps !== 1 ? 's' : ''}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Actions - Fun and Playful */}
+                {criticalAlerts.length > 0 && (
+                  <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-2xl shadow-xl border-4 border-red-300 dark:border-red-700 p-6">
+                    <div className="flex items-center justify-between mb-5">
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                        <span className="text-4xl animate-bounce">⚡</span>
+                        <span>Things That Need Your Attention NOW!</span>
+                        <span className="text-3xl">🚨</span>
+                      </h3>
+                      <button
+                        onClick={() => setSelectedTab('alerts')}
+                        className="text-base font-bold text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border-2 border-red-300 dark:border-red-700 hover:scale-105 transition-all shadow-lg"
+                      >
+                        See Everything
+                        <ArrowRight className="h-5 w-5" />
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                      {criticalAlerts.slice(0, 3).map((alert) => (
+                        <div key={alert.id} className="p-5 bg-white dark:bg-gray-800 border-4 border-red-300 dark:border-red-800 rounded-2xl shadow-lg transform hover:scale-105 transition-all">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl">⚠️</span>
+                              <h4 className="font-bold text-gray-900 dark:text-white text-base">{alert.title}</h4>
+                            </div>
+                            <div className="px-3 py-1 bg-red-500 text-white rounded-full text-xs font-bold">HIGH</div>
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 leading-relaxed">{alert.message}</p>
                           {alert.recommendedAction && (
-                            <p className="text-xs text-red-700 dark:text-red-300 mb-3 font-medium">
-                              💡 {alert.recommendedAction}
-                            </p>
+                            <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl mb-4 border-2 border-yellow-300 dark:border-yellow-700">
+                              <p className="text-sm text-yellow-800 dark:text-yellow-300 font-medium flex items-start gap-2">
+                                <span className="text-xl">💡</span>
+                                <span>{alert.recommendedAction}</span>
+                              </p>
+                            </div>
                           )}
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-3">
                             <button
                               onClick={() => handleResolveAlert(alert.id)}
-                              className="flex-1 text-xs px-3 py-1.5 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                              className="flex-1 text-sm font-bold px-4 py-2.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:from-red-600 hover:to-orange-600 transition-all shadow-lg transform hover:scale-105"
                             >
-                              Resolve
+                              ✅ Fix It!
                             </button>
                             <button
                               onClick={() => setSelectedTab('alerts')}
-                              className="text-xs px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700"
+                              className="text-sm font-bold px-4 py-2.5 border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
                             >
-                              Details
+                              👀 More
                             </button>
                           </div>
                         </div>
@@ -740,197 +1051,227 @@ const RiskMitigation: React.FC = () => {
                   </div>
                 )}
 
-                {/* Key Insights Section */}
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Key Risk Insights</h3>
+                {/* Key Insights Section - Fun Version */}
+                <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 rounded-2xl shadow-xl border-4 border-blue-300 dark:border-blue-700 p-6">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-3">
+                    <span className="text-4xl">🧠</span>
+                    <span>Smart Things We Found!</span>
+                    <span className="text-3xl">💡</span>
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                          <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-1">Price Volatility Protection</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            {riskMetrics.priceAlerts > 0 
-                              ? `You have ${riskMetrics.priceAlerts} active price alerts. Monitor these closely to lock in favorable prices before they increase.`
-                              : 'No price volatility detected. Prices are stable across your tracked materials.'}
-                          </p>
-                          {riskMetrics.priceAlerts > 0 && (
-                            <button 
-                              onClick={() => navigate('/app/prices')}
-                              className="mt-2 text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1"
-                            >
-                              View Price Trends <ArrowRight className="h-3 w-3" />
-                            </button>
-                          )}
+                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-blue-300 dark:border-blue-700 shadow-lg">
+                        <div className="flex items-start gap-4">
+                          <span className="text-4xl">💰</span>
+                          <div className="flex-1">
+                            <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-2">Price Protection</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                              {riskMetrics.priceAlerts > 0 
+                                ? `You have ${riskMetrics.priceAlerts} price alerts! 📊 Watch them closely so you can buy things before prices go up! 📈`
+                                : 'No price problems right now! 💵 Everything is stable and good! ✨'}
+                            </p>
+                            {riskMetrics.priceAlerts > 0 && (
+                              <button 
+                                onClick={() => navigate('/app/prices')}
+                                className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-xl border-2 border-blue-300 dark:border-blue-700 hover:scale-105 transition-all"
+                              >
+                                <span>See Price Trends</span>
+                                <ArrowRight className="h-4 w-4" />
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-                          <Activity className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-1">Supply Chain Health</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            {riskMetrics.supplyAlerts > 0
-                              ? `${riskMetrics.supplyAlerts} supply disruption alerts detected. Consider activating backup suppliers.`
-                              : 'Your supply chain is operating smoothly with no major disruptions.'}
-                          </p>
-                          {riskMetrics.supplyAlerts > 0 && (
-                            <button 
-                              onClick={() => navigate('/app/supplier-directory')}
-                              className="mt-2 text-xs text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 flex items-center gap-1"
-                            >
-                              Find Backup Suppliers <ArrowRight className="h-3 w-3" />
-                            </button>
-                          )}
+                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-yellow-300 dark:border-yellow-700 shadow-lg">
+                        <div className="flex items-start gap-4">
+                          <span className="text-4xl">🚚</span>
+                          <div className="flex-1">
+                            <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-2">Supply Chain Health</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                              {riskMetrics.supplyAlerts > 0
+                                ? `${riskMetrics.supplyAlerts} supply problems found! ⚠️ Maybe find some backup suppliers to stay safe! 🛡️`
+                                : 'Your supply chain is super healthy! 🎉 Everything is running smoothly! ✨'}
+                            </p>
+                            {riskMetrics.supplyAlerts > 0 && (
+                              <button 
+                                onClick={() => navigate('/app/supplier-directory')}
+                                className="text-sm font-bold text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-xl border-2 border-yellow-300 dark:border-yellow-700 hover:scale-105 transition-all"
+                              >
+                                <span>Find Backup Suppliers</span>
+                                <ArrowRight className="h-4 w-4" />
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                          <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-1">Compliance Status</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Your compliance score is {riskMetrics.complianceScore}%. {
-                              riskMetrics.complianceScore >= 90 
-                                ? 'Excellent compliance - keep up the good work!'
-                                : riskMetrics.complianceScore >= 80
-                                ? 'Good compliance, but review any pending alerts to improve your score.'
-                                : 'Review compliance alerts and update expired documents to improve your score.'
-                            }
-                          </p>
-                          <button 
-                            onClick={() => navigate('/app/documents')}
-                            className="mt-2 text-xs text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 flex items-center gap-1"
-                          >
-                            Check Documents <ArrowRight className="h-3 w-3" />
-                          </button>
+                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-green-300 dark:border-green-700 shadow-lg">
+                        <div className="flex items-start gap-4">
+                          <span className="text-4xl">✅</span>
+                          <div className="flex-1">
+                            <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-2">Compliance Status</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                              Your score is {riskMetrics.complianceScore}%! {
+                                riskMetrics.complianceScore >= 90 
+                                  ? 'You\'re doing AMAZING! 🌟 Keep it up!'
+                                  : riskMetrics.complianceScore >= 80
+                                  ? 'You\'re doing good! 👍 But check your alerts to get even better!'
+                                  : 'You need to check some things! 📋 Look at your alerts and update your papers!'
+                              }
+                            </p>
+                            <button 
+                              onClick={() => navigate('/app/documents')}
+                              className="text-sm font-bold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 flex items-center gap-2 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-xl border-2 border-green-300 dark:border-green-700 hover:scale-105 transition-all"
+                            >
+                              <span>Check Documents</span>
+                              <ArrowRight className="h-4 w-4" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                          <Shield className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-1">Risk Mitigation</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            {riskMetrics.totalAlerts === 0
-                              ? 'No active risks detected. Your supply chain is well-protected.'
-                              : `You have ${riskMetrics.totalAlerts} active risk alerts. Review and take action to protect your operations.`}
-                          </p>
-                          {riskMetrics.totalAlerts > 0 && (
-                            <button 
-                              onClick={() => setSelectedTab('playbooks')}
-                              className="mt-2 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 flex items-center gap-1"
-                            >
-                              View Mitigation Strategies <ArrowRight className="h-3 w-3" />
-                            </button>
-                          )}
+                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-purple-300 dark:border-purple-700 shadow-lg">
+                        <div className="flex items-start gap-4">
+                          <span className="text-4xl">🛡️</span>
+                          <div className="flex-1">
+                            <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-2">Risk Protection</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                              {riskMetrics.totalAlerts === 0
+                                ? 'No problems found! 🎉 You\'re super safe! ✨'
+                                : `You have ${riskMetrics.totalAlerts} alerts! 👀 Check them out and do something about them! 🚀`}
+                            </p>
+                            {riskMetrics.totalAlerts > 0 && (
+                              <button 
+                                onClick={() => setSelectedTab('playbooks')}
+                                className="text-sm font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 flex items-center gap-2 bg-purple-50 dark:bg-purple-900/20 px-4 py-2 rounded-xl border-2 border-purple-300 dark:border-purple-700 hover:scale-105 transition-all"
+                              >
+                                <span>See How to Fix Things</span>
+                                <ArrowRight className="h-4 w-4" />
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Risk Assessment Table with Filters */}
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                  <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Risk Assessment</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Current risk factors and mitigation strategies</p>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2">
-                          <Filter className="h-4 w-4 text-gray-500" />
-                          <select
-                            value={selectedRiskLevel}
-                            onChange={(e) => setSelectedRiskLevel(e.target.value)}
-                            className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                          >
-                            <option value="all">All Risk Levels</option>
-                            <option value="high">High Risk</option>
-                            <option value="medium">Medium Risk</option>
-                            <option value="low">Low Risk</option>
-                          </select>
-                        </div>
+                {/* Risk Assessment Cards - Fun and Colorful */}
+                <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-xl border-4 border-indigo-300 dark:border-indigo-700 p-6">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3 mb-2">
+                        <span className="text-4xl">📊</span>
+                        <span>Risk Assessment</span>
+                        <span className="text-3xl">🎯</span>
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 ml-12">See what risks you have and how to fix them!</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border-2 border-indigo-300 dark:border-indigo-700 shadow-lg">
+                        <Filter className="h-5 w-5 text-indigo-600" />
+                        <select
+                          value={selectedRiskLevel}
+                          onChange={(e) => setSelectedRiskLevel(e.target.value)}
+                          className="px-3 py-1 text-sm font-bold border-0 bg-transparent text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-0"
+                        >
+                          <option value="all">🔍 All Risks</option>
+                          <option value="high">🔴 High Risk</option>
+                          <option value="medium">🟡 Medium Risk</option>
+                          <option value="low">🟢 Low Risk</option>
+                        </select>
                       </div>
                     </div>
                   </div>
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                      <thead className="bg-gray-50 dark:bg-gray-700">
-                        <tr>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Risk Level</th>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Alerts</th>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Impact</th>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Probability</th>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Mitigation</th>
-                          <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Trend</th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {filteredRisks.length > 0 ? filteredRisks.map((risk) => (
-                          <tr key={risk.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center gap-2">
-                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{risk.category}</div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {filteredRisks.length > 0 ? filteredRisks.map((risk) => (
+                      <div 
+                        key={risk.id} 
+                        className={`rounded-2xl shadow-xl border-4 p-6 transform hover:scale-105 transition-all ${
+                          risk.riskLevel === 'high' 
+                            ? 'bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/30 border-red-400 dark:border-red-700' 
+                            : risk.riskLevel === 'medium'
+                            ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 border-yellow-400 dark:border-yellow-700'
+                            : 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-400 dark:border-green-700'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <span className="text-4xl">
+                              {risk.category === 'Market Volatility' ? '💰' : 
+                               risk.category === 'Supply Chain' ? '🚚' : '📋'}
+                            </span>
+                            <div>
+                              <h4 className="text-lg font-bold text-gray-900 dark:text-white">{risk.category}</h4>
                               <StatusBadge 
                                 type={risk.riskLevel === 'high' ? 'error' : risk.riskLevel === 'medium' ? 'warning' : 'success'} 
                                 text={risk.riskLevel.toUpperCase()} 
+                                size="sm"
                               />
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center gap-2">
-                                <Bell className={`h-4 w-4 ${risk.alertCount > 0 ? 'text-yellow-500' : 'text-gray-400'}`} />
-                                <span className="text-sm text-gray-900 dark:text-gray-100 font-medium">{risk.alertCount}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-3 mb-4">
+                          <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                            <div className="flex items-center gap-2">
+                              <Bell className={`h-5 w-5 ${risk.alertCount > 0 ? 'text-yellow-500' : 'text-gray-400'}`} />
+                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Alerts</span>
+                            </div>
+                            <span className="text-xl font-bold text-gray-900 dark:text-white">{risk.alertCount}</span>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Impact</div>
+                              <div className="text-sm font-bold text-gray-900 dark:text-white">{risk.impact}</div>
+                            </div>
+                            <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Chance</div>
+                              <div className="text-sm font-bold text-gray-900 dark:text-white">{risk.probability}</div>
+                            </div>
+                          </div>
+                          
+                          <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                            <div className="flex items-start gap-2">
+                              <span className="text-xl">💡</span>
+                              <div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">How to Fix It</div>
+                                <div className="text-sm font-medium text-gray-900 dark:text-white leading-relaxed">{risk.mitigation}</div>
                               </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                              {risk.impact}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                              {risk.probability}
-                            </td>
-                            <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-md">
-                              <div className="flex items-start gap-2">
-                                <Info className="h-4 w-4 mt-0.5 text-gray-400 flex-shrink-0" />
-                                <span>{risk.mitigation}</span>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center gap-2">
-                                {risk.trend === 'up' ? (
-                                  <TrendingUp className="h-4 w-4 text-red-500" />
-                                ) : risk.trend === 'down' ? (
-                                  <TrendingDown className="h-4 w-4 text-green-500" />
-                                ) : (
-                                  <div className="h-4 w-4 bg-gray-400 rounded-full" />
-                                )}
-                                <span className="text-sm text-gray-500 dark:text-gray-400">
-                                  {risk.trendValue > 0 ? `${risk.trendValue}%` : 'Stable'}
-                                </span>
-                              </div>
-                            </td>
-                          </tr>
-                        )) : (
-                          <tr>
-                            <td colSpan={7} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                              No risks match your filter criteria
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Trend</span>
+                            <div className="flex items-center gap-2">
+                              {risk.trend === 'up' ? (
+                                <>
+                                  <TrendingUp className="h-5 w-5 text-red-500" />
+                                  <span className="text-sm font-bold text-red-600 dark:text-red-400">📈 Going Up</span>
+                                </>
+                              ) : risk.trend === 'down' ? (
+                                <>
+                                  <TrendingDown className="h-5 w-5 text-green-500" />
+                                  <span className="text-sm font-bold text-green-600 dark:text-green-400">📉 Going Down</span>
+                                </>
+                              ) : (
+                                <>
+                                  <div className="h-5 w-5 bg-gray-400 rounded-full" />
+                                  <span className="text-sm font-bold text-gray-600 dark:text-gray-400">➡️ Stable</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )) : (
+                      <div className="col-span-full text-center py-12">
+                        <span className="text-6xl mb-4 block">🎉</span>
+                        <p className="text-lg font-bold text-gray-600 dark:text-gray-400">No risks match your filter!</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">Try a different filter or celebrate - you're all safe! ✨</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1484,19 +1825,23 @@ const RiskMitigation: React.FC = () => {
                         )}
 
                         {riskMetrics.insuranceCoverage.expiringSoon > 0 && (
-                          <div className="p-6 bg-orange-50 dark:bg-orange-900/10 border-l-4 border-orange-400">
-                            <div className="flex items-start gap-3">
-                              <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
+                          <div className="p-6 bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 border-4 border-orange-300 dark:border-orange-700 rounded-2xl shadow-lg">
+                            <div className="flex items-start gap-4">
+                              <span className="text-4xl">⏰</span>
                               <div className="flex-1">
-                                <h4 className="text-sm font-semibold text-orange-900 dark:text-orange-100 mb-1">
-                                  Policy Expiring Soon
+                                <h4 className="text-lg font-bold text-orange-900 dark:text-orange-100 mb-2 flex items-center gap-2">
+                                  <span>Policy Expiring Soon!</span>
+                                  <span className="text-2xl">⚠️</span>
                                 </h4>
-                                <p className="text-sm text-orange-800 dark:text-orange-200">
-                                  You have {riskMetrics.insuranceCoverage.expiringSoon} policy{riskMetrics.insuranceCoverage.expiringSoon !== 1 ? 's' : ''} expiring within 30 days. 
-                                  Renew now to maintain continuous coverage.
+                                <p className="text-sm text-orange-800 dark:text-orange-200 mb-4 leading-relaxed">
+                                  You have {riskMetrics.insuranceCoverage.expiringSoon} policy{riskMetrics.insuranceCoverage.expiringSoon !== 1 ? 's' : ''} expiring soon! 
+                                  Renew them now to stay protected! 🛡️
                                 </p>
-                                <button className="mt-3 px-4 py-2 text-sm font-medium bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
-                                  Renew Policy
+                                <button 
+                                  onClick={() => setSelectedTab('insurance')}
+                                  className="px-6 py-3 text-base font-bold bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl hover:from-orange-600 hover:to-yellow-600 transition-all shadow-lg transform hover:scale-105 flex items-center gap-2"
+                                >
+                                  <span>🔄 Renew Now!</span>
                                 </button>
                               </div>
                             </div>
@@ -1518,10 +1863,14 @@ const RiskMitigation: React.FC = () => {
                                   Price Volatility Protection
                                 </h4>
                                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                  With {riskMetrics.priceAlerts} active price alerts, consider price risk insurance to protect against sudden price spikes.
+                                  With {riskMetrics.priceAlerts} active price alerts, consider price risk insurance to protect against sudden price spikes! 💰
                                 </p>
-                                <button className="text-sm font-medium text-yellow-700 dark:text-yellow-300 hover:text-yellow-900 dark:hover:text-yellow-100 flex items-center gap-1">
-                                  Explore Options <ArrowRight className="h-4 w-4" />
+                                <button 
+                                  onClick={() => setSelectedTab('insurance')}
+                                  className="text-sm font-bold text-yellow-700 dark:text-yellow-300 hover:text-yellow-900 dark:hover:text-yellow-100 flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-xl border-2 border-yellow-300 dark:border-yellow-700 hover:scale-105 transition-all"
+                                >
+                                  <span>🔍 Explore Options</span>
+                                  <ArrowRight className="h-4 w-4" />
                                 </button>
                               </div>
                             </div>
@@ -1536,10 +1885,14 @@ const RiskMitigation: React.FC = () => {
                                     Supply Chain Disruption Coverage
                                   </h4>
                                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                    {riskMetrics.supplyAlerts} supply disruption alerts detected. Business interruption insurance can help cover losses.
+                                    {riskMetrics.supplyAlerts} supply disruption alerts detected! Business interruption insurance can help cover losses! 🚚
                                   </p>
-                                  <button className="text-sm font-medium text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-100 flex items-center gap-1">
-                                    Learn More <ArrowRight className="h-4 w-4" />
+                                  <button 
+                                    onClick={() => setSelectedTab('insurance')}
+                                    className="text-sm font-bold text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-100 flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-xl border-2 border-blue-300 dark:border-blue-700 hover:scale-105 transition-all"
+                                  >
+                                    <span>📚 Learn More</span>
+                                    <ArrowRight className="h-4 w-4" />
                                   </button>
                                 </div>
                               </div>
@@ -1552,48 +1905,238 @@ const RiskMitigation: React.FC = () => {
                     {/* Insurance Providers */}
                     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recommended Insurance Providers</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-700 transition-colors">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-                              <Shield className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                      {insuranceProviders.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {insuranceProviders.map((provider) => (
+                            <div key={provider.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-700 transition-colors">
+                              <div className="flex items-center gap-3 mb-3">
+                                <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+                                  <Shield className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                                </div>
+                                <div className="flex-1">
+                                  <h4 className="font-semibold text-gray-900 dark:text-white">{provider.name}</h4>
+                                  {provider.rating && (
+                                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                      ⭐ {provider.rating.toFixed(1)} Rating
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                {provider.description || 'Comprehensive insurance coverage for your business needs.'}
+                              </p>
+                              {provider.coverage_types && provider.coverage_types.length > 0 && (
+                                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                  {provider.coverage_types.slice(0, 3).map((type: string, idx: number) => (
+                                    <span key={idx}>✓ {type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}</span>
+                                  ))}
+                                </div>
+                              )}
+                              <button 
+                                onClick={() => handleRequestQuote(provider.id)}
+                                disabled={requestingQuote}
+                                className="w-full px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                {requestingQuote ? 'Loading...' : 'Get Quote'}
+                              </button>
                             </div>
-                            <h4 className="font-semibold text-gray-900 dark:text-white">East Africa Trade Insurance</h4>
-                          </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                            Specialized in cargo and trade insurance across East African corridors.
-                          </p>
-                          <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                            <span>✓ Cargo Insurance</span>
-                            <span>✓ Trade Credit</span>
-                            <span>✓ Liability</span>
-                          </div>
-                          <button className="w-full px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
-                            Get Quote
-                          </button>
+                          ))}
                         </div>
+                      ) : (
+                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                          <Shield className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                          <p>No insurance providers available at this time.</p>
+                        </div>
+                      )}
+                    </div>
 
-                        <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-700 transition-colors">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-                              <Shield className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                    {/* Insurance Quotes */}
+                    {insuranceQuotes.length > 0 && (
+                      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Insurance Quotes</h3>
+                        <div className="space-y-4">
+                          {insuranceQuotes.map((quote) => (
+                            <div key={quote.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                              <div className="flex items-start justify-between mb-3">
+                                <div>
+                                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
+                                    {quote.insurance_providers?.name || 'Insurance Provider'}
+                                  </h4>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    {quote.quote_type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())} Coverage
+                                  </p>
+                                </div>
+                                <StatusBadge 
+                                  type={quote.status === 'accepted' ? 'success' : quote.status === 'expired' ? 'error' : 'warning'} 
+                                  text={quote.status.toUpperCase()} 
+                                />
+                              </div>
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3 text-sm">
+                                <div>
+                                  <div className="text-gray-500 dark:text-gray-400">Coverage</div>
+                                  <div className="font-semibold text-gray-900 dark:text-white">
+                                    {quote.currency} {(quote.coverage_amount / 1000000).toFixed(1)}M
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="text-gray-500 dark:text-gray-400">Premium</div>
+                                  <div className="font-semibold text-gray-900 dark:text-white">
+                                    {quote.currency} {quote.premium?.toLocaleString() || 'N/A'}
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="text-gray-500 dark:text-gray-400">Term</div>
+                                  <div className="font-semibold text-gray-900 dark:text-white">
+                                    {Math.round(quote.term_days / 30)} months
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="text-gray-500 dark:text-gray-400">Expires</div>
+                                  <div className="font-semibold text-gray-900 dark:text-white">
+                                    {new Date(quote.expires_at).toLocaleDateString()}
+                                  </div>
+                                </div>
+                              </div>
+                              {quote.status === 'pending' && new Date(quote.expires_at) > new Date() && (
+                                <button
+                                  onClick={() => handleSubmitApplication(quote.id)}
+                                  className="w-full px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                                >
+                                  Apply Now
+                                </button>
+                              )}
                             </div>
-                            <h4 className="font-semibold text-gray-900 dark:text-white">Pan-African Risk Solutions</h4>
-                          </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                            Comprehensive coverage for supply chain and business risks.
-                          </p>
-                          <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                            <span>✓ Business Interruption</span>
-                            <span>✓ Price Risk</span>
-                            <span>✓ Supplier Risk</span>
-                          </div>
-                          <button className="w-full px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
-                            Get Quote
-                          </button>
+                          ))}
                         </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* Insurance Applications */}
+                    {insuranceApplications.length > 0 && (
+                      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Applications</h3>
+                        <div className="space-y-4">
+                          {insuranceApplications.map((app) => (
+                            <div key={app.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                              <div className="flex items-start justify-between mb-3">
+                                <div>
+                                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
+                                    {app.insurance_providers?.name || 'Insurance Provider'}
+                                  </h4>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    {app.application_type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())} Insurance
+                                  </p>
+                                </div>
+                                <StatusBadge 
+                                  type={app.status === 'approved' ? 'success' : app.status === 'rejected' ? 'error' : 'warning'} 
+                                  text={app.status.toUpperCase()} 
+                                />
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">
+                                Coverage: {app.currency} {(app.coverage_amount / 1000000).toFixed(1)}M • 
+                                Submitted: {new Date(app.created_at).toLocaleDateString()}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Quote Request Modal */}
+                    {showQuoteModal && selectedProvider && (
+                      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                            <div className="flex items-center justify-between">
+                              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                Request Quote from {selectedProvider.name}
+                              </h3>
+                              <button
+                                onClick={() => {
+                                  setShowQuoteModal(false);
+                                  setSelectedProvider(null);
+                                }}
+                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                              >
+                                <X className="h-5 w-5" />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="p-6 space-y-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Coverage Type
+                              </label>
+                              <select
+                                value={quoteRequest.quoteType}
+                                onChange={(e) => setQuoteRequest({ ...quoteRequest, quoteType: e.target.value as any })}
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                              >
+                                <option value="cargo">Cargo Insurance</option>
+                                <option value="liability">Liability Insurance</option>
+                                <option value="property">Property Insurance</option>
+                                <option value="general">General Business Insurance</option>
+                                <option value="trade_credit">Trade Credit Insurance</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Coverage Amount: {quoteRequest.coverageAmount.toLocaleString()} {quoteRequest.currency}
+                              </label>
+                              <input
+                                type="range"
+                                min="100000"
+                                max="10000000"
+                                step="100000"
+                                value={quoteRequest.coverageAmount}
+                                onChange={(e) => setQuoteRequest({ ...quoteRequest, coverageAmount: parseInt(e.target.value) })}
+                                className="w-full"
+                              />
+                              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                <span>100K</span>
+                                <span>10M</span>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Coverage Term: {Math.round(quoteRequest.termDays / 30)} months
+                              </label>
+                              <input
+                                type="range"
+                                min="30"
+                                max="730"
+                                step="30"
+                                value={quoteRequest.termDays}
+                                onChange={(e) => setQuoteRequest({ ...quoteRequest, termDays: parseInt(e.target.value) })}
+                                className="w-full"
+                              />
+                              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                <span>1 month</span>
+                                <span>24 months</span>
+                              </div>
+                            </div>
+                            <div className="flex gap-3 pt-4">
+                              <button
+                                onClick={() => {
+                                  setShowQuoteModal(false);
+                                  setSelectedProvider(null);
+                                }}
+                                className="flex-1 px-4 py-2 text-sm font-medium border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                onClick={handleSubmitQuote}
+                                disabled={requestingQuote}
+                                className="flex-1 px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                {requestingQuote ? 'Requesting...' : 'Request Quote'}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -1629,8 +2172,17 @@ const RiskMitigation: React.FC = () => {
                           <span>Update pricing models and forecasts</span>
                         </li>
                       </ul>
-                      <button className="mt-4 w-full px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                        Execute Playbook
+                      <button 
+                        onClick={() => {
+                          addToast({
+                            type: 'info',
+                            title: 'Playbook Activated! 🎯',
+                            message: 'Price Spike Response playbook is now active. We\'ll help you follow these steps!',
+                          });
+                        }}
+                        className="mt-4 w-full px-4 py-3 text-base font-bold bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:from-red-600 hover:to-orange-600 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
+                      >
+                        <span>🚀 Execute Playbook!</span>
                       </button>
                     </div>
 
@@ -1659,8 +2211,17 @@ const RiskMitigation: React.FC = () => {
                           <span>Communicate delays to customers proactively</span>
                         </li>
                       </ul>
-                      <button className="mt-4 w-full px-4 py-2 text-sm font-medium bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
-                        Execute Playbook
+                      <button 
+                        onClick={() => {
+                          addToast({
+                            type: 'info',
+                            title: 'Playbook Activated! 🎯',
+                            message: 'Supply Disruption playbook is now active. We\'ll help you follow these steps!',
+                          });
+                        }}
+                        className="mt-4 w-full px-4 py-3 text-base font-bold bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
+                      >
+                        <span>🚀 Execute Playbook!</span>
                       </button>
                     </div>
 
@@ -1689,8 +2250,17 @@ const RiskMitigation: React.FC = () => {
                           <span>Train staff on new requirements</span>
                         </li>
                       </ul>
-                      <button className="mt-4 w-full px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                        Execute Playbook
+                      <button 
+                        onClick={() => {
+                          addToast({
+                            type: 'info',
+                            title: 'Playbook Activated! 🎯',
+                            message: 'Regulatory Change playbook is now active. We\'ll help you follow these steps!',
+                          });
+                        }}
+                        className="mt-4 w-full px-4 py-3 text-base font-bold bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
+                      >
+                        <span>🚀 Execute Playbook!</span>
                       </button>
                     </div>
                   </div>

@@ -18,7 +18,7 @@ const Login: React.FC = () => {
 
   // Navigate to industry selection when authenticated - but only if we're on login page
   useEffect(() => {
-    if (authState.user && location.pathname === '/login') {
+    if (authState.user && (location.pathname === '/login' || location.pathname === '/app/login')) {
       console.log('Login page: User authenticated, navigating to industry selection');
       navigate('/select-industry', { replace: true });
     }

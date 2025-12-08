@@ -213,7 +213,7 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
                      location.pathname.startsWith('/app/logistics') ||
                      (dropdownKey === 'market' && (location.pathname.startsWith('/app/countries') || location.pathname.startsWith('/app/demand') || location.pathname.startsWith('/app/analytics'))) ||
                      (dropdownKey === 'supply' && (location.pathname.startsWith('/app/supplier-directory') || location.pathname.startsWith('/app/agents') || location.pathname.startsWith('/app/logistics'))) ||
-                     (dropdownKey === 'admin' && location.pathname.startsWith('/app/admin'));
+                     (dropdownKey === 'admin' && location.pathname.startsWith('/admin'));
 
     return (
       <div className="relative">
@@ -299,7 +299,7 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
             {/* Admin Dropdown */}
             {currentUser?.role === 'admin' && (
               <Dropdown icon={Settings2} label="Admin" dropdownKey="admin">
-                <DropdownItem to="/app/admin" icon={ShieldCheck} label="Admin Dashboard" />
+                <DropdownItem to="/admin" icon={ShieldCheck} label="Admin Panel" />
               </Dropdown>
             )}
           </nav>

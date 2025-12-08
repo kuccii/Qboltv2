@@ -24,9 +24,16 @@ interface PriceAlert {
   threshold: number;
   changePercent?: number;
   country: string;
+  location?: string;
   active: boolean;
   createdAt: Date;
   lastTriggered?: Date;
+  triggerCount?: number;
+  notificationPreferences?: {
+    email?: boolean;
+    in_app?: boolean;
+    sms?: boolean;
+  };
 }
 
 const PriceAlerts: React.FC = () => {
@@ -41,7 +48,11 @@ const PriceAlerts: React.FC = () => {
     condition: 'above' as 'above' | 'below' | 'change',
     threshold: '',
     changePercent: '',
-    country: 'Kenya'
+    country: 'Kenya',
+    location: '',
+    notificationEmail: true,
+    notificationInApp: true,
+    notificationSms: false
   });
 
   const materials = currentIndustry === 'construction'
@@ -64,9 +75,16 @@ const PriceAlerts: React.FC = () => {
           threshold: alert.threshold || 0,
           changePercent: alert.change_percent,
           country: alert.country,
+          location: alert.location,
           active: alert.active,
           createdAt: new Date(alert.created_at),
-          lastTriggered: alert.last_triggered ? new Date(alert.last_triggered) : undefined
+          lastTriggered: alert.last_triggered ? new Date(alert.last_triggered) : undefined,
+          triggerCount: alert.trigger_count || 0,
+          notificationPreferences: alert.notification_preferences || {
+            email: true,
+            in_app: true,
+            sms: false
+          }
         })));
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load alerts');
@@ -88,9 +106,15 @@ const PriceAlerts: React.FC = () => {
       const newAlert = await unifiedApi.priceAlerts.create({
         material: formData.material,
         country: formData.country,
+        location: formData.location || undefined,
         condition: formData.condition,
         threshold: formData.condition !== 'change' ? parseFloat(formData.threshold) : undefined,
-        change_percent: formData.condition === 'change' ? parseFloat(formData.changePercent) : undefined
+        change_percent: formData.condition === 'change' ? parseFloat(formData.changePercent) : undefined,
+        notification_preferences: {
+          email: formData.notificationEmail,
+          in_app: formData.notificationInApp,
+          sms: formData.notificationSms
+        }
       });
 
       setAlerts(prev => [{
@@ -100,8 +124,15 @@ const PriceAlerts: React.FC = () => {
         threshold: newAlert.threshold || 0,
         changePercent: newAlert.change_percent,
         country: newAlert.country,
+        location: newAlert.location,
         active: newAlert.active,
-        createdAt: new Date(newAlert.created_at)
+        createdAt: new Date(newAlert.created_at),
+        triggerCount: newAlert.trigger_count || 0,
+        notificationPreferences: newAlert.notification_preferences || {
+          email: true,
+          in_app: true,
+          sms: false
+        }
       }, ...prev]);
 
       setFormData({
@@ -109,7 +140,11 @@ const PriceAlerts: React.FC = () => {
         condition: 'above',
         threshold: '',
         changePercent: '',
-        country: 'Kenya'
+        country: 'Kenya',
+        location: '',
+        notificationEmail: true,
+        notificationInApp: true,
+        notificationSms: false
       });
       setShowCreateForm(false);
     } catch (err) {
@@ -371,13 +406,30 @@ const PriceAlerts: React.FC = () => {
                       {alert.condition === 'above' && `Alert when price goes above ${alert.threshold} KES`}
                       {alert.condition === 'below' && `Alert when price goes below ${alert.threshold} KES`}
                       {alert.condition === 'change' && `Alert when price changes by ${alert.changePercent}%`}
+                      {alert.location && (
+                        <span className="text-xs text-gray-500 ml-2">• {alert.location}</span>
+                      )}
                     </p>
 
-                    {alert.lastTriggered && (
-                      <p className="text-xs text-gray-500 mt-1">
-                        Last triggered: {alert.lastTriggered.toLocaleDateString()}
-                      </p>
-                    )}
+                    <div className="flex items-center gap-3 mt-1">
+                      {alert.triggerCount !== undefined && alert.triggerCount > 0 && (
+                        <span className="text-xs text-blue-600">
+                          Triggered {alert.triggerCount} time{alert.triggerCount > 1 ? 's' : ''}
+                        </span>
+                      )}
+                      {alert.lastTriggered && (
+                        <span className="text-xs text-gray-500">
+                          Last: {new Date(alert.lastTriggered).toLocaleDateString()}
+                        </span>
+                      )}
+                      {alert.notificationPreferences && (
+                        <div className="flex items-center gap-1 text-xs text-gray-500">
+                          {alert.notificationPreferences.email && <span>📧</span>}
+                          {alert.notificationPreferences.in_app && <span>🔔</span>}
+                          {alert.notificationPreferences.sms && <span>📱</span>}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 

@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { usePrices } from '../hooks/useData';
 import { unifiedApi } from '../services/unifiedApi';
-import DashboardCard from '../components/DashboardCard';
+import { AdminCard } from '../components/AdminCard';
 import StatusBadge from '../components/StatusBadge';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -180,20 +180,22 @@ const AdminPriceManager: React.FC = () => {
 
   if (loading) return <LoadingSpinner fullScreen />;
   if (error) return (
-    <div className="p-6">
-      <AlertCircle className="h-12 w-12 text-error-500 mb-4" />
-      <p className="text-error-600">{error}</p>
+    <div className="p-6 bg-gray-900">
+      <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
+      <p className="text-red-400">{error}</p>
     </div>
   );
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Price Management</h1>
-          <p className="text-gray-600 mt-1">Manage price data across all markets</p>
-        </div>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-white">Price Management</h1>
+              <p className="text-gray-400 mt-1">Manage price data across all markets</p>
+            </div>
         <div className="flex gap-2">
           <label className="cursor-pointer">
             <input
@@ -202,14 +204,14 @@ const AdminPriceManager: React.FC = () => {
               onChange={handleCSVImport}
               className="hidden"
             />
-            <div className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+            <div className="flex items-center gap-2 px-4 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700">
               <Upload className="h-4 w-4" />
               <span>Import CSV</span>
             </div>
           </label>
           <button
             onClick={handleCSVExport}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+            className="flex items-center gap-2 px-4 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700"
           >
             <Download className="h-4 w-4" />
             <span>Export CSV</span>
@@ -238,82 +240,82 @@ const AdminPriceManager: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <DashboardCard>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <CheckCircle className="h-6 w-6 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Total Records</p>
-              <p className="text-2xl font-bold text-gray-900">{prices.length}</p>
-            </div>
-          </div>
-        </DashboardCard>
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <AdminCard>
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-blue-500/20 rounded-lg">
+                  <CheckCircle className="h-6 w-6 text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-400">Total Records</p>
+                  <p className="text-2xl font-bold text-white">{prices.length}</p>
+                </div>
+              </div>
+            </AdminCard>
 
-        <DashboardCard>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-green-50 rounded-lg">
-              <CheckCircle className="h-6 w-6 text-green-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Verified</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {prices.filter(p => p.verified).length}
-              </p>
-            </div>
-          </div>
-        </DashboardCard>
+            <AdminCard>
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-green-500/20 rounded-lg">
+                  <CheckCircle className="h-6 w-6 text-green-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-400">Verified</p>
+                  <p className="text-2xl font-bold text-white">
+                    {prices.filter(p => p.verified).length}
+                  </p>
+                </div>
+              </div>
+            </AdminCard>
 
-        <DashboardCard>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-yellow-50 rounded-lg">
-              <AlertCircle className="h-6 w-6 text-yellow-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Pending Review</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {prices.filter(p => !p.verified).length}
-              </p>
-            </div>
-          </div>
-        </DashboardCard>
+            <AdminCard>
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-yellow-500/20 rounded-lg">
+                  <AlertCircle className="h-6 w-6 text-yellow-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-400">Pending Review</p>
+                  <p className="text-2xl font-bold text-white">
+                    {prices.filter(p => !p.verified).length}
+                  </p>
+                </div>
+              </div>
+            </AdminCard>
 
-        <DashboardCard>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-purple-50 rounded-lg">
-              <CheckCircle className="h-6 w-6 text-purple-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Countries</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {new Set(prices.map(p => p.country)).size}
-              </p>
-            </div>
+            <AdminCard>
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-purple-500/20 rounded-lg">
+                  <CheckCircle className="h-6 w-6 text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-400">Countries</p>
+                  <p className="text-2xl font-bold text-white">
+                    {new Set(prices.map(p => p.country)).size}
+                  </p>
+                </div>
+              </div>
+            </AdminCard>
           </div>
-        </DashboardCard>
-      </div>
 
-      {/* Filters */}
-      <div className="flex gap-4">
-        <div className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search materials or locations..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-            />
-          </div>
-        </div>
-        <select
-          value={selectedCountry}
-          onChange={(e) => setSelectedCountry(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-        >
+          {/* Filters */}
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search materials or locations..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+            </div>
+            <select
+              value={selectedCountry}
+              onChange={(e) => setSelectedCountry(e.target.value)}
+              className="px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-primary-500"
+            >
           <option value="all">All Countries</option>
           {countries.map(c => (
             <option key={c} value={c}>{c}</option>
@@ -321,218 +323,220 @@ const AdminPriceManager: React.FC = () => {
         </select>
       </div>
 
-      {/* Create/Edit Form */}
-      {showCreateForm && (
-        <DashboardCard>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            {editingPrice ? 'Edit Price' : 'Add New Price'}
-          </h2>
-          <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Material *</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.material}
-                  onChange={(e) => setFormData({ ...formData, material: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  placeholder="e.g., Cement"
-                />
-              </div>
+          {/* Create/Edit Form */}
+          {showCreateForm && (
+            <AdminCard>
+              <h2 className="text-lg font-semibold text-white mb-4">
+                {editingPrice ? 'Edit Price' : 'Add New Price'}
+              </h2>
+              <form onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Material *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.material}
+                      onChange={(e) => setFormData({ ...formData, material: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg"
+                      placeholder="e.g., Cement"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  placeholder="e.g., Nairobi"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Location *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.location}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg"
+                      placeholder="e.g., Nairobi"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Country *</label>
-                <select
-                  value={formData.country}
-                  onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                >
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Country *</label>
+                    <select
+                      value={formData.country}
+                      onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg"
+                    >
                   {countries.map(c => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Price *</label>
-                <input
-                  type="number"
-                  required
-                  step="0.01"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  placeholder="850"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Price *</label>
+                    <input
+                      type="number"
+                      required
+                      step="0.01"
+                      value={formData.price}
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg"
+                      placeholder="850"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
-                <select
-                  value={formData.currency}
-                  onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                >
-                  <option value="KES">KES</option>
-                  <option value="RWF">RWF</option>
-                  <option value="UGX">UGX</option>
-                  <option value="TZS">TZS</option>
-                  <option value="USD">USD</option>
-                </select>
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Currency</label>
+                    <select
+                      value={formData.currency}
+                      onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg"
+                    >
+                      <option value="KES">KES</option>
+                      <option value="RWF">RWF</option>
+                      <option value="UGX">UGX</option>
+                      <option value="TZS">TZS</option>
+                      <option value="USD">USD</option>
+                    </select>
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Unit</label>
-                <select
-                  value={formData.unit}
-                  onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                >
-                  {units.map(u => (
-                    <option key={u} value={u}>{u}</option>
-                  ))}
-                </select>
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Unit</label>
+                    <select
+                      value={formData.unit}
+                      onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg"
+                    >
+                      {units.map(u => (
+                        <option key={u} value={u}>{u}</option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Change %</label>
-                <input
-                  type="number"
-                  step="0.1"
-                  value={formData.change_percent}
-                  onChange={(e) => setFormData({ ...formData, change_percent: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  placeholder="2.5"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Change %</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={formData.change_percent}
+                      onChange={(e) => setFormData({ ...formData, change_percent: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg"
+                      placeholder="2.5"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Source</label>
-                <input
-                  type="text"
-                  value={formData.source}
-                  onChange={(e) => setFormData({ ...formData, source: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  placeholder="Market Survey"
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Source</label>
+                    <input
+                      type="text"
+                      value={formData.source}
+                      onChange={(e) => setFormData({ ...formData, source: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg"
+                      placeholder="Market Survey"
+                    />
+                  </div>
 
-              <div className="md:col-span-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={formData.verified}
-                    onChange={(e) => setFormData({ ...formData, verified: e.target.checked })}
-                    className="rounded border-gray-300"
-                  />
-                  <span className="text-sm text-gray-700">Mark as verified</span>
-                </label>
-              </div>
-            </div>
+                  <div className="md:col-span-2">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={formData.verified}
+                        onChange={(e) => setFormData({ ...formData, verified: e.target.checked })}
+                        className="rounded border-gray-600 bg-gray-800"
+                      />
+                      <span className="text-sm text-gray-300">Mark as verified</span>
+                    </label>
+                  </div>
+                </div>
 
-            <div className="flex justify-end gap-2 mt-4">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowCreateForm(false);
-                  setEditingPrice(null);
-                }}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-              >
-                {editingPrice ? 'Update' : 'Create'}
-              </button>
-            </div>
-          </form>
-        </DashboardCard>
-      )}
-
-      {/* Prices Table */}
-      <DashboardCard>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Material</th>
-                <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Location</th>
-                <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Country</th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700">Price</th>
-                <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Unit</th>
-                <th className="text-center py-3 px-4 text-sm font-semibold text-gray-700">Change</th>
-                <th className="text-center py-3 px-4 text-sm font-semibold text-gray-700">Status</th>
-                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredPrices.map(price => (
-                <tr key={price.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="py-3 px-4 text-sm text-gray-900 font-medium">{price.material}</td>
-                  <td className="py-3 px-4 text-sm text-gray-600">{price.location}</td>
-                  <td className="py-3 px-4 text-sm text-gray-600">{price.country}</td>
-                  <td className="py-3 px-4 text-sm text-gray-900 font-semibold text-right">
-                    {price.price.toLocaleString()} {price.currency}
-                  </td>
-                  <td className="py-3 px-4 text-sm text-gray-600">{price.unit}</td>
-                  <td className="py-3 px-4 text-center">
-                    <span className={`text-sm font-medium ${
-                      (price.change_percent || 0) > 0 ? 'text-green-600' : 'text-red-600'
-                    }`}>
-                      {(price.change_percent || 0) > 0 ? '+' : ''}{price.change_percent || 0}%
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-center">
-                    <StatusBadge variant={price.verified ? 'success' : 'warning'} size="sm">
-                      {price.verified ? 'Verified' : 'Pending'}
-                    </StatusBadge>
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => handleEdit(price)}
-                        className="p-2 hover:bg-gray-100 rounded-lg"
-                        title="Edit"
-                      >
-                        <Edit2 className="h-4 w-4 text-gray-600" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(price.id)}
-                        className="p-2 hover:bg-gray-100 rounded-lg"
-                        title="Delete"
-                      >
-                        <Trash2 className="h-4 w-4 text-gray-600" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {filteredPrices.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-600">No prices found</p>
-            </div>
+                <div className="flex justify-end gap-2 mt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCreateForm(false);
+                      setEditingPrice(null);
+                    }}
+                    className="px-4 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  >
+                    {editingPrice ? 'Update' : 'Create'}
+                  </button>
+                </div>
+              </form>
+            </AdminCard>
           )}
+
+          {/* Prices Table */}
+          <AdminCard>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-700">
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Material</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Location</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Country</th>
+                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Price</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-300">Unit</th>
+                    <th className="text-center py-3 px-4 text-sm font-semibold text-gray-300">Change</th>
+                    <th className="text-center py-3 px-4 text-sm font-semibold text-gray-300">Status</th>
+                    <th className="text-right py-3 px-4 text-sm font-semibold text-gray-300">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredPrices.map(price => (
+                    <tr key={price.id} className="border-b border-gray-700 hover:bg-gray-800">
+                      <td className="py-3 px-4 text-sm text-white font-medium">{price.material}</td>
+                      <td className="py-3 px-4 text-sm text-gray-400">{price.location}</td>
+                      <td className="py-3 px-4 text-sm text-gray-400">{price.country}</td>
+                      <td className="py-3 px-4 text-sm text-white font-semibold text-right">
+                        {price.price.toLocaleString()} {price.currency}
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-400">{price.unit}</td>
+                      <td className="py-3 px-4 text-center">
+                        <span className={`text-sm font-medium ${
+                          (price.change_percent || 0) > 0 ? 'text-green-400' : 'text-red-400'
+                        }`}>
+                          {(price.change_percent || 0) > 0 ? '+' : ''}{price.change_percent || 0}%
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <StatusBadge variant={price.verified ? 'success' : 'warning'} size="sm">
+                          {price.verified ? 'Verified' : 'Pending'}
+                        </StatusBadge>
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => handleEdit(price)}
+                            className="p-2 hover:bg-gray-700 rounded-lg"
+                            title="Edit"
+                          >
+                            <Edit2 className="h-4 w-4 text-gray-400" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(price.id)}
+                            className="p-2 hover:bg-gray-700 rounded-lg"
+                            title="Delete"
+                          >
+                            <Trash2 className="h-4 w-4 text-gray-400" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {filteredPrices.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-gray-400">No prices found</p>
+                </div>
+              )}
+            </div>
+          </AdminCard>
         </div>
-      </DashboardCard>
+      </div>
     </div>
   );
 };

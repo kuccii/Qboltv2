@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import './styles/industry-themes.css';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { DataProvider } from './contexts/DataContext';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -10,10 +10,12 @@ import { IndustryProvider } from './contexts/IndustryContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingSpinner from './components/LoadingSpinner';
 import Layout from './components/Layout';
+import AdminLayout from './components/AdminLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import SecurityMiddleware from './components/SecurityMiddleware';
 import AccessibilityWrapper from './components/AccessibilityWrapper';
 import MobileOptimization from './components/MobileOptimization';
+import UserRoleHelper from './components/UserRoleHelper';
 
 // Lazy load components
 const Home = React.lazy(() => import('./pages/Home'));
@@ -34,6 +36,17 @@ const RiskMitigation = React.lazy(() => import('./pages/RiskMitigation'));
 const Logistics = React.lazy(() => import('./pages/Logistics'));
 const DocumentVault = React.lazy(() => import('./pages/DocumentVault'));
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
+const AdminPriceManager = React.lazy(() => import('./pages/AdminPriceManager'));
+const AdminSupplierManager = React.lazy(() => import('./pages/AdminSupplierManager'));
+const AdminAgentManager = React.lazy(() => import('./pages/AdminAgentManager'));
+const AdminFinancingManager = React.lazy(() => import('./pages/AdminFinancingManager'));
+const AdminLogisticsManager = React.lazy(() => import('./pages/AdminLogisticsManager'));
+const AdminDemandManager = React.lazy(() => import('./pages/AdminDemandManager'));
+const AdminRiskManager = React.lazy(() => import('./pages/AdminRiskManager'));
+const AdminDocumentManager = React.lazy(() => import('./pages/AdminDocumentManager'));
+const AdminUserManager = React.lazy(() => import('./pages/AdminUserManager'));
+const AdminBulkImport = React.lazy(() => import('./pages/AdminBulkImport'));
+const AdminBulkExport = React.lazy(() => import('./pages/AdminBulkExport'));
 const IndustrySelector = React.lazy(() => import('./components/IndustrySelector'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
@@ -66,10 +79,12 @@ function App() {
                   <Router>
                     <AccessibilityWrapper>
                       <MobileOptimization>
+                        <UserRoleHelper />
                         <Suspense fallback={<LoadingFallback />}>
                           <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/app/login" element={<Navigate to="/login" replace />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/select-industry" element={
                           <ProtectedRoute>
@@ -108,11 +123,26 @@ function App() {
                           <Route path="notifications" element={<Notifications />} />
                           <Route path="billing" element={<Billing />} />
                           <Route path="help" element={<HelpCenter />} />
-                          <Route path="admin" element={
-                            <ProtectedRoute adminOnly requiredPermission="settings:read">
-                              <AdminDashboard />
-                            </ProtectedRoute>
-                          } />
+                        </Route>
+                        
+                        {/* Separate Admin Routes - Completely Independent */}
+                        <Route path="/admin" element={
+                          <ProtectedRoute adminOnly>
+                            <AdminLayout />
+                          </ProtectedRoute>
+                        }>
+                          <Route index element={<AdminDashboard />} />
+                          <Route path="prices" element={<AdminPriceManager />} />
+                          <Route path="suppliers" element={<AdminSupplierManager />} />
+                          <Route path="agents" element={<AdminAgentManager />} />
+                          <Route path="financing" element={<AdminFinancingManager />} />
+                          <Route path="logistics" element={<AdminLogisticsManager />} />
+                          <Route path="demand" element={<AdminDemandManager />} />
+                          <Route path="risk" element={<AdminRiskManager />} />
+                          <Route path="documents" element={<AdminDocumentManager />} />
+                          <Route path="users" element={<AdminUserManager />} />
+                          <Route path="import" element={<AdminBulkImport />} />
+                          <Route path="export" element={<AdminBulkExport />} />
                         </Route>
                         <Route path="*" element={<NotFound />} />
                       </Routes>

@@ -71,31 +71,43 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // Check admin access FIRST (before industry check)
+  // Admin routes should bypass industry selection requirement
+  if (adminOnly) {
+    console.log('ProtectedRoute: Admin route check:', { isAdmin, userRole: authState.user?.role });
+    if (!isAdmin) {
+      console.log('ProtectedRoute: Admin access denied');
+      return (
+        <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+          <div className="text-center max-w-md mx-auto p-6">
+            <Shield className="h-12 w-12 text-warning-500 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Access Denied</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              You don't have permission to access this page. Admin privileges required.
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">
+              Current role: {authState.user?.role || 'none'}
+            </p>
+            <Navigate to={fallbackPath} replace />
+          </div>
+        </div>
+      );
+    }
+    // Admin is authenticated and has admin role - allow access (bypass industry check)
+    console.log('ProtectedRoute: Admin access granted');
+    return <>{children}</>;
+  }
+
   // Allow access to /select-industry if authenticated (even if industry not selected)
   if (location.pathname === '/select-industry') {
     console.log('ProtectedRoute: Allowing access to industry selection');
     return <>{children}</>;
   }
 
-  // Check if user has selected an industry (only for /app routes)
+  // Check if user has selected an industry (only for /app routes, not admin routes)
   if (!isIndustrySelected && location.pathname.startsWith('/app')) {
     console.log('ProtectedRoute: No industry selected, redirecting to industry selection');
     return <Navigate to="/select-industry" replace />;
-  }
-
-  if (adminOnly && !isAdmin) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-center max-w-md mx-auto p-6">
-          <Shield className="h-12 w-12 text-warning-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
-          <p className="text-gray-600 mb-4">
-            You don't have permission to access this page. Admin privileges required.
-          </p>
-          <Navigate to={fallbackPath} replace />
-        </div>
-      </div>
-    );
   }
 
   if (requiredPermission && !hasPermission(requiredPermission)) {

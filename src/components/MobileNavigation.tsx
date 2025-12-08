@@ -194,7 +194,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
             {/* Admin Dropdown - Matching Desktop */}
             {currentUser?.role === 'admin' && (
               <SectionDropdown icon={Settings2} label="Admin" section="admin">
-                <NavItem to="/app/admin" icon={ShieldCheck} label="Admin Dashboard" />
+                <NavItem to="/admin" icon={ShieldCheck} label="Admin Panel" />
               </SectionDropdown>
             )}
           </div>
