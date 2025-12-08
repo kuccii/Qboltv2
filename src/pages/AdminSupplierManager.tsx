@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 import { useSuppliers } from '../hooks/useData';
 import { unifiedApi } from '../services/unifiedApi';
-import DashboardCard from '../components/DashboardCard';
 import { AdminCard } from '../components/AdminCard';
 import StatusBadge from '../components/StatusBadge';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -572,7 +571,7 @@ const AdminSupplierManager: React.FC = () => {
             </div>
           )}
         </div>
-      </DashboardCard>
+      </AdminCard>
     </div>
   );
 };

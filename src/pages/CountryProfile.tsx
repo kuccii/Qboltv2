@@ -26,7 +26,6 @@ import {
   Shield
 } from 'lucide-react';
 import { unifiedApi } from '../services/unifiedApi';
-import { HeaderStrip } from '../design-system';
 import RwandaOverview from '../components/rwanda/RwandaOverview';
 import RwandaInfrastructureOverview from '../components/rwanda/RwandaInfrastructureOverview';
 import RwandaContactDirectory from '../components/rwanda/RwandaContactDirectory';
