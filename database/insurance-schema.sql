@@ -240,3 +240,4 @@ CREATE POLICY "Admins can view all claims"
   ON insurance_claims FOR SELECT
   USING (EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'admin'));
 
+

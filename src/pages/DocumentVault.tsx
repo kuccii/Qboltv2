@@ -37,7 +37,7 @@ import DashboardCard from '../components/DashboardCard';
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
 import { unifiedApi } from '../services/unifiedApi';
-import HeaderStrip from '../components/HeaderStrip';
+// Removed HeaderStrip - using custom playful header
 import { useToast } from '../contexts/ToastContext';
 import {
   AppLayout,
@@ -671,8 +671,7 @@ const DocumentVault: React.FC = () => {
   if (loading) {
     return (
       <AppLayout>
-        <HeaderStrip title="Trade Documentation Guide" subtitle="Loading..." />
-        <PageLayout maxWidth="full" padding="none">
+        <PageLayout>
           <div className="flex items-center justify-center py-24">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
@@ -686,148 +685,157 @@ const DocumentVault: React.FC = () => {
 
   return (
     <AppLayout>
-      <HeaderStrip 
-        title="Trade Documentation Guide"
-        subtitle="Complete guide to required documentation for trade in East Africa"
-        chips={[
-          { label: 'Documents', value: documentRequirements.length, variant: 'info' },
-          { label: 'Required', value: requiredDocs.length, variant: 'error' },
-          { label: 'Countries', value: countries.length, variant: 'success' },
-        ]}
-        right={
-          <ActionMenu
-            items={[
-              { id: 'download', label: 'Download Guide PDF', icon: <Download className="h-4 w-4" />, onClick: () => console.log('Download') },
-              { id: 'print', label: 'Print Guide', icon: <FileX className="h-4 w-4" />, onClick: () => window.print() },
-            ]}
-            size="sm"
-          />
-        }
-      />
-      
-      <PageLayout maxWidth="full" padding="none">
-        <div className="px-10 md:px-14 lg:px-20 py-8 space-y-8">
-          {/* Hero Section */}
-          <div className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 rounded-2xl p-8 text-white overflow-hidden">
-            <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-            <div className="relative z-10">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h1 className="text-3xl font-bold mb-2">Trade Documentation Made Simple</h1>
-                  <p className="text-primary-100 text-lg max-w-2xl">
-                    Navigate the complexities of East African trade documentation with our comprehensive guide. 
-                    Find requirements, costs, processing times, and step-by-step instructions for all essential documents.
-                  </p>
-                </div>
-                <div className="hidden lg:block">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                    <FileText className="h-12 w-12 mb-2" />
-                    <div className="text-2xl font-bold">{documentRequirements.length}</div>
-                    <div className="text-sm text-primary-100">Documents Covered</div>
-                  </div>
-                </div>
+      <PageLayout>
+        {/* Playful Header */}
+        <div className="mb-6 p-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl shadow-xl border-4 border-blue-300 dark:border-blue-700">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 flex items-center gap-3">
+                <span className="text-4xl sm:text-5xl">📄</span>
+                <span>Your Paperwork Helper! 📋</span>
+              </h1>
+              <p className="text-blue-100 text-sm sm:text-base font-medium">
+                All the papers you need for trading, made super easy! 🎯
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+                <div className="text-white text-xs font-bold">📄 Documents</div>
+                <div className="text-white text-lg font-extrabold">{documentRequirements.length}</div>
               </div>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle2 className="h-5 w-5" />
-                    <span className="text-sm font-medium">Required Docs</span>
-                  </div>
-                  <div className="text-2xl font-bold">{requiredDocs.length}</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Globe className="h-5 w-5" />
-                    <span className="text-sm font-medium">Countries</span>
-                  </div>
-                  <div className="text-2xl font-bold">{countries.length}</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Clock className="h-5 w-5" />
-                    <span className="text-sm font-medium">Avg. Time</span>
-                  </div>
-                  <div className="text-2xl font-bold">5-15</div>
-                  <div className="text-xs text-primary-100">days</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                  <div className="flex items-center gap-2 mb-2">
-                    <DollarSign className="h-5 w-5" />
-                    <span className="text-sm font-medium">Cost Range</span>
-                  </div>
-                  <div className="text-2xl font-bold">$0-500</div>
-                </div>
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+                <div className="text-white text-xs font-bold">✅ Required</div>
+                <div className="text-white text-lg font-extrabold">{requiredDocs.length}</div>
+              </div>
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+                <div className="text-white text-xs font-bold">🌍 Countries</div>
+                <div className="text-white text-lg font-extrabold">{countries.length}</div>
               </div>
             </div>
           </div>
-
-          {/* Tabs */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-4">
+            <ActionMenu
+              items={[
+                { id: 'download', label: '📥 Download Guide PDF', icon: <Download className="h-4 w-4" />, onClick: () => console.log('Download') },
+                { id: 'print', label: '🖨️ Print Guide', icon: <FileX className="h-4 w-4" />, onClick: () => window.print() },
+              ]}
+              size="sm"
+            />
+          </div>
+        </div>
+      
+        <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+          {/* Playful Tab Navigation */}
+          <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-blue-200 dark:border-blue-700 p-2">
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
               {[
-                { id: 'overview', label: 'Overview', icon: <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> },
-                { id: 'documents', label: 'Documents', icon: <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> },
-                { id: 'checklist', label: 'My Checklist', icon: <ListChecks className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: checklistProgress.completed },
-                { id: 'resources', label: 'Resources', icon: <BookOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> }
-              ].map(tab => (
+                { id: 'overview', label: 'Overview', icon: '👀', emoji: '👀' },
+                { id: 'documents', label: 'Documents', icon: '📄', emoji: '📄' },
+                { id: 'checklist', label: 'Checklist', icon: '✅', emoji: '✅' },
+                { id: 'resources', label: 'Resources', icon: '📚', emoji: '📚' },
+              ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap relative flex-shrink-0 ${
+                  className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                     activeTab === tab.id
-                      ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                      ? tab.id === 'overview'
+                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg border-2 border-blue-300'
+                        : tab.id === 'documents'
+                          ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg border-2 border-purple-300'
+                          : tab.id === 'checklist'
+                            ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg border-2 border-green-300'
+                            : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg border-2 border-pink-300'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
                   }`}
                 >
-                  {tab.icon}
-                  <span>{tab.label}</span>
-                  {tab.badge !== undefined && tab.badge > 0 && (
-                    <span className="ml-1 px-1.5 py-0.5 text-xs font-bold bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full">
-                      {tab.badge}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{tab.emoji}</span>
+                    <span>{tab.label}</span>
+                  </div>
                 </button>
               ))}
             </div>
+          </div>
 
-            <div className="p-6">
-              {activeTab === 'overview' && (
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-6">
+            {/* Tab Content */}
+            {activeTab === 'overview' && (
                 <div className="space-y-6">
-                  {/* Category Overview */}
+                  {/* Welcome Message */}
+                  <div className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 dark:from-blue-900/30 dark:via-purple-900/30 dark:to-pink-900/30 rounded-2xl p-6 border-4 border-blue-300 dark:border-blue-700">
+                    <div className="flex items-start gap-4">
+                      <div className="text-5xl">📚</div>
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-2">How This Helps You! 🎯</h3>
+                        <p className="text-base text-gray-700 dark:text-gray-300 mb-4">
+                          This page shows you <strong>all the papers you need</strong> to trade stuff! 
+                          We'll tell you what to get, where to get it, how much it costs, and how long it takes! 
+                          No more confusion! 😊
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <button 
+                            onClick={() => setActiveTab('documents')}
+                            className="px-4 py-2 bg-blue-500 text-white rounded-xl font-bold hover:bg-blue-600 transform hover:scale-105 transition-all shadow-lg"
+                          >
+                            📄 See All Documents →
+                          </button>
+                          <button 
+                            onClick={() => setActiveTab('checklist')}
+                            className="px-4 py-2 bg-green-500 text-white rounded-xl font-bold hover:bg-green-600 transform hover:scale-105 transition-all shadow-lg"
+                          >
+                            ✅ Start Your Checklist →
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Category Overview - More Playful */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Documents by Category</h3>
+                    <h3 className="text-xl font-extrabold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                      <span>📁</span>
+                      <span>Documents by Category</span>
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                       {categoriesCount.map(cat => (
                         <div
                           key={cat.name}
-                          className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer"
+                          onClick={() => {
+                            setActiveTab('documents');
+                            setSelectedCategory(cat.name === 'all' ? 'all' : cat.name);
+                          }}
+                          className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-xl p-5 border-4 border-blue-200 dark:border-blue-700 hover:shadow-xl transition-all cursor-pointer transform hover:scale-105"
                         >
                           <div className="flex items-center gap-3 mb-2">
-                            {getCategoryIcon(cat.name)}
-                            <span className="font-semibold text-gray-900 dark:text-white">{cat.count}</span>
+                            <span className="text-3xl">{getCategoryIcon(cat.name)}</span>
+                            <span className="text-2xl font-extrabold text-gray-900 dark:text-white">{cat.count}</span>
                           </div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">{cat.name}</div>
+                          <div className="text-sm font-bold text-gray-700 dark:text-gray-300">{cat.name}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Click to see! 👆</div>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Quick Tips */}
+                  {/* Quick Tips - More Kid-Friendly */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Tips</h3>
+                    <h3 className="text-xl font-extrabold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                      <span>💡</span>
+                      <span>Super Helpful Tips!</span>
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {[
-                        { icon: <Clock className="h-5 w-5 text-warning-600" />, title: 'Start Early', desc: 'Begin 2-4 weeks before shipment' },
-                        { icon: <FileText className="h-5 w-5 text-info-600" />, title: 'Keep Copies', desc: 'Maintain digital and physical copies' },
-                        { icon: <CheckCircle2 className="h-5 w-5 text-success-600" />, title: 'Verify Requirements', desc: 'Check with authorities before shipping' },
-                        { icon: <Globe className="h-5 w-5 text-primary-600" />, title: 'Use Digital Platforms', desc: 'Apply online to save time' },
+                        { emoji: '⏰', icon: <Clock className="h-5 w-5 text-warning-600" />, title: 'Start Early! 🚀', desc: 'Get your papers ready 2-4 weeks before you ship stuff! This way you won\'t be in a rush!', color: 'from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30' },
+                        { emoji: '📋', icon: <FileText className="h-5 w-5 text-info-600" />, title: 'Keep Copies! 📄', desc: 'Save both digital (on your computer) and paper copies! You never know when you\'ll need them!', color: 'from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30' },
+                        { emoji: '✅', icon: <CheckCircle2 className="h-5 w-5 text-success-600" />, title: 'Double Check! 🔍', desc: 'Always ask the people in charge before you ship! Rules can change, so make sure you have everything!', color: 'from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30' },
+                        { emoji: '🌐', icon: <Globe className="h-5 w-5 text-primary-600" />, title: 'Use the Internet! 💻', desc: 'Apply online when you can! It\'s faster and easier than going to offices in person!', color: 'from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30' },
                       ].map((tip, idx) => (
-                        <div key={idx} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
-                          <div className="flex-shrink-0">{tip.icon}</div>
-                          <div>
-                            <div className="font-medium text-gray-900 dark:text-white">{tip.title}</div>
-                            <div className="text-sm text-gray-600 dark:text-gray-400">{tip.desc}</div>
+                        <div key={idx} className={`flex items-start gap-4 p-5 bg-gradient-to-r ${tip.color} rounded-xl border-4 border-blue-200 dark:border-blue-700 hover:shadow-lg transition-all transform hover:scale-105`}>
+                          <div className="text-4xl">{tip.emoji}</div>
+                          <div className="flex-1">
+                            <div className="font-extrabold text-lg text-gray-900 dark:text-white mb-1">{tip.title}</div>
+                            <div className="text-sm text-gray-700 dark:text-gray-300">{tip.desc}</div>
                           </div>
                         </div>
                       ))}
@@ -1025,19 +1033,79 @@ const DocumentVault: React.FC = () => {
                                   </div>
                                 </div>
 
+                                {/* Quick Actions - Make it More Useful! */}
+                                <div className="border-t-4 border-blue-300 dark:border-blue-700 pt-4 mt-4">
+                                  <h4 className="font-extrabold text-base text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                    <span>⚡</span>
+                                    <span>Quick Actions - Get Things Done!</span>
+                                  </h4>
+                                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                    <button
+                                      onClick={() => {
+                                        const requirements = `Document: ${doc.name}\nRequired Documents: ${doc.documents.join(', ')}\nSteps:\n${doc.applicationSteps.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
+                                        navigator.clipboard.writeText(requirements);
+                                        addToast({ type: 'success', title: 'Copied! 📋', message: 'Document requirements copied to clipboard!' });
+                                      }}
+                                      className="px-3 py-2 bg-blue-500 text-white rounded-xl text-xs font-bold hover:bg-blue-600 transform hover:scale-105 transition-all shadow-md"
+                                    >
+                                      📋 Copy Info
+                                    </button>
+                                    <button
+                                      onClick={() => setShowStatusModal(doc.id)}
+                                      className="px-3 py-2 bg-green-500 text-white rounded-xl text-xs font-bold hover:bg-green-600 transform hover:scale-105 transition-all shadow-md"
+                                    >
+                                      {docStatus ? '✏️ Update' : '✅ Track'}
+                                    </button>
+                                    {doc.links?.portal && (
+                                      <a
+                                        href={doc.links.portal}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-3 py-2 bg-purple-500 text-white rounded-xl text-xs font-bold hover:bg-purple-600 transform hover:scale-105 transition-all shadow-md text-center"
+                                      >
+                                        🌐 Apply Now
+                                      </a>
+                                    )}
+                                    <button
+                                      onClick={() => {
+                                        window.print();
+                                      }}
+                                      className="px-3 py-2 bg-orange-500 text-white rounded-xl text-xs font-bold hover:bg-orange-600 transform hover:scale-105 transition-all shadow-md"
+                                    >
+                                      🖨️ Print
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        toggleFavorite(doc.id);
+                                      }}
+                                      className={`px-3 py-2 rounded-xl text-xs font-bold transform hover:scale-105 transition-all shadow-md ${
+                                        isFavorite
+                                          ? 'bg-yellow-500 text-white hover:bg-yellow-600'
+                                          : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-400'
+                                      }`}
+                                    >
+                                      {isFavorite ? '⭐ Saved' : '⭐ Save'}
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        const summary = `📄 ${doc.name}\n💰 Cost: ${doc.cost}\n⏰ Time: ${doc.processingTime}\n🏆 Valid: ${doc.validity}\n📍 Countries: ${doc.country.map(getCountryName).join(', ')}`;
+                                        navigator.clipboard.writeText(summary);
+                                        addToast({ type: 'success', title: 'Copied! 📋', message: 'Document summary copied!' });
+                                      }}
+                                      className="px-3 py-2 bg-pink-500 text-white rounded-xl text-xs font-bold hover:bg-pink-600 transform hover:scale-105 transition-all shadow-md"
+                                    >
+                                      📤 Share
+                                    </button>
+                                  </div>
+                                </div>
+
                                 {/* Status Tracking */}
-                                <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                                <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
                                   <div className="flex items-center justify-between mb-3">
                                     <h4 className="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-2">
                                       <ListChecks className="h-4 w-4 text-primary-600" />
                                       Track Your Application
                                     </h4>
-                                    <button
-                                      onClick={() => setShowStatusModal(doc.id)}
-                                      className="px-3 py-1.5 text-xs font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-                                    >
-                                      {docStatus ? 'Update Status' : 'Mark Status'}
-                                    </button>
                                   </div>
                                   {docStatus && (
                                     <div className="pl-6 space-y-2">
@@ -1281,7 +1349,6 @@ const DocumentVault: React.FC = () => {
               </div>
             </div>
           )}
-        </div>
       </PageLayout>
     </AppLayout>
   );

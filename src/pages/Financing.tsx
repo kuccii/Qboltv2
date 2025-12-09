@@ -32,6 +32,7 @@ import { useIndustry } from '../contexts/IndustryContext';
 import { unifiedApi } from '../services/unifiedApi';
 import HeaderStrip from '../components/HeaderStrip';
 import { useToast } from '../contexts/ToastContext';
+import { formatCurrency } from '../utils/currency';
 import {
   AppLayout,
   PageLayout,
@@ -350,15 +351,7 @@ const Financing: React.FC = () => {
     return filteredOffers.filter(o => compareIds.includes(o.id));
   }, [filteredOffers, compareIds]);
   
-  // Format currency
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
+  // Currency formatting is now handled by the utility function
   
   // Calculate monthly payment
   const calculateMonthlyPayment = (amount: number, interestRate: number, months: number) => {
@@ -515,11 +508,11 @@ const Financing: React.FC = () => {
                             />
                           </div>
                           <div className="text-xs text-gray-600 dark:text-gray-400 mt-2 font-medium">
-                            💵 {formatCurrency(app.amount)} • ⏰ {Math.round((app.term_days || 30) / 30)} months
+                            💵 {formatCurrency(app.amount, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} • ⏰ {Math.round((app.term_days || 30) / 30)} months
                           </div>
                           {app.approved_amount && (
                             <div className="text-xs text-success-600 dark:text-success-400 mt-2 font-bold bg-success-50 dark:bg-success-900/20 px-2 py-1 rounded-lg inline-block">
-                              ✅ Approved: {formatCurrency(app.approved_amount)}
+                              ✅ Approved: {formatCurrency(app.approved_amount, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                             </div>
                           )}
                           <div className="text-xs text-primary-600 dark:text-primary-400 mt-3 flex items-center gap-1 font-medium">
@@ -598,7 +591,7 @@ const Financing: React.FC = () => {
                     </label>
                     <div className="text-center mb-4">
                       <div className="text-4xl font-extrabold text-primary-600 dark:text-primary-400 mb-2">
-                        {formatCurrency(financeAmount)}
+                        {formatCurrency(financeAmount, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">Move the slider to change! 👆</div>
                     </div>
@@ -657,10 +650,10 @@ const Financing: React.FC = () => {
                       <div className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">What You'll Pay Each Month</div>
                       <div className="text-5xl font-extrabold text-purple-800 dark:text-purple-200 mb-3">
                         {formatCurrency(calculateMonthlyPayment(
-                          financeAmount, 
-                          bestOffer?.interestRate || 12.5, 
+                          financeAmount,
+                          bestOffer?.interestRate || 12,
                           financeTerm
-                        ))}
+                        ), 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                       </div>
                       {bestOffer && (
                         <div className="text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border-2 border-purple-300 dark:border-purple-700 inline-block">
@@ -678,7 +671,7 @@ const Financing: React.FC = () => {
                             financeAmount,
                             bestOffer?.interestRate || 12.5,
                             financeTerm
-                          ))}
+                          ), 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                         </div>
                       </div>
                       <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-pink-300 dark:border-pink-700 text-center">
@@ -689,7 +682,7 @@ const Financing: React.FC = () => {
                             financeAmount,
                             bestOffer?.interestRate || 12.5,
                             financeTerm
-                          ))}
+                          ), 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                         </div>
                       </div>
                     </div>
@@ -773,10 +766,10 @@ const Financing: React.FC = () => {
                               {offer.term}
                             </td>
                             <td className="text-right py-3 px-4 font-medium text-gray-900 dark:text-white">
-                              {formatCurrency(monthly)}
+                              {formatCurrency(monthly, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                             </td>
                             <td className="text-right py-3 px-4 text-gray-700 dark:text-gray-300">
-                              {formatCurrency(total)}
+                              {formatCurrency(total, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                             </td>
                             <td className="text-center py-3 px-4">
                               <button
@@ -928,10 +921,10 @@ const Financing: React.FC = () => {
                                   <div className="text-2xl mb-2">💰</div>
                                   <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Amount</div>
                                   <div className="text-lg font-extrabold text-gray-900 dark:text-white">
-                                    {formatCurrency(offer.amount)}
+                                    {formatCurrency(offer.amount, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                   </div>
                                   <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                                    Up to {formatCurrency(offer.maxAmount)}
+                                    Up to {formatCurrency(offer.maxAmount, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                   </div>
                                 </div>
                                 
@@ -961,7 +954,7 @@ const Financing: React.FC = () => {
                                   <div className="text-2xl mb-2">💸</div>
                                   <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Monthly</div>
                                   <div className="text-lg font-extrabold text-gray-900 dark:text-white">
-                                    {formatCurrency(monthlyPayment)}
+                                    {formatCurrency(monthlyPayment, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                   </div>
                                   <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
                                     {financeTerm} months
@@ -973,13 +966,13 @@ const Financing: React.FC = () => {
                                 <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-indigo-300 dark:border-indigo-700 text-center">
                                   <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">📊 Total Cost</div>
                                   <div className="text-base font-extrabold text-gray-900 dark:text-white">
-                                    {formatCurrency(totalCost)}
+                                    {formatCurrency(totalCost, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                   </div>
                                 </div>
                                 <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-pink-300 dark:border-pink-700 text-center">
                                   <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">💵 Extra Cost</div>
                                   <div className="text-base font-extrabold text-gray-900 dark:text-white">
-                                    {formatCurrency(totalInterest)}
+                                    {formatCurrency(totalInterest, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                   </div>
                                 </div>
                               </div>
@@ -1222,7 +1215,7 @@ const Financing: React.FC = () => {
                               <div className="text-2xl mb-1">💰</div>
                               <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Money Asked</div>
                               <div className="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white">
-                                {formatCurrency(app.amount)}
+                                {formatCurrency(app.amount, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                               </div>
                             </div>
                             <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-green-300 dark:border-green-700 text-center shadow-md">
@@ -1255,7 +1248,7 @@ const Financing: React.FC = () => {
                                 <div>
                                   <div className="text-sm font-bold text-green-800 dark:text-green-200 mb-1">✅ You Got It!</div>
                                   <div className="text-lg font-extrabold text-green-900 dark:text-green-100">
-                                    Approved: {formatCurrency(app.approved_amount)}
+                                    Approved: {formatCurrency(app.approved_amount, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                                   </div>
                                 </div>
                               </div>
@@ -1338,7 +1331,7 @@ const Financing: React.FC = () => {
                 <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                   <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Requested Amount</div>
                   <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {formatCurrency(selectedApplication.amount)}
+                    {formatCurrency(selectedApplication.amount, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                   </div>
                 </div>
                 <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
@@ -1375,7 +1368,7 @@ const Financing: React.FC = () => {
                     <span className="text-sm font-semibold text-success-900 dark:text-success-100">Approved</span>
                   </div>
                   <div className="text-lg font-bold text-success-900 dark:text-success-100">
-                    Approved Amount: {formatCurrency(selectedApplication.approved_amount)}
+                    Approved Amount: {formatCurrency(selectedApplication.approved_amount, 'USD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                   </div>
                 </div>
               )}

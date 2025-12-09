@@ -89,15 +89,98 @@ const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '', cou
     try {
       setLoading(true);
       
-      const [suppliersData, pricingData, infrastructureData] = await Promise.all([
-        getRwandaSuppliers(),
-        getRwandaPricing(),
-        getRwandaInfrastructure()
-      ]);
-      
-      setSuppliers(suppliersData);
-      setPricing(pricingData);
-      setInfrastructure(infrastructureData);
+      // Fetch from database first, fallback to JSON files only for Rwanda
+      try {
+        const [dbSuppliers, dbPricing, dbInfrastructure] = await Promise.all([
+          unifiedApi.countries.getSuppliers(countryCode),
+          unifiedApi.countries.getPricing(countryCode),
+          unifiedApi.countries.getInfrastructure(countryCode)
+        ]);
+
+        // Transform database data
+        if (dbSuppliers.length > 0) {
+          setSuppliers(dbSuppliers.map((s: any) => ({
+            id: s.id,
+            countryCode: countryCode as any,
+            name: s.name,
+            category: s.category,
+            location: s.location,
+            region: s.region || '',
+            contact: {
+              email: s.email || '',
+              phone: s.phone || '',
+              website: s.website,
+              address: s.address
+            },
+            services: s.services || [],
+            materials: s.materials || [],
+            certifications: s.certifications || [],
+            verified: s.verified || false,
+            rating: s.rating,
+            dataSource: s.data_source || 'user_contributed',
+            description: s.description
+          })));
+        }
+
+        if (dbPricing.length > 0) {
+          setPricing(dbPricing.map((p: any) => ({
+            countryCode: countryCode as any,
+            category: p.category,
+            item: p.item,
+            price: parseFloat(p.price),
+            currency: p.currency,
+            unit: p.unit,
+            region: p.region,
+            trend: p.trend,
+            previousPrice: p.previous_price ? parseFloat(p.previous_price) : undefined,
+            notes: p.notes,
+            source: p.source,
+            lastUpdated: p.last_updated
+          })));
+        }
+
+        if (dbInfrastructure.length > 0) {
+          setInfrastructure(dbInfrastructure.map((infra: any) => ({
+            id: infra.id,
+            countryCode: countryCode as any,
+            type: infra.type,
+            name: infra.name,
+            location: infra.location,
+            coordinates: infra.latitude && infra.longitude ? [infra.latitude, infra.longitude] : undefined,
+            capacity: infra.capacity || '',
+            services: infra.services || [],
+            operatingHours: infra.operating_hours,
+            contact: {
+              email: infra.email || '',
+              phone: infra.phone || '',
+              website: infra.website,
+              address: infra.address
+            },
+            seasonalNotes: infra.seasonal_notes,
+            status: infra.status,
+            lastUpdated: infra.last_updated
+          })));
+        }
+      } catch (dbError) {
+        // Fallback to JSON files only for Rwanda
+        if (countryCode === 'RW') {
+          console.log('Database fetch failed, using JSON files:', dbError);
+          const [suppliersData, pricingData, infrastructureData] = await Promise.all([
+            getRwandaSuppliers(),
+            getRwandaPricing(),
+            getRwandaInfrastructure()
+          ]);
+          
+          setSuppliers(suppliersData);
+          setPricing(pricingData);
+          setInfrastructure(infrastructureData);
+        } else {
+          // For other countries, use empty arrays
+          setSuppliers([]);
+          setPricing([]);
+          setInfrastructure([]);
+        }
+      }
       
       // Generate smart insights
       generateRecommendations(suppliersData, pricingData, infrastructureData);

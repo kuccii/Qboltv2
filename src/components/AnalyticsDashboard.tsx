@@ -28,7 +28,7 @@ import { usePWA } from '../utils/pwa';
 import { unifiedApi } from '../services/unifiedApi';
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
-import HeaderStrip from './HeaderStrip';
+// Removed HeaderStrip - using custom playful header
 import {
   AppLayout,
   PageLayout,
@@ -268,78 +268,98 @@ const AnalyticsDashboard: React.FC = () => {
     { dataKey: 'revenue', color: '#10B981', name: 'Revenue (K)' },
   ];
 
+  // Use analyticsData with fallback
+  const displayData = analyticsData || {
+    totalRevenue: 0,
+    totalOrders: 0,
+    activeSuppliers: 0,
+    priceTrends: []
+  };
+
+  // Format number helper
+  const formatNumber = (num: number): string => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M';
+    } else if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toString();
+  };
+
   return (
     <AppLayout>
-      <HeaderStrip 
-        title="Analytics Dashboard"
-        subtitle="Comprehensive insights into your supply chain performance"
-        chips={[
-          { label: 'Total Shipments', value: data.totalOrders, variant: 'info' },
-          { label: 'Active Suppliers', value: data.activeSuppliers, variant: 'info' },
-          { label: 'Price Points', value: data.priceTrends.length, variant: 'success' },
-        ]}
-        right={
-          <div className="flex items-center gap-3">
+      <PageLayout>
+        {/* Super Important Header - Make Analytics Feel Important! */}
+        <div className="mb-6 p-6 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 rounded-2xl shadow-xl border-4 border-purple-300 dark:border-purple-700">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex-1">
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 flex items-center gap-3">
+                <span className="text-4xl sm:text-5xl">📊</span>
+                <span>Your Business Superpowers! 🚀</span>
+              </h1>
+              <p className="text-purple-100 text-sm sm:text-base font-medium mb-3">
+                See everything about your business in one place! Know what's working, what's not, and how to make more money! 💰
+              </p>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+                  <div className="text-white text-xs font-bold">💰 Money Made</div>
+                  <div className="text-white text-lg font-extrabold">
+                    {displayData.totalRevenue > 0 ? `$${formatNumber(displayData.totalRevenue)}` : 'Start Trading!'}
+                  </div>
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+                  <div className="text-white text-xs font-bold">📦 Orders</div>
+                  <div className="text-white text-lg font-extrabold">
+                    {formatNumber(displayData.totalOrders)}
+                  </div>
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+                  <div className="text-white text-xs font-bold">👥 Suppliers</div>
+                  <div className="text-white text-lg font-extrabold">
+                    {formatNumber(displayData.activeSuppliers)}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-4">
             <SelectInput
               value={selectedPeriod}
               onChange={setSelectedPeriod}
               options={[
-                { value: '7d', label: 'Last 7 days' },
-                { value: '30d', label: 'Last 30 days' },
-                { value: '90d', label: 'Last 90 days' },
-                { value: '1y', label: 'Last year' }
+                { value: '7d', label: '📅 Last 7 days' },
+                { value: '30d', label: '📅 Last 30 days' },
+                { value: '90d', label: '📅 Last 90 days' },
+                { value: '1y', label: '📅 Last year' }
               ]}
-              className="w-40"
+              className="w-40 bg-white border-4 border-purple-300 rounded-xl font-bold"
             />
             <button
               onClick={handleRefresh}
               disabled={isRefreshing || !isOnline}
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white text-purple-600 rounded-xl hover:bg-purple-50 disabled:opacity-50 shadow-lg transform hover:scale-105 transition-all"
             >
-              <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
-              Refresh
+              <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              🔄 Refresh
             </button>
             <ActionMenu
               items={[
-                {
-                  label: 'Export CSV',
-                  icon: <FileText className="h-4 w-4" />,
-                  onClick: handleExport
-                },
-                {
-                  label: 'Export PDF',
-                  icon: <FileText className="h-4 w-4" />,
-                  onClick: () => {
-                    // TODO: Implement PDF export
-                    alert('PDF export coming soon');
-                  }
-                },
-                {
-                  label: 'Export Image',
-                  icon: <ImageIcon className="h-4 w-4" />,
-                  onClick: () => {
-                    // TODO: Implement image export
-                    alert('Image export coming soon');
-                  }
-                },
-                {
-                  label: 'Export Excel',
-                  icon: <FileSpreadsheet className="h-4 w-4" />,
-                  onClick: () => {
-                    // TODO: Implement Excel export
-                    alert('Excel export coming soon');
-                  }
-                }
+                { label: '📥 Export CSV', icon: <FileText className="h-4 w-4" />, onClick: handleExport },
+                { label: '📄 Export PDF', icon: <FileText className="h-4 w-4" />, onClick: () => alert('PDF export coming soon!') },
+                { label: '🖼️ Export Image', icon: <ImageIcon className="h-4 w-4" />, onClick: () => alert('Image export coming soon!') },
+                { label: '📊 Export Excel', icon: <FileSpreadsheet className="h-4 w-4" />, onClick: () => alert('Excel export coming soon!') }
               ]}
               size="sm"
             />
+            {!isOnline && (
+              <div className="px-3 py-2 bg-yellow-400 text-yellow-900 rounded-xl text-xs font-bold border-2 border-yellow-500">
+                ⚠️ Offline
+              </div>
+            )}
           </div>
-        }
-        status={isOnline ? { kind: 'live' } : { kind: 'offline' }}
-      />
-
-      <PageLayout maxWidth="full" padding="none">
-        <div className="px-10 md:px-14 lg:px-20 py-8 space-y-8">
+        </div>
+      
+        <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           {/* Offline Indicator */}
           {!isOnline && (
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
@@ -386,95 +406,111 @@ const AnalyticsDashboard: React.FC = () => {
 
           {/* Key Metrics */}
           {!loading && (
-            <>
-              {/* Tab Navigation */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-                <div className="flex items-center border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
+              {/* Playful Tab Navigation */}
+              <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-blue-200 dark:border-blue-700 p-2">
+                <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
                   <button
                     onClick={() => setSelectedTab('overview')}
-                    className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                    className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                       selectedTab === 'overview'
-                        ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                        : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg border-2 border-blue-300'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
                     }`}
                   >
                     <div className="flex items-center gap-2">
-                      <BarChart3 className="h-4 w-4" />
-                      Overview
+                      <span className="text-lg">📊</span>
+                      <span>Overview</span>
                     </div>
                   </button>
                   <button
                     onClick={() => setSelectedTab('prices')}
-                    className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                    className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                       selectedTab === 'prices'
-                        ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                        : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                        ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg border-2 border-green-300'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-green-50 dark:hover:bg-green-900/20'
                     }`}
                   >
                     <div className="flex items-center gap-2">
-                      <DollarSign className="h-4 w-4" />
-                      Prices
+                      <span className="text-lg">💰</span>
+                      <span>Prices</span>
                     </div>
                   </button>
                   <button
                     onClick={() => setSelectedTab('suppliers')}
-                    className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                    className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                       selectedTab === 'suppliers'
-                        ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                        : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg border-2 border-purple-300'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-purple-50 dark:hover:bg-purple-900/20'
                     }`}
                   >
                     <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4" />
-                      Suppliers
+                      <span className="text-lg">👥</span>
+                      <span>Suppliers</span>
                     </div>
                   </button>
                   <button
                     onClick={() => setSelectedTab('logistics')}
-                    className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                    className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                       selectedTab === 'logistics'
-                        ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                        : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg border-2 border-orange-300'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-orange-50 dark:hover:bg-orange-900/20'
                     }`}
                   >
                     <div className="flex items-center gap-2">
-                      <Package className="h-4 w-4" />
-                      Logistics
+                      <span className="text-lg">🚚</span>
+                      <span>Logistics</span>
                     </div>
                   </button>
                   <button
                     onClick={() => setSelectedTab('risk')}
-                    className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                    className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                       selectedTab === 'risk'
-                        ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                        : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                        ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg border-2 border-red-300'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-red-50 dark:hover:bg-red-900/20'
                     }`}
                   >
                     <div className="flex items-center gap-2">
-                      <AlertTriangle className="h-4 w-4" />
-                      Risk
+                      <span className="text-lg">🛡️</span>
+                      <span>Risk</span>
                     </div>
                   </button>
                   <button
                     onClick={() => setSelectedTab('documents')}
-                    className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                    className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                       selectedTab === 'documents'
-                        ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                        : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                        ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg border-2 border-pink-300'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-pink-50 dark:hover:bg-pink-900/20'
                     }`}
                   >
                     <div className="flex items-center gap-2">
-                      <FileText className="h-4 w-4" />
-                      Documents
+                      <span className="text-lg">📄</span>
+                      <span>Documents</span>
                     </div>
                   </button>
                 </div>
+              </div>
 
-                <div className="p-6">
-                  {/* Filters and Controls */}
-                  <div className="mb-6">
-                    <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-4">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-6">
+                {/* Tab Content */}
+                {selectedTab === 'overview' && (
+                  <div>
+                    <div className="mb-6 p-4 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-xl border-4 border-blue-300 dark:border-blue-700">
+                      <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                        <span>🎯</span>
+                        <span>Why This Page is SUPER Important! 💪</span>
+                      </h2>
+                      <p className="text-base text-gray-700 dark:text-gray-300 font-medium">
+                        This page shows you <strong>everything</strong> about your business! 
+                        See how much money you're making, which suppliers are best, 
+                        what prices are doing, and so much more! 
+                        Use this to make smart decisions and grow your business! 🚀
+                      </p>
+                    </div>
+                    
+                    {/* Filters and Controls */}
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-4">
                     <button
                       onClick={() => setShowFilters(!showFilters)}
                       className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
@@ -560,105 +596,103 @@ const AnalyticsDashboard: React.FC = () => {
                       </div>
                     </div>
                   )}
-                  </div>
-
-                  {/* Tab Content */}
-                  {selectedTab === 'overview' && (
-                    <div className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <MetricCard
-                  title="Total Shipments"
-                  value={data.totalOrders}
-                  growth={data.orderGrowth}
-                  icon={Package}
-                  format="number"
-                />
-                <MetricCard
-                  title="Active Suppliers"
-                  value={data.activeSuppliers}
-                  growth={data.supplierGrowth}
-                  icon={Users}
-                  format="number"
-                />
-                <MetricCard
-                  title="Price Points Tracked"
-                  value={data.priceTrends.length > 0 ? data.priceTrends.reduce((sum: number, item: any) => {
-                    return sum + Object.keys(item).filter(k => k !== 'date').length;
-                  }, 0) : 0}
-                  growth={0}
-                  icon={DollarSign}
-                  format="number"
-                />
-                <MetricCard
-                  title="Materials Tracked"
-                  value={industryConfig?.materials?.length || (currentIndustry === 'construction' ? 5 : 5)}
-                  growth={0}
-                  icon={BarChart3}
-                  format="number"
-                />
-              </div>
-
-              {/* Charts Section */}
-              {data.priceTrends.length > 0 && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Price Trends Chart */}
-                  <EnhancedChart
-                    data={data.priceTrends}
-                    config={priceChartConfig}
-                    type={selectedChartType}
-                    title="Price Trends"
-                    subtitle="Material prices over time"
-                    height={400}
-                    showTrend={true}
-                  />
-
-                  {/* Market Share Chart */}
-                  {data.marketShare.length > 0 && (
-                    <EnhancedChart
-                      data={data.marketShare}
-                      config={[]}
-                      type="pie"
-                      title="Market Share"
-                      subtitle="Distribution by category"
-                      height={400}
-                    />
-                  )}
-                </div>
-              )}
-
-              {/* Supplier Performance */}
-              {data.supplierPerformance.length > 0 && (
-                <EnhancedChart
-                  data={data.supplierPerformance}
-                  config={supplierChartConfig}
-                  type="bar"
-                  title="Supplier Performance"
-                          subtitle="Top performing suppliers by activity and ratings"
-                  height={400}
-                />
-              )}
-
-              {/* Regional Analysis */}
-              {data.regionalData.length > 0 && (
-                <EnhancedChart
-                  data={data.regionalData}
-                  config={regionalChartConfig}
-                  type="bar"
-                  title="Regional Analysis"
-                  subtitle="Performance by region"
-                  height={400}
-                />
-              )}
-
-                      {/* Chart Type Selector */}
-                      <div className="flex justify-center">
-                        <ChartTypeSelector
-                          selectedType={selectedChartType}
-                          onTypeChange={setSelectedChartType}
-                        />
-                      </div>
                     </div>
-                  )}
+
+                    {/* Key Metrics Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <MetricCard
+                        title="Total Shipments"
+                        value={displayData.totalOrders}
+                        growth={displayData.orderGrowth}
+                        icon={Package}
+                        format="number"
+                      />
+                      <MetricCard
+                        title="Active Suppliers"
+                        value={displayData.activeSuppliers}
+                        growth={displayData.supplierGrowth}
+                        icon={Users}
+                        format="number"
+                      />
+                      <MetricCard
+                        title="Price Points Tracked"
+                        value={displayData.priceTrends.length > 0 ? displayData.priceTrends.reduce((sum: number, item: any) => {
+                          return sum + Object.keys(item).filter(k => k !== 'date').length;
+                        }, 0) : 0}
+                        growth={0}
+                        icon={DollarSign}
+                        format="number"
+                      />
+                      <MetricCard
+                        title="Materials Tracked"
+                        value={industryConfig?.materials?.length || (currentIndustry === 'construction' ? 5 : 5)}
+                        growth={0}
+                        icon={BarChart3}
+                        format="number"
+                      />
+                    </div>
+
+                    {/* Charts Section */}
+                    {displayData.priceTrends.length > 0 && (
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* Price Trends Chart */}
+                        <EnhancedChart
+                          data={displayData.priceTrends}
+                          config={priceChartConfig}
+                          type={selectedChartType}
+                          title="Price Trends"
+                          subtitle="Material prices over time"
+                          height={400}
+                          showTrend={true}
+                        />
+
+                        {/* Market Share Chart */}
+                        {displayData.marketShare.length > 0 && (
+                          <EnhancedChart
+                            data={displayData.marketShare}
+                            config={[]}
+                            type="pie"
+                            title="Market Share"
+                            subtitle="Distribution by category"
+                            height={400}
+                          />
+                        )}
+                      </div>
+                    )}
+
+                    {/* Supplier Performance */}
+                    {displayData.supplierPerformance.length > 0 && (
+                      <EnhancedChart
+                        data={displayData.supplierPerformance}
+                        config={supplierChartConfig}
+                        type="bar"
+                        title="Supplier Performance"
+                        subtitle="Top performing suppliers by activity and ratings"
+                        height={400}
+                      />
+                    )}
+
+                    {/* Regional Analysis */}
+                    {displayData.regionalData.length > 0 && (
+                      <EnhancedChart
+                        data={displayData.regionalData}
+                        config={regionalChartConfig}
+                        type="bar"
+                        title="Regional Analysis"
+                        subtitle="Performance by region"
+                        height={400}
+                      />
+                    )}
+
+                    {/* Chart Type Selector */}
+                    <div className="flex justify-center">
+                      <ChartTypeSelector
+                        selectedType={selectedChartType}
+                        onTypeChange={setSelectedChartType}
+                      />
+                    </div>
+                  </div>
+                )}
 
                   {selectedTab === 'prices' && (
                     <div className="space-y-6">
@@ -701,7 +735,7 @@ const AnalyticsDashboard: React.FC = () => {
                             <Activity className="h-5 w-5 text-primary-600" />
                           </div>
                           <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                            {data.priceTrends.length > 0 ? 'Medium' : 'N/A'}
+                            {displayData.priceTrends.length > 0 ? 'Medium' : 'N/A'}
                           </div>
                           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Based on recent trends</p>
                         </div>
@@ -779,8 +813,8 @@ const AnalyticsDashboard: React.FC = () => {
                             <BarChart3 className="h-5 w-5 text-primary-600" />
                           </div>
                           <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                            {data.supplierPerformance.length > 0 
-                              ? (data.supplierPerformance.reduce((sum: number, s: any) => sum + (s.rating || 0), 0) / data.supplierPerformance.length).toFixed(1)
+                            {displayData.supplierPerformance.length > 0 
+                              ? (displayData.supplierPerformance.reduce((sum: number, s: any) => sum + (s.rating || 0), 0) / displayData.supplierPerformance.length).toFixed(1)
                               : '0.0'}
                           </div>
                           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Out of 5.0</p>
@@ -1003,7 +1037,7 @@ const AnalyticsDashboard: React.FC = () => {
                   )}
                 </div>
               </div>
-            </>
+            </div>
           )}
         </div>
       </PageLayout>

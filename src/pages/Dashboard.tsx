@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   TrendingUp, 
   Users, 
@@ -24,7 +25,11 @@ import {
   Briefcase,
   Wifi,
   WifiOff,
-  Package
+  Package,
+  FileText,
+  Wallet,
+  Map,
+  Search
 } from 'lucide-react';
 import { useIndustry } from '../contexts/IndustryContext';
 import { useExport } from '../hooks/useExport';
@@ -378,6 +383,71 @@ const Dashboard: React.FC = () => {
                 <Plus className="h-4 w-4" /> Tour
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions Section */}
+      <div className="px-3 sm:px-4 md:px-6 py-4">
+        <div className="bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 dark:from-yellow-900/20 dark:via-orange-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-yellow-300 dark:border-yellow-700 p-4 sm:p-5">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <span>⚡</span>
+            <span>Quick Actions - Get Things Done Fast! 🚀</span>
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+            {/* View Prices */}
+            <button
+              onClick={() => navigate('/app/countries/rw/pricing')}
+              className="bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-blue-300 dark:border-blue-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            >
+              <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8" />
+              <span className="text-xs sm:text-sm font-bold text-center">💰 Prices</span>
+            </button>
+
+            {/* Find Suppliers */}
+            <button
+              onClick={() => navigate('/app/countries/rw/contacts')}
+              className="bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-green-300 dark:border-green-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            >
+              <Users className="h-6 w-6 sm:h-8 sm:w-8" />
+              <span className="text-xs sm:text-sm font-bold text-center">👥 Suppliers</span>
+            </button>
+
+            {/* Apply for Financing */}
+            <button
+              onClick={() => navigate('/app/financing')}
+              className="bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-purple-300 dark:border-purple-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            >
+              <Wallet className="h-6 w-6 sm:h-8 sm:w-8" />
+              <span className="text-xs sm:text-sm font-bold text-center">💳 Financing</span>
+            </button>
+
+            {/* Risk Alerts */}
+            <button
+              onClick={() => navigate('/app/risk')}
+              className="bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-red-300 dark:border-red-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            >
+              <Shield className="h-6 w-6 sm:h-8 sm:w-8" />
+              <span className="text-xs sm:text-sm font-bold text-center">🛡️ Risk</span>
+            </button>
+
+            {/* View Documents */}
+            <button
+              onClick={() => navigate('/app/documents')}
+              className="bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-indigo-300 dark:border-indigo-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            >
+              <FileText className="h-6 w-6 sm:h-8 sm:w-8" />
+              <span className="text-xs sm:text-sm font-bold text-center">📄 Documents</span>
+            </button>
+
+            {/* Track Demand */}
+            <button
+              onClick={() => navigate('/app/demand')}
+              className="bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-orange-300 dark:border-orange-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            >
+              <Map className="h-6 w-6 sm:h-8 sm:w-8" />
+              <span className="text-xs sm:text-sm font-bold text-center">🗺️ Demand</span>
+            </button>
           </div>
         </div>
       </div>

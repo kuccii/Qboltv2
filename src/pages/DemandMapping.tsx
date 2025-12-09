@@ -38,7 +38,7 @@ import {
 import HeatMapChart from '../components/HeatMapChart';
 // Removed mock data import - using real data from API
 import { unifiedApi } from '../services/unifiedApi';
-import HeaderStrip from '../components/HeaderStrip';
+// Removed HeaderStrip - using custom playful header
 import {
   getEastAfricaExportPotential,
   getEastAfricaTradeData,
@@ -579,41 +579,57 @@ const DemandMapping: React.FC = () => {
 
   return (
     <AppLayout>
-      <HeaderStrip 
-        title="Demand Mapping for East Africa"
-        subtitle="Visualize regional demand patterns and identify market opportunities across East Africa"
-        chips={[
-          { label: 'Regions', value: regionDetails.length, variant: 'info' },
-          { label: 'Data Points', value: filteredData.length, variant: 'info' },
-        ]}
-        right={
-          <div className="flex items-center gap-3">
+      <PageLayout>
+        {/* Playful Header */}
+        <div className="mb-6 p-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl shadow-xl border-4 border-blue-300 dark:border-blue-700">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 flex items-center gap-3">
+                <span className="text-4xl sm:text-5xl">🗺️</span>
+                <span>Find Where Things Are Needed! 🌍</span>
+              </h1>
+              <p className="text-blue-100 text-sm sm:text-base font-medium">
+                See where people want to buy stuff across East Africa! 🎯
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+                <div className="text-white text-xs font-bold">📍 Regions</div>
+                <div className="text-white text-lg font-extrabold">{regionDetails.length}</div>
+              </div>
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+                <div className="text-white text-xs font-bold">📊 Data Points</div>
+                <div className="text-white text-lg font-extrabold">{filteredData.length}</div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-4">
             <button
               onClick={handleRefresh}
               disabled={demandLoading}
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white text-blue-600 rounded-xl hover:bg-blue-50 disabled:opacity-50 shadow-lg transform hover:scale-105 transition-all"
             >
               <RefreshCw className={`h-4 w-4 ${demandLoading ? 'animate-spin' : ''}`} />
-              Refresh
+              🔄 Refresh
             </button>
             <button
               onClick={() => setShowItcData(!showItcData)}
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl transition-all shadow-lg transform hover:scale-105 ${
                 showItcData
-                  ? 'bg-blue-100 text-blue-700 border border-blue-300 dark:bg-blue-900/20 dark:text-blue-400'
-                  : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300'
+                  ? 'bg-green-500 text-white border-2 border-green-300'
+                  : 'bg-white text-gray-700 border-2 border-gray-300 hover:bg-gray-50'
               }`}
               title="Toggle ITC (Export Potential Map & Trade Map) data"
             >
               <Globe className="h-4 w-4" />
-              ITC Data {showItcData ? 'ON' : 'OFF'}
+              🌐 ITC Data {showItcData ? 'ON ✅' : 'OFF'}
             </button>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white text-purple-600 rounded-xl hover:bg-purple-50 border-2 border-purple-300 shadow-lg transform hover:scale-105 transition-all"
             >
               <Filter className="h-4 w-4" />
-              Filters
+              🔍 Filters
             </button>
             <ActionMenu
               items={[
@@ -623,54 +639,53 @@ const DemandMapping: React.FC = () => {
               size="sm"
             />
           </div>
-        }
-      />
+        </div>
       
-      <PageLayout maxWidth="full" padding="none">
-        <div className="px-10 md:px-14 lg:px-20 py-8 space-y-8">
-          {/* Tab Navigation */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide">
+        <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+          {/* Playful Tab Navigation */}
+          <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-blue-200 dark:border-blue-700 p-2">
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
               <button
                 onClick={() => setSelectedTab('demand')}
-                className={`px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
+                className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                   selectedTab === 'demand'
-                    ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                    : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg border-2 border-blue-300'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
                 }`}
               >
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <MapIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🗺️</span>
                   <span>Demand Map</span>
                 </div>
               </button>
               <button
                 onClick={() => setSelectedTab('itc-export')}
-                className={`px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
+                className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                   selectedTab === 'itc-export'
-                    ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                    : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                    ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg border-2 border-purple-300'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-purple-50 dark:hover:bg-purple-900/20'
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <Globe className="h-4 w-4" />
-                  ITC Export Map
+                  <span className="text-lg">🌐</span>
+                  <span>Export Map</span>
                 </div>
               </button>
               <button
                 onClick={() => setSelectedTab('trade-data')}
-                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                   selectedTab === 'trade-data'
-                    ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                    : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                    ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg border-2 border-pink-300'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-pink-50 dark:hover:bg-pink-900/20'
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4" />
-                  Trade Data
+                  <span className="text-lg">📊</span>
+                  <span>Trade Data</span>
                 </div>
               </button>
             </div>
+          </div>
 
             <div className="p-6">
               {/* Tab Content */}
@@ -947,7 +962,6 @@ const DemandMapping: React.FC = () => {
               )}
             </div>
           </div>
-        </div>
       </PageLayout>
     </AppLayout>
   );

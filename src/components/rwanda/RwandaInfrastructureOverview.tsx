@@ -55,7 +55,7 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
       
       // Fetch from database first, fallback to JSON files
       try {
-        const dbInfrastructure = await unifiedApi.countries.getInfrastructure('RW', {
+        const dbInfrastructure = await unifiedApi.countries.getInfrastructure(countryCode, {
           type: selectedType !== 'all' ? selectedType : undefined,
           search: searchTerm || undefined
         });
@@ -82,23 +82,13 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
             lastUpdated: infra.last_updated
           })));
         } else {
-          // Fallback to JSON files (only for Rwanda)
-          if (countryCode === 'RW') {
-            const infrastructureData = await getRwandaInfrastructure();
-            setInfrastructure(infrastructureData);
-          } else {
-            setInfrastructure([]);
-          }
-        }
-      } catch (dbError) {
-        // Fallback to JSON files (only for Rwanda)
-        console.log('Database fetch failed, using JSON files:', dbError);
-        if (countryCode === 'RW') {
-          const infrastructureData = await getRwandaInfrastructure();
-          setInfrastructure(infrastructureData);
-        } else {
+          // No database data - show empty state with helpful message
           setInfrastructure([]);
         }
+      } catch (dbError) {
+        // Database error - show empty state
+        console.log('Database fetch failed:', dbError);
+        setInfrastructure([]);
       }
     } catch (err) {
       setError('Failed to load infrastructure data');

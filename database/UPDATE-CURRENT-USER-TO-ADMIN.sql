@@ -33,3 +33,4 @@ SELECT
 FROM public.user_profiles
 WHERE role = 'admin';
 
+
