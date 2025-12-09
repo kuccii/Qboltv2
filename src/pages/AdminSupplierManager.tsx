@@ -572,6 +572,8 @@ const AdminSupplierManager: React.FC = () => {
           )}
         </div>
       </AdminCard>
+        </div>
+      </div>
     </div>
   );
 };
