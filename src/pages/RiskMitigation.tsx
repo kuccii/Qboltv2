@@ -687,28 +687,29 @@ const RiskMitigation: React.FC = () => {
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="flex border-b-2 border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
               {[
-                { id: 'overview', label: 'Overview', icon: <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.totalAlerts },
-                { id: 'alerts', label: 'Alerts', icon: <Bell className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.totalAlerts, urgent: riskMetrics.highRisk },
-                { id: 'timeline', label: 'Timeline', icon: <History className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> },
-                { id: 'insurance', label: 'Insurance', icon: <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.insuranceCoverage.coverageGaps },
-                { id: 'playbooks', label: 'Playbooks', icon: <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> }
+                { id: 'overview', label: 'Overview', emoji: '📊', icon: <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.totalAlerts },
+                { id: 'alerts', label: 'Alerts', emoji: '🚨', icon: <Bell className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.totalAlerts, urgent: riskMetrics.highRisk },
+                { id: 'timeline', label: 'Timeline', emoji: '📅', icon: <History className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> },
+                { id: 'insurance', label: 'Insurance', emoji: '🛡️', icon: <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.insuranceCoverage.coverageGaps },
+                { id: 'playbooks', label: 'Playbooks', emoji: '📚', icon: <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> }
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setSelectedTab(tab.id as any)}
-                  className={`flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 md:px-4 lg:px-6 py-2.5 sm:py-3 md:py-4 font-bold text-xs sm:text-sm transition-colors whitespace-nowrap relative flex-shrink-0 ${
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 lg:px-6 py-3 sm:py-3.5 md:py-4 font-bold text-xs sm:text-sm transition-all whitespace-nowrap relative flex-shrink-0 transform hover:scale-105 ${
                     selectedTab === tab.id
-                      ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                      ? 'text-primary-600 dark:text-primary-400 border-b-4 border-primary-600 dark:border-primary-400 bg-primary-50/50 dark:bg-primary-900/20'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                   }`}
                 >
+                  <span className="text-base sm:text-lg">{tab.emoji}</span>
                   {tab.icon}
                   <span>{tab.label}</span>
                   {tab.badge !== undefined && tab.badge > 0 && (
-                    <span className={`ml-1 px-1.5 py-0.5 text-xs font-bold rounded-full ${
+                    <span className={`ml-1.5 px-2 py-1 text-xs font-bold rounded-full shadow-md ${
                       tab.urgent && tab.urgent > 0
-                        ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
-                        : 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
+                        ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white animate-pulse'
+                        : 'bg-gradient-to-r from-primary-500 to-purple-500 text-white'
                     }`}>
                       {tab.badge}
                     </span>

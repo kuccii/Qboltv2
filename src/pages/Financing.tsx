@@ -1140,124 +1140,147 @@ const Financing: React.FC = () => {
             {/* Applications Tab */}
             {selectedTab === 'applications' && (
               <SectionLayout 
-                title="Your Financing Applications" 
-                subtitle={`${applications.length} application${applications.length !== 1 ? 's' : ''} total`}
+                title="📝 Your Money Applications!" 
+                subtitle={`🎯 You've asked for money ${applications.length} time${applications.length !== 1 ? 's' : ''}! Let's see how they're doing!`}
               >
                 {applicationsLoading ? (
-                  <div className="flex items-center justify-center py-12">
-                    <RefreshCw className="h-8 w-8 animate-spin text-primary-600 mx-auto mb-2" />
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Loading applications...</p>
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <RefreshCw className="h-12 w-12 animate-spin text-primary-600 mb-4" />
+                    <p className="text-base font-semibold text-gray-600 dark:text-gray-400">Loading your applications... ⏳</p>
                   </div>
                 ) : applications.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-12">
-                    <FileText className="h-16 w-16 text-gray-400 mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Applications Yet</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 text-center max-w-md">
-                      You haven't submitted any financing applications. Browse available offers and apply when you're ready.
+                  <div className="flex flex-col items-center justify-center py-16 px-4">
+                    <div className="text-8xl mb-6">📭</div>
+                    <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-3">No Applications Yet! 😊</h3>
+                    <p className="text-base text-gray-600 dark:text-gray-400 mb-6 text-center max-w-md font-medium">
+                      You haven't asked for money yet! Browse the awesome offers and pick one you like! 🎯
                     </p>
                     <button
                       onClick={() => setSelectedTab('offers')}
-                      className="px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                      className="px-6 py-3 text-base font-bold bg-gradient-to-r from-primary-500 to-purple-600 text-white rounded-xl hover:from-primary-600 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg flex items-center gap-2"
                     >
-                      Browse Offers
+                      <span>💎</span>
+                      <span>Browse Awesome Offers!</span>
+                      <ChevronRight size={18} />
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {applications.map((app) => (
-                      <div 
-                        key={app.id} 
-                        className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:border-primary-300 dark:hover:border-primary-700 transition-all cursor-pointer"
-                        onClick={() => {
-                          setSelectedApplication(app);
-                          setShowApplicationModal(true);
-                        }}
-                      >
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-                                <Wallet className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                  <div className="space-y-4 sm:space-y-6">
+                    {applications.map((app) => {
+                      const statusEmoji = app.status === 'approved' ? '✅' : 
+                                         app.status === 'rejected' ? '❌' : 
+                                         app.status === 'under_review' ? '⏳' : '📋';
+                      const statusColor = app.status === 'approved' ? 'from-green-500 to-emerald-600' : 
+                                         app.status === 'rejected' ? 'from-red-500 to-pink-600' : 
+                                         app.status === 'under_review' ? 'from-yellow-500 to-orange-600' : 'from-blue-500 to-indigo-600';
+                      
+                      return (
+                        <div 
+                          key={app.id} 
+                          className="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 dark:from-gray-800 dark:via-blue-900/20 dark:to-purple-900/20 border-4 border-gray-300 dark:border-gray-600 rounded-2xl p-5 sm:p-6 hover:border-primary-400 dark:hover:border-primary-600 transition-all cursor-pointer transform hover:scale-[1.02] shadow-lg"
+                          onClick={() => {
+                            setSelectedApplication(app);
+                            setShowApplicationModal(true);
+                          }}
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-3">
+                                <div className="p-3 bg-gradient-to-br from-primary-200 to-purple-200 dark:from-primary-900/40 dark:to-purple-900/40 rounded-xl shadow-lg">
+                                  <span className="text-3xl">
+                                    {app.financing_offers?.provider_type === 'bank' ? '🏦' : app.financing_offers?.provider_type === 'fintech' ? '💳' : '💼'}
+                                  </span>
+                                </div>
+                                <div>
+                                  <h3 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
+                                    <span>{statusEmoji}</span>
+                                    <span>{app.financing_offers?.provider_name || app.financing_offers?.name || 'Money Application'}</span>
+                                  </h3>
+                                  <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mt-1">
+                                    {app.financing_offers?.provider_type === 'bank' && '🏦 Bank'} 
+                                    {app.financing_offers?.provider_type === 'fintech' && '💳 Fintech'} 
+                                    {app.financing_offers?.provider_type === 'platform' && '💼 Platform'} Money
+                                  </p>
+                                </div>
                               </div>
-                              <div>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                  {app.financing_offers?.provider_name || app.financing_offers?.name || 'Financing Application'}
-                                </h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  {app.financing_offers?.provider_type === 'bank' && 'Bank'} 
-                                  {app.financing_offers?.provider_type === 'fintech' && 'Fintech'} 
-                                  {app.financing_offers?.provider_type === 'platform' && 'Platform'} Financing
+                              {app.purpose && (
+                                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 bg-white/50 dark:bg-gray-700/50 px-3 py-2 rounded-lg border-2 border-gray-200 dark:border-gray-600">
+                                  <span>💡</span> {app.purpose}
                                 </p>
+                              )}
+                            </div>
+                            <div className={`px-4 py-2 rounded-xl font-bold text-sm sm:text-base bg-gradient-to-r ${statusColor} text-white shadow-lg flex items-center gap-2 flex-shrink-0`}>
+                              <span>{statusEmoji}</span>
+                              <span>{(app.status || 'pending').toUpperCase().replace('_', ' ')}</span>
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-blue-300 dark:border-blue-700 text-center shadow-md">
+                              <div className="text-2xl mb-1">💰</div>
+                              <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Money Asked</div>
+                              <div className="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white">
+                                {formatCurrency(app.amount)}
                               </div>
                             </div>
-                            {app.purpose && (
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{app.purpose}</p>
-                            )}
+                            <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-green-300 dark:border-green-700 text-center shadow-md">
+                              <div className="text-2xl mb-1">⏰</div>
+                              <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Time to Pay</div>
+                              <div className="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white">
+                                {Math.round((app.term_days || 30) / 30)} months
+                              </div>
+                            </div>
+                            <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-purple-300 dark:border-purple-700 text-center shadow-md">
+                              <div className="text-2xl mb-1">📅</div>
+                              <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">When Asked</div>
+                              <div className="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white">
+                                {new Date(app.created_at).toLocaleDateString()}
+                              </div>
+                            </div>
+                            <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-orange-300 dark:border-orange-700 text-center shadow-md">
+                              <div className="text-2xl mb-1">📊</div>
+                              <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Interest</div>
+                              <div className="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white">
+                                {app.financing_offers?.interest_rate ? `${app.financing_offers.interest_rate}%` : 'N/A'}
+                              </div>
+                            </div>
                           </div>
-                          <StatusBadge 
-                            type={
-                              app.status === 'approved' ? 'success' : 
-                              app.status === 'rejected' ? 'error' : 
-                              app.status === 'under_review' ? 'warning' : 
-                              'warning'
-                            } 
-                            text={(app.status || 'pending').toUpperCase().replace('_', ' ')} 
-                          />
+
+                          {app.approved_amount && (
+                            <div className="p-4 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-xl border-4 border-green-400 dark:border-green-700 shadow-lg">
+                              <div className="flex items-center gap-3">
+                                <span className="text-3xl">🎉</span>
+                                <div>
+                                  <div className="text-sm font-bold text-green-800 dark:text-green-200 mb-1">✅ You Got It!</div>
+                                  <div className="text-lg font-extrabold text-green-900 dark:text-green-100">
+                                    Approved: {formatCurrency(app.approved_amount)}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {app.approval_notes && (
+                            <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border-2 border-blue-300 dark:border-blue-700">
+                              <div className="flex items-start gap-2">
+                                <span className="text-xl">📝</span>
+                                <div>
+                                  <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Notes from Them</div>
+                                  <div className="text-sm font-medium text-gray-800 dark:text-gray-200">{app.approval_notes}</div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {app.partner_application_id && (
+                            <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-lg">
+                              <Shield className="h-4 w-4" />
+                              <span>🆔 Partner ID: {app.partner_application_id}</span>
+                            </div>
+                          )}
                         </div>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                          <div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Requested Amount</div>
-                            <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                              {formatCurrency(app.amount)}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Term</div>
-                            <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                              {Math.round((app.term_days || 30) / 30)} months
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Submitted</div>
-                            <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                              {new Date(app.created_at).toLocaleDateString()}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Interest Rate</div>
-                            <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                              {app.financing_offers?.interest_rate ? `${app.financing_offers.interest_rate}%` : 'N/A'}
-                            </div>
-                          </div>
-                        </div>
-
-                        {app.approved_amount && (
-                          <div className="p-3 bg-success-50 dark:bg-success-900/20 rounded-lg border border-success-200 dark:border-success-800">
-                            <div className="flex items-center gap-2">
-                              <CheckCircle className="h-4 w-4 text-success-600 dark:text-success-400" />
-                              <span className="text-sm font-medium text-success-900 dark:text-success-100">
-                                Approved Amount: {formatCurrency(app.approved_amount)}
-                              </span>
-                            </div>
-                          </div>
-                        )}
-
-                        {app.approval_notes && (
-                          <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Notes</div>
-                            <div className="text-sm text-gray-700 dark:text-gray-300">{app.approval_notes}</div>
-                          </div>
-                        )}
-
-                        {app.partner_application_id && (
-                          <div className="mt-3 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                            <Shield className="h-3 w-3" />
-                            <span>Partner Application ID: {app.partner_application_id}</span>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </SectionLayout>
