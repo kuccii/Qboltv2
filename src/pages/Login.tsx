@@ -121,12 +121,17 @@ const Login: React.FC = () => {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                <Building2 className="text-white" size={32} />
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-xl transform hover:scale-110 transition-transform">
+                <span className="text-4xl">🚀</span>
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome back</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Sign in to your Qivook account</p>
+            <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              Welcome Back! 👋
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-400 mt-2 flex items-center justify-center gap-2">
+              <span>✨</span>
+              <span>Sign in to continue your adventure!</span>
+            </p>
           </div>
 
           {/* Error Messages */}
@@ -177,19 +182,20 @@ const Login: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email address
+              <label htmlFor="email" className="block text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <span>📧</span>
+                <span>Your Email</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail size={18} className="text-gray-400" />
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail size={20} className="text-blue-500" />
                 </div>
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 w-full rounded-lg border border-gray-300 dark:border-gray-600 py-3 px-4 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  className="pl-12 w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 py-3.5 px-4 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
                   placeholder="you@company.com"
                   required
                 />
@@ -197,20 +203,21 @@ const Login: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Password
+              <label htmlFor="password" className="block text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <span>🔒</span>
+                <span>Your Password</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock size={18} className="text-gray-400" />
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock size={20} className="text-blue-500" />
                 </div>
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 pr-10 w-full rounded-lg border border-gray-300 dark:border-gray-600 py-3 px-4 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  placeholder="••••••••"
+                  className="pl-12 pr-12 w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 py-3.5 px-4 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                  placeholder="Enter your secret password"
                   required
                   disabled={isLocked}
                   minLength={authConfig.passwordMinLength}
@@ -261,18 +268,19 @@ const Login: React.FC = () => {
                   disabled: loading || isLocked || !email || !password || password.length < authConfig.passwordMinLength
                 });
               }}
-              className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full flex justify-center items-center gap-2 py-4 px-6 border-2 border-transparent rounded-xl shadow-lg text-base font-bold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95"
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
               ) : isLocked ? (
                 <>
-                  <Lock size={16} />
-                  Account Locked
+                  <Lock size={18} />
+                  <span>Account Locked 🔒</span>
                 </>
               ) : (
                 <>
-                  Sign in <ArrowRight size={16} />
+                  <span>Let's Go!</span>
+                  <ArrowRight size={18} />
                 </>
               )}
             </button>
@@ -300,27 +308,28 @@ const Login: React.FC = () => {
       </div>
 
       {/* Right side - Hero Section */}
-      <div className="hidden lg:flex lg:flex-1 bg-gradient-to-br from-blue-600 to-purple-600 items-center justify-center p-8">
-        <div className="text-center text-white max-w-md">
-          <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <Building2 size={40} />
+      <div className="hidden lg:flex lg:flex-1 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 items-center justify-center p-8 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+        <div className="text-center text-white max-w-md relative z-10">
+          <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl border-4 border-white/30">
+            <span className="text-5xl">🎯</span>
           </div>
-          <h2 className="text-3xl font-bold mb-4">Trade Intelligence Platform</h2>
-          <p className="text-blue-100 text-lg leading-relaxed">
-            Empowering East African businesses with real-time market intelligence, supplier insights, and trade financing solutions.
+          <h2 className="text-4xl font-extrabold mb-4">Your Trade Adventure Starts Here! 🚀</h2>
+          <p className="text-white/90 text-lg leading-relaxed mb-8">
+            Get smart tools to help your business grow! Track prices, find suppliers, and get money for your projects! 💰
           </p>
           <div className="mt-8 space-y-4">
-            <div className="flex items-center gap-3 text-blue-100">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span>Real-time price tracking</span>
+            <div className="flex items-center gap-3 text-white/90 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl border-2 border-white/20">
+              <span className="text-2xl">💰</span>
+              <span className="font-semibold">See prices in real-time!</span>
             </div>
-            <div className="flex items-center gap-3 text-blue-100">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span>Verified supplier network</span>
+            <div className="flex items-center gap-3 text-white/90 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl border-2 border-white/20">
+              <span className="text-2xl">👥</span>
+              <span className="font-semibold">Find trusted suppliers!</span>
             </div>
-            <div className="flex items-center gap-3 text-blue-100">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span>Trade financing solutions</span>
+            <div className="flex items-center gap-3 text-white/90 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl border-2 border-white/20">
+              <span className="text-2xl">💳</span>
+              <span className="font-semibold">Get money for your business!</span>
             </div>
           </div>
         </div>
