@@ -256,7 +256,7 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
   };
 
   return (
-    <header className="bg-gradient-to-r from-white via-blue-50/30 to-purple-50/30 dark:from-gray-800 dark:via-blue-900/20 dark:to-purple-900/20 shadow-lg border-b-2 border-blue-200 dark:border-blue-700 sticky top-0 z-40">
+    <header className="hidden lg:block bg-gradient-to-r from-white via-blue-50/30 to-purple-50/30 dark:from-gray-800 dark:via-blue-900/20 dark:to-purple-900/20 shadow-lg border-b-2 border-blue-200 dark:border-blue-700 sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         <div className="h-14 sm:h-16 flex items-center">
           {/* Left: Logo */}
