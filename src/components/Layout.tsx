@@ -28,8 +28,10 @@ const Layout: React.FC = () => {
         <Outlet />
       </main>
 
-      {/* Bottom Tab Navigation for Mobile */}
-      <BottomTabNavigation onMoreClick={toggleMobileMenu} />
+      {/* Bottom Tab Navigation for Mobile - Hide when mobile menu is open */}
+      {!mobileMenuOpen && (
+        <BottomTabNavigation onMoreClick={toggleMobileMenu} />
+      )}
     </div>
   );
 };
