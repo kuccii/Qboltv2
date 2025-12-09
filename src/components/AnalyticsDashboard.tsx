@@ -8,17 +8,12 @@ import {
   Users, 
   Package, 
   DollarSign,
-  Download,
   RefreshCw,
   Filter,
-  Calendar,
   Clock,
-  Info,
   AlertTriangle,
-  Lightbulb,
   Target,
   ArrowRight,
-  Settings,
   FileText,
   Image as ImageIcon,
   FileSpreadsheet
@@ -85,19 +80,6 @@ const AnalyticsDashboard: React.FC = () => {
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
   const [comparePeriod, setComparePeriod] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<'overview' | 'prices' | 'suppliers' | 'logistics' | 'risk' | 'documents'>('overview');
-  const [chartLoading, setChartLoading] = useState({
-    priceTrends: false,
-    supplierPerformance: false,
-    marketShare: false,
-    regionalData: false
-  });
-  
-  // Additional analytics data
-  const [priceAnalytics, setPriceAnalytics] = useState<any>(null);
-  const [supplierAnalytics, setSupplierAnalytics] = useState<any>(null);
-  const [logisticsAnalytics, setLogisticsAnalytics] = useState<any>(null);
-  const [riskAnalytics, setRiskAnalytics] = useState<any>(null);
-  const [documentAnalytics, setDocumentAnalytics] = useState<any>(null);
 
   // Fetch analytics data from backend
   useEffect(() => {
@@ -269,11 +251,19 @@ const AnalyticsDashboard: React.FC = () => {
   ];
 
   // Use analyticsData with fallback
-  const displayData = analyticsData || {
+  const displayData: AnalyticsData = analyticsData || {
     totalRevenue: 0,
+    revenueGrowth: 0,
     totalOrders: 0,
+    orderGrowth: 0,
     activeSuppliers: 0,
-    priceTrends: []
+    supplierGrowth: 0,
+    avgOrderValue: 0,
+    orderValueGrowth: 0,
+    priceTrends: [],
+    supplierPerformance: [],
+    marketShare: [],
+    regionalData: []
   };
 
   // Format number helper
@@ -325,7 +315,7 @@ const AnalyticsDashboard: React.FC = () => {
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-4">
             <SelectInput
               value={selectedPeriod}
-              onChange={setSelectedPeriod}
+              onChange={(value: string) => setSelectedPeriod(value as '7d' | '30d' | '90d' | '1y')}
               options={[
                 { value: '7d', label: '📅 Last 7 days' },
                 { value: '30d', label: '📅 Last 30 days' },
@@ -344,10 +334,10 @@ const AnalyticsDashboard: React.FC = () => {
             </button>
             <ActionMenu
               items={[
-                { label: '📥 Export CSV', icon: <FileText className="h-4 w-4" />, onClick: handleExport },
-                { label: '📄 Export PDF', icon: <FileText className="h-4 w-4" />, onClick: () => alert('PDF export coming soon!') },
-                { label: '🖼️ Export Image', icon: <ImageIcon className="h-4 w-4" />, onClick: () => alert('Image export coming soon!') },
-                { label: '📊 Export Excel', icon: <FileSpreadsheet className="h-4 w-4" />, onClick: () => alert('Excel export coming soon!') }
+                { id: 'export-csv', label: '📥 Export CSV', icon: <FileText className="h-4 w-4" />, onClick: handleExport },
+                { id: 'export-pdf', label: '📄 Export PDF', icon: <FileText className="h-4 w-4" />, onClick: () => alert('PDF export coming soon!') },
+                { id: 'export-image', label: '🖼️ Export Image', icon: <ImageIcon className="h-4 w-4" />, onClick: () => alert('Image export coming soon!') },
+                { id: 'export-excel', label: '📊 Export Excel', icon: <FileSpreadsheet className="h-4 w-4" />, onClick: () => alert('Excel export coming soon!') }
               ]}
               size="sm"
             />
@@ -406,6 +396,7 @@ const AnalyticsDashboard: React.FC = () => {
 
           {/* Key Metrics */}
           {!loading && (
+            <div>
               {/* Playful Tab Navigation */}
               <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-blue-200 dark:border-blue-700 p-2">
                 <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
@@ -585,7 +576,7 @@ const AnalyticsDashboard: React.FC = () => {
                       </label>
                       <SelectInput
                         value={selectedChartType}
-                        onChange={setSelectedChartType}
+                        onChange={(value: string) => setSelectedChartType(value as 'line' | 'bar' | 'area')}
                         options={[
                           { value: 'line', label: 'Line Chart' },
                           { value: 'bar', label: 'Bar Chart' },
@@ -637,7 +628,7 @@ const AnalyticsDashboard: React.FC = () => {
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* Price Trends Chart */}
                         <EnhancedChart
-                          data={displayData.priceTrends}
+                          data={displayData.priceTrends as any}
                           config={priceChartConfig}
                           type={selectedChartType}
                           title="Price Trends"
@@ -649,7 +640,7 @@ const AnalyticsDashboard: React.FC = () => {
                         {/* Market Share Chart */}
                         {displayData.marketShare.length > 0 && (
                           <EnhancedChart
-                            data={displayData.marketShare}
+                            data={displayData.marketShare.map(item => ({ name: item.category, value: item.value })) as any}
                             config={[]}
                             type="pie"
                             title="Market Share"
@@ -663,7 +654,7 @@ const AnalyticsDashboard: React.FC = () => {
                     {/* Supplier Performance */}
                     {displayData.supplierPerformance.length > 0 && (
                       <EnhancedChart
-                        data={displayData.supplierPerformance}
+                        data={displayData.supplierPerformance.map(item => ({ name: item.name, value: item.orders })) as any}
                         config={supplierChartConfig}
                         type="bar"
                         title="Supplier Performance"
@@ -675,7 +666,7 @@ const AnalyticsDashboard: React.FC = () => {
                     {/* Regional Analysis */}
                     {displayData.regionalData.length > 0 && (
                       <EnhancedChart
-                        data={displayData.regionalData}
+                        data={displayData.regionalData.map(item => ({ name: item.region, value: item.orders })) as any}
                         config={regionalChartConfig}
                         type="bar"
                         title="Regional Analysis"
@@ -688,7 +679,7 @@ const AnalyticsDashboard: React.FC = () => {
                     <div className="flex justify-center">
                       <ChartTypeSelector
                         selectedType={selectedChartType}
-                        onTypeChange={setSelectedChartType}
+                        onTypeChange={(type: string) => setSelectedChartType(type as 'line' | 'bar' | 'area')}
                       />
                     </div>
                   </div>
@@ -745,7 +736,7 @@ const AnalyticsDashboard: React.FC = () => {
                       {data.priceTrends.length > 0 ? (
                         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                           <EnhancedChart
-                            data={data.priceTrends}
+                            data={data.priceTrends as any}
                             config={priceChartConfig}
                             type={selectedChartType}
                             title="Price Trends Over Time"
@@ -825,7 +816,7 @@ const AnalyticsDashboard: React.FC = () => {
                       {data.supplierPerformance.length > 0 ? (
                         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                           <EnhancedChart
-                            data={data.supplierPerformance}
+                            data={data.supplierPerformance.map(item => ({ name: item.name, value: item.orders })) as any}
                             config={supplierChartConfig}
                             type="bar"
                             title="Top Supplier Performance"
@@ -1037,7 +1028,6 @@ const AnalyticsDashboard: React.FC = () => {
                   )}
                 </div>
               </div>
-            </div>
           )}
         </div>
       </PageLayout>
@@ -1050,7 +1040,7 @@ interface MetricCardProps {
   title: string;
   value: number;
   growth: number;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: React.ComponentType<any>;
   format: 'currency' | 'number' | 'percentage';
 }
 
