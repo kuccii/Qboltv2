@@ -683,42 +683,52 @@ const RiskMitigation: React.FC = () => {
             </div>
           )}
 
-          {/* Tabs Container - Matching DocumentVault Style */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="flex border-b-2 border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
+          {/* Tabs Container - Matching Country Profile Style */}
+          <div className="mb-6">
+            <div className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-blue-200 dark:border-gray-700 shadow-lg overflow-x-auto scrollbar-hide">
               {[
-                { id: 'overview', label: 'Overview', emoji: '📊', icon: <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.totalAlerts },
-                { id: 'alerts', label: 'Alerts', emoji: '🚨', icon: <Bell className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.totalAlerts, urgent: riskMetrics.highRisk },
-                { id: 'timeline', label: 'Timeline', emoji: '📅', icon: <History className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> },
-                { id: 'insurance', label: 'Insurance', emoji: '🛡️', icon: <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.insuranceCoverage.coverageGaps },
-                { id: 'playbooks', label: 'Playbooks', emoji: '📚', icon: <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> }
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setSelectedTab(tab.id as any)}
-                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 lg:px-6 py-3 sm:py-3.5 md:py-4 font-bold text-xs sm:text-sm transition-all whitespace-nowrap relative flex-shrink-0 transform hover:scale-105 ${
-                    selectedTab === tab.id
-                      ? 'text-primary-600 dark:text-primary-400 border-b-4 border-primary-600 dark:border-primary-400 bg-primary-50/50 dark:bg-primary-900/20'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
-                  }`}
-                >
-                  <span className="text-base sm:text-lg">{tab.emoji}</span>
-                  {tab.icon}
-                  <span>{tab.label}</span>
-                  {tab.badge !== undefined && tab.badge > 0 && (
-                    <span className={`ml-1.5 px-2 py-1 text-xs font-bold rounded-full shadow-md ${
-                      tab.urgent && tab.urgent > 0
-                        ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white animate-pulse'
-                        : 'bg-gradient-to-r from-primary-500 to-purple-500 text-white'
-                    }`}>
-                      {tab.badge}
-                    </span>
-                  )}
-                </button>
-              ))}
+                { id: 'overview', label: 'Overview', emoji: '📊', color: 'blue', badge: riskMetrics.totalAlerts },
+                { id: 'alerts', label: 'Alerts', emoji: '🚨', color: 'red', badge: riskMetrics.totalAlerts, urgent: riskMetrics.highRisk },
+                { id: 'timeline', label: 'Timeline', emoji: '📅', color: 'purple' },
+                { id: 'insurance', label: 'Insurance', emoji: '🛡️', color: 'green', badge: riskMetrics.insuranceCoverage.coverageGaps },
+                { id: 'playbooks', label: 'Playbooks', emoji: '📚', color: 'orange' }
+              ].map((tab) => {
+                const colorClasses = {
+                  blue: { active: 'from-blue-500 to-blue-600', hover: 'hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-300' },
+                  red: { active: 'from-red-500 to-red-600', hover: 'hover:bg-red-100 dark:hover:bg-gray-700 hover:text-red-700 dark:hover:text-red-300' },
+                  purple: { active: 'from-purple-500 to-purple-600', hover: 'hover:bg-purple-100 dark:hover:bg-gray-700 hover:text-purple-700 dark:hover:text-purple-300' },
+                  green: { active: 'from-green-500 to-green-600', hover: 'hover:bg-green-100 dark:hover:bg-gray-700 hover:text-green-700 dark:hover:text-green-300' },
+                  orange: { active: 'from-orange-500 to-orange-600', hover: 'hover:bg-orange-100 dark:hover:bg-gray-700 hover:text-orange-700 dark:hover:text-orange-300' }
+                };
+                const colors = colorClasses[tab.color as keyof typeof colorClasses] || colorClasses.blue;
+                
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setSelectedTab(tab.id as any)}
+                    className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
+                      selectedTab === tab.id
+                        ? `bg-gradient-to-r ${colors.active} text-white shadow-lg scale-105`
+                        : `text-gray-600 dark:text-gray-400 ${colors.hover}`
+                    }`}
+                  >
+                    <span>{tab.emoji}</span>
+                    <span>{tab.label}</span>
+                    {tab.badge !== undefined && tab.badge > 0 && (
+                      <span className={`ml-1.5 px-2 py-1 text-xs font-bold rounded-full shadow-md ${
+                        tab.urgent && tab.urgent > 0
+                          ? 'bg-white/30 text-white animate-pulse'
+                          : selectedTab === tab.id ? 'bg-white/30 text-white' : 'bg-gradient-to-r from-primary-500 to-purple-500 text-white'
+                      }`}>
+                        {tab.badge}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
 
-            <div className="p-6">
+            <div className="mt-6">
 
               {/* Tab Content */}
               {(!loading && (!alertsLoading || initialLoadTimeout || alertsError)) && (

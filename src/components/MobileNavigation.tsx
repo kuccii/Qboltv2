@@ -128,7 +128,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
       />
       
       {/* Navigation Panel */}
-      <div className="fixed inset-y-0 right-0 w-80 bg-gradient-to-b from-white via-blue-50/20 to-purple-50/20 dark:from-gray-800 dark:via-blue-900/10 dark:to-purple-900/10 shadow-2xl transform transition-transform border-l-2 border-blue-200 dark:border-blue-700">
+      <div className="fixed inset-y-0 right-0 w-80 bg-white dark:bg-gray-800 shadow-2xl transform transition-transform border-l-2 border-blue-200 dark:border-blue-700">
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b-2 border-blue-200 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
