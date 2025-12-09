@@ -1907,49 +1907,62 @@ const RiskMitigation: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Coverage Recommendations */}
+                    {/* Coverage Recommendations - Kid Friendly */}
                     {riskMetrics.insuranceCoverage.coverageGaps > 0 && (
-                      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Coverage Recommendations</h3>
+                      <div className="bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 dark:from-yellow-900/20 dark:via-orange-900/20 dark:to-pink-900/20 rounded-2xl shadow-xl border-4 border-yellow-300 dark:border-yellow-700 p-5 sm:p-6">
+                        <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white mb-5 flex items-center gap-3">
+                          <span className="text-4xl">💡</span>
+                          <span>We Think You Need More Shields!</span>
+                        </h3>
                         <div className="space-y-4">
-                          <div className="p-4 bg-yellow-50 dark:bg-yellow-900/10 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                            <div className="flex items-start gap-3">
-                              <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                          <div className="p-5 bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 rounded-2xl border-4 border-yellow-300 dark:border-yellow-700 shadow-lg">
+                            <div className="flex items-start gap-4">
+                              <span className="text-4xl">💰</span>
                               <div className="flex-1">
-                                <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
-                                  Price Volatility Protection
+                                <h4 className="text-lg font-extrabold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                                  <span>Price Protection Shield!</span>
                                 </h4>
-                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                  With {riskMetrics.priceAlerts} active price alerts, consider price risk insurance to protect against sudden price spikes! 💰
+                                <p className="text-base font-medium text-gray-800 dark:text-gray-200 mb-4 leading-relaxed">
+                                  You have {riskMetrics.priceAlerts} price problems! Get a shield to protect you when prices go up super fast! 🚀
                                 </p>
                                 <button 
-                                  onClick={() => setSelectedTab('insurance')}
-                                  className="text-sm font-bold text-yellow-700 dark:text-yellow-300 hover:text-yellow-900 dark:hover:text-yellow-100 flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-xl border-2 border-yellow-300 dark:border-yellow-700 hover:scale-105 transition-all"
+                                  onClick={() => {
+                                    setShowQuoteModal(true);
+                                    const firstProvider = insuranceProviders[0];
+                                    if (firstProvider) setSelectedProvider(firstProvider);
+                                  }}
+                                  className="text-base font-bold text-yellow-800 dark:text-yellow-200 hover:text-yellow-900 dark:hover:text-yellow-100 flex items-center gap-2 bg-white dark:bg-gray-800 px-5 py-3 rounded-xl border-4 border-yellow-400 dark:border-yellow-600 hover:scale-105 transition-all shadow-lg"
                                 >
-                                  <span>🔍 Explore Options</span>
-                                  <ArrowRight className="h-4 w-4" />
+                                  <span>🔍</span>
+                                  <span>Get This Shield!</span>
+                                  <ArrowRight className="h-5 w-5" />
                                 </button>
                               </div>
                             </div>
                           </div>
 
                           {riskMetrics.supplyAlerts > 0 && (
-                            <div className="p-4 bg-blue-50 dark:bg-blue-900/10 rounded-lg border border-blue-200 dark:border-blue-800">
-                              <div className="flex items-start gap-3">
-                                <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                            <div className="p-5 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-2xl border-4 border-blue-300 dark:border-blue-700 shadow-lg">
+                              <div className="flex items-start gap-4">
+                                <span className="text-4xl">📦</span>
                                 <div className="flex-1">
-                                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
-                                    Supply Chain Disruption Coverage
+                                  <h4 className="text-lg font-extrabold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                                    <span>Supply Chain Shield!</span>
                                   </h4>
-                                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                    {riskMetrics.supplyAlerts} supply disruption alerts detected! Business interruption insurance can help cover losses! 🚚
+                                  <p className="text-base font-medium text-gray-800 dark:text-gray-200 mb-4 leading-relaxed">
+                                    {riskMetrics.supplyAlerts} supply problems found! Get a shield to help when things stop coming! 🛡️
                                   </p>
                                   <button 
-                                    onClick={() => setSelectedTab('insurance')}
-                                    className="text-sm font-bold text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-100 flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-xl border-2 border-blue-300 dark:border-blue-700 hover:scale-105 transition-all"
+                                    onClick={() => {
+                                      setShowQuoteModal(true);
+                                      const firstProvider = insuranceProviders[0];
+                                      if (firstProvider) setSelectedProvider(firstProvider);
+                                    }}
+                                    className="text-base font-bold text-blue-800 dark:text-blue-200 hover:text-blue-900 dark:hover:text-blue-100 flex items-center gap-2 bg-white dark:bg-gray-800 px-5 py-3 rounded-xl border-4 border-blue-400 dark:border-blue-600 hover:scale-105 transition-all shadow-lg"
                                   >
-                                    <span>📚 Learn More</span>
-                                    <ArrowRight className="h-4 w-4" />
+                                    <span>📚</span>
+                                    <span>Learn More!</span>
+                                    <ArrowRight className="h-5 w-5" />
                                   </button>
                                 </div>
                               </div>
@@ -1959,186 +1972,264 @@ const RiskMitigation: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Insurance Providers */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recommended Insurance Providers</h3>
+                    {/* Insurance Providers - Kid Friendly */}
+                    <div className="bg-gradient-to-br from-white to-purple-50/30 dark:from-gray-800 dark:to-purple-900/20 rounded-2xl shadow-xl border-4 border-purple-200 dark:border-purple-700 p-5 sm:p-6">
+                      <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white mb-5 flex items-center gap-3">
+                        <span className="text-4xl">🏢</span>
+                        <span>Shield Companies We Like!</span>
+                      </h3>
                       {insuranceProviders.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                           {insuranceProviders.map((provider) => (
-                            <div key={provider.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-700 transition-colors">
-                              <div className="flex items-center gap-3 mb-3">
-                                <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-                                  <Shield className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                            <div key={provider.id} className="p-5 sm:p-6 bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-800 dark:to-blue-900/20 rounded-2xl border-4 border-blue-200 dark:border-blue-700 hover:border-blue-400 dark:hover:border-blue-600 transition-all shadow-lg transform hover:scale-105">
+                              <div className="flex items-center gap-4 mb-4">
+                                <div className="p-4 bg-gradient-to-br from-blue-200 to-indigo-200 dark:from-blue-900/40 dark:to-indigo-900/40 rounded-xl shadow-lg">
+                                  <span className="text-4xl">🛡️</span>
                                 </div>
                                 <div className="flex-1">
-                                  <h4 className="font-semibold text-gray-900 dark:text-white">{provider.name}</h4>
+                                  <h4 className="text-lg font-extrabold text-gray-900 dark:text-white">{provider.name}</h4>
                                   {provider.rating && (
-                                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                      ⭐ {provider.rating.toFixed(1)} Rating
+                                    <div className="flex items-center gap-1 mt-2">
+                                      <span className="text-lg">⭐</span>
+                                      <span className="text-sm font-bold text-gray-700 dark:text-gray-300">{provider.rating.toFixed(1)}</span>
+                                      <span className="text-xs text-gray-500 dark:text-gray-400">Rating</span>
                                     </div>
                                   )}
                                 </div>
                               </div>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                {provider.description || 'Comprehensive insurance coverage for your business needs.'}
+                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4 leading-relaxed bg-white/50 dark:bg-gray-700/50 px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600">
+                                {provider.description || 'They give you super strong shields to keep your business safe! 💪'}
                               </p>
                               {provider.coverage_types && provider.coverage_types.length > 0 && (
-                                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                <div className="flex flex-wrap items-center gap-2 mb-4">
                                   {provider.coverage_types.slice(0, 3).map((type: string, idx: number) => (
-                                    <span key={idx}>✓ {type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}</span>
+                                    <span key={idx} className="px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-800 dark:text-blue-200 rounded-xl border-2 border-blue-300 dark:border-blue-700">
+                                      ✅ {type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                                    </span>
                                   ))}
                                 </div>
                               )}
                               <button 
-                                onClick={() => handleRequestQuote(provider.id)}
+                                onClick={() => {
+                                  const foundProvider = insuranceProviders.find(p => p.id === provider.id);
+                                  if (foundProvider) {
+                                    setSelectedProvider(foundProvider);
+                                    setShowQuoteModal(true);
+                                  }
+                                }}
                                 disabled={requestingQuote}
-                                className="w-full px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full px-5 py-3 text-base font-extrabold bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                               >
-                                {requestingQuote ? 'Loading...' : 'Get Quote'}
+                                {requestingQuote ? (
+                                  <>
+                                    <RefreshCw className="h-5 w-5 animate-spin" />
+                                    <span>Loading...</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <span>💬</span>
+                                    <span>Ask for a Quote!</span>
+                                  </>
+                                )}
                               </button>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                          <Shield className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                          <p>No insurance providers available at this time.</p>
+                        <div className="text-center py-12">
+                          <div className="text-8xl mb-6">🛡️</div>
+                          <h3 className="text-xl font-extrabold text-gray-900 dark:text-white mb-3">No Shield Companies Right Now! 😊</h3>
+                          <p className="text-base font-medium text-gray-700 dark:text-gray-300">Check back later for shield companies! ✨</p>
                         </div>
                       )}
                     </div>
 
-                    {/* Insurance Quotes */}
+                    {/* Insurance Quotes - Kid Friendly */}
                     {insuranceQuotes.length > 0 && (
-                      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Insurance Quotes</h3>
-                        <div className="space-y-4">
-                          {insuranceQuotes.map((quote) => (
-                            <div key={quote.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                              <div className="flex items-start justify-between mb-3">
-                                <div>
-                                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
-                                    {quote.insurance_providers?.name || 'Insurance Provider'}
-                                  </h4>
-                                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    {quote.quote_type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())} Coverage
-                                  </p>
+                      <div className="bg-gradient-to-br from-white to-green-50/30 dark:from-gray-800 dark:to-green-900/20 rounded-2xl shadow-xl border-4 border-green-200 dark:border-green-700 p-5 sm:p-6">
+                        <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white mb-5 flex items-center gap-3">
+                          <span className="text-4xl">💬</span>
+                          <span>Shield Prices They Gave You!</span>
+                        </h3>
+                        <div className="space-y-5">
+                          {insuranceQuotes.map((quote) => {
+                            const statusEmoji = quote.status === 'accepted' ? '✅' : quote.status === 'expired' ? '❌' : '⏳';
+                            const statusColor = quote.status === 'accepted' ? 'from-green-500 to-emerald-600' : 
+                                               quote.status === 'expired' ? 'from-red-500 to-pink-600' : 
+                                               'from-yellow-500 to-orange-600';
+                            
+                            return (
+                              <div key={quote.id} className="p-5 sm:p-6 bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-800 dark:to-blue-900/20 rounded-2xl border-4 border-blue-200 dark:border-blue-700 shadow-lg transform hover:scale-[1.02] transition-all">
+                                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-3">
+                                      <div className="p-3 bg-gradient-to-br from-blue-200 to-indigo-200 dark:from-blue-900/40 dark:to-indigo-900/40 rounded-xl shadow-lg">
+                                        <span className="text-3xl">🛡️</span>
+                                      </div>
+                                      <div>
+                                        <h4 className="text-lg font-extrabold text-gray-900 dark:text-white">
+                                          {quote.insurance_providers?.name || 'Shield Company'}
+                                        </h4>
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-1">
+                                          {quote.quote_type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())} Shield
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className={`px-4 py-2 rounded-xl font-bold text-sm sm:text-base bg-gradient-to-r ${statusColor} text-white shadow-lg flex items-center gap-2 flex-shrink-0`}>
+                                    <span>{statusEmoji}</span>
+                                    <span>{quote.status.toUpperCase()}</span>
+                                  </div>
                                 </div>
-                                <StatusBadge 
-                                  type={quote.status === 'accepted' ? 'success' : quote.status === 'expired' ? 'error' : 'warning'} 
-                                  text={quote.status.toUpperCase()} 
-                                />
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4">
+                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-blue-300 dark:border-blue-700 text-center shadow-md">
+                                    <div className="text-2xl mb-1">💰</div>
+                                    <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Protection</div>
+                                    <div className="text-sm font-extrabold text-gray-900 dark:text-white">
+                                      {quote.currency} {(quote.coverage_amount / 1000000).toFixed(1)}M
+                                    </div>
+                                  </div>
+                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-green-300 dark:border-green-700 text-center shadow-md">
+                                    <div className="text-2xl mb-1">💵</div>
+                                    <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Cost</div>
+                                    <div className="text-sm font-extrabold text-gray-900 dark:text-white">
+                                      {quote.currency} {quote.premium?.toLocaleString() || 'N/A'}
+                                    </div>
+                                  </div>
+                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-purple-300 dark:border-purple-700 text-center shadow-md">
+                                    <div className="text-2xl mb-1">⏰</div>
+                                    <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Time</div>
+                                    <div className="text-sm font-extrabold text-gray-900 dark:text-white">
+                                      {Math.round(quote.term_days / 30)} months
+                                    </div>
+                                  </div>
+                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-orange-300 dark:border-orange-700 text-center shadow-md">
+                                    <div className="text-2xl mb-1">📅</div>
+                                    <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Expires</div>
+                                    <div className="text-sm font-extrabold text-gray-900 dark:text-white">
+                                      {new Date(quote.expires_at).toLocaleDateString()}
+                                    </div>
+                                  </div>
+                                </div>
+                                {quote.status === 'pending' && new Date(quote.expires_at) > new Date() && (
+                                  <button
+                                    onClick={() => handleSubmitApplication(quote.id)}
+                                    className="w-full px-5 py-3 text-base font-extrabold bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
+                                  >
+                                    <span>🚀</span>
+                                    <span>Get This Shield Now!</span>
+                                  </button>
+                                )}
                               </div>
-                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3 text-sm">
-                                <div>
-                                  <div className="text-gray-500 dark:text-gray-400">Coverage</div>
-                                  <div className="font-semibold text-gray-900 dark:text-white">
-                                    {quote.currency} {(quote.coverage_amount / 1000000).toFixed(1)}M
-                                  </div>
-                                </div>
-                                <div>
-                                  <div className="text-gray-500 dark:text-gray-400">Premium</div>
-                                  <div className="font-semibold text-gray-900 dark:text-white">
-                                    {quote.currency} {quote.premium?.toLocaleString() || 'N/A'}
-                                  </div>
-                                </div>
-                                <div>
-                                  <div className="text-gray-500 dark:text-gray-400">Term</div>
-                                  <div className="font-semibold text-gray-900 dark:text-white">
-                                    {Math.round(quote.term_days / 30)} months
-                                  </div>
-                                </div>
-                                <div>
-                                  <div className="text-gray-500 dark:text-gray-400">Expires</div>
-                                  <div className="font-semibold text-gray-900 dark:text-white">
-                                    {new Date(quote.expires_at).toLocaleDateString()}
-                                  </div>
-                                </div>
-                              </div>
-                              {quote.status === 'pending' && new Date(quote.expires_at) > new Date() && (
-                                <button
-                                  onClick={() => handleSubmitApplication(quote.id)}
-                                  className="w-full px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-                                >
-                                  Apply Now
-                                </button>
-                              )}
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     )}
 
-                    {/* Insurance Applications */}
+                    {/* Insurance Applications - Kid Friendly */}
                     {insuranceApplications.length > 0 && (
-                      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Applications</h3>
-                        <div className="space-y-4">
-                          {insuranceApplications.map((app) => (
-                            <div key={app.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                              <div className="flex items-start justify-between mb-3">
-                                <div>
-                                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
-                                    {app.insurance_providers?.name || 'Insurance Provider'}
-                                  </h4>
-                                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    {app.application_type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())} Insurance
-                                  </p>
+                      <div className="bg-gradient-to-br from-white to-indigo-50/30 dark:from-gray-800 dark:to-indigo-900/20 rounded-2xl shadow-xl border-4 border-indigo-200 dark:border-indigo-700 p-5 sm:p-6">
+                        <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white mb-5 flex items-center gap-3">
+                          <span className="text-4xl">📝</span>
+                          <span>Your Shield Requests!</span>
+                        </h3>
+                        <div className="space-y-5">
+                          {insuranceApplications.map((app) => {
+                            const statusEmoji = app.status === 'approved' ? '✅' : app.status === 'rejected' ? '❌' : '⏳';
+                            const statusColor = app.status === 'approved' ? 'from-green-500 to-emerald-600' : 
+                                               app.status === 'rejected' ? 'from-red-500 to-pink-600' : 
+                                               'from-yellow-500 to-orange-600';
+                            
+                            return (
+                              <div key={app.id} className="p-5 sm:p-6 bg-gradient-to-br from-white to-indigo-50/30 dark:from-gray-800 dark:to-indigo-900/20 rounded-2xl border-4 border-indigo-200 dark:border-indigo-700 shadow-lg transform hover:scale-[1.02] transition-all">
+                                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-3">
+                                      <div className="p-3 bg-gradient-to-br from-indigo-200 to-purple-200 dark:from-indigo-900/40 dark:to-purple-900/40 rounded-xl shadow-lg">
+                                        <span className="text-3xl">🛡️</span>
+                                      </div>
+                                      <div>
+                                        <h4 className="text-lg font-extrabold text-gray-900 dark:text-white">
+                                          {app.insurance_providers?.name || 'Shield Company'}
+                                        </h4>
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-1">
+                                          {app.application_type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())} Shield
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3 mt-4">
+                                      <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-indigo-300 dark:border-indigo-700 text-center shadow-md">
+                                        <div className="text-xl mb-1">💰</div>
+                                        <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Protection</div>
+                                        <div className="text-sm font-extrabold text-gray-900 dark:text-white">
+                                          {app.currency} {(app.coverage_amount / 1000000).toFixed(1)}M
+                                        </div>
+                                      </div>
+                                      <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-purple-300 dark:border-purple-700 text-center shadow-md">
+                                        <div className="text-xl mb-1">📅</div>
+                                        <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">When Asked</div>
+                                        <div className="text-sm font-extrabold text-gray-900 dark:text-white">
+                                          {new Date(app.created_at).toLocaleDateString()}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className={`px-4 py-2 rounded-xl font-bold text-sm sm:text-base bg-gradient-to-r ${statusColor} text-white shadow-lg flex items-center gap-2 flex-shrink-0`}>
+                                    <span>{statusEmoji}</span>
+                                    <span>{app.status.toUpperCase()}</span>
+                                  </div>
                                 </div>
-                                <StatusBadge 
-                                  type={app.status === 'approved' ? 'success' : app.status === 'rejected' ? 'error' : 'warning'} 
-                                  text={app.status.toUpperCase()} 
-                                />
                               </div>
-                              <div className="text-sm text-gray-600 dark:text-gray-400">
-                                Coverage: {app.currency} {(app.coverage_amount / 1000000).toFixed(1)}M • 
-                                Submitted: {new Date(app.created_at).toLocaleDateString()}
-                              </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     )}
 
-                    {/* Quote Request Modal */}
+                    {/* Quote Request Modal - Kid Friendly */}
                     {showQuoteModal && selectedProvider && (
                       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                        <div className="bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-800 dark:to-blue-900/20 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border-4 border-blue-300 dark:border-blue-700">
+                          <div className="p-5 sm:p-6 border-b-4 border-blue-200 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
                             <div className="flex items-center justify-between">
-                              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                Request Quote from {selectedProvider.name}
+                              <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white flex items-center gap-3">
+                                <span className="text-3xl">💬</span>
+                                <span>Ask {selectedProvider.name} for a Price!</span>
                               </h3>
                               <button
                                 onClick={() => {
                                   setShowQuoteModal(false);
                                   setSelectedProvider(null);
                                 }}
-                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                className="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                               >
-                                <X className="h-5 w-5" />
+                                <X className="h-6 w-6" />
                               </button>
                             </div>
                           </div>
-                          <div className="p-6 space-y-4">
+                          <div className="p-5 sm:p-6 space-y-5">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Coverage Type
+                              <label className="block text-base font-extrabold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                <span>🛡️</span>
+                                <span>What Kind of Shield?</span>
                               </label>
                               <select
                                 value={quoteRequest.quoteType}
                                 onChange={(e) => setQuoteRequest({ ...quoteRequest, quoteType: e.target.value as any })}
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                className="w-full px-4 py-3 text-base font-bold border-4 border-blue-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-md"
                               >
-                                <option value="cargo">Cargo Insurance</option>
-                                <option value="liability">Liability Insurance</option>
-                                <option value="property">Property Insurance</option>
-                                <option value="general">General Business Insurance</option>
-                                <option value="trade_credit">Trade Credit Insurance</option>
+                                <option value="cargo">🚚 Cargo Shield (Protects your stuff when moving!)</option>
+                                <option value="liability">👥 Liability Shield (Protects you from problems!)</option>
+                                <option value="property">🏢 Property Shield (Protects your building!)</option>
+                                <option value="general">💼 General Business Shield (Protects everything!)</option>
+                                <option value="trade_credit">💳 Trade Credit Shield (Protects your money!)</option>
                               </select>
                             </div>
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Coverage Amount: {quoteRequest.coverageAmount.toLocaleString()} {quoteRequest.currency}
+                              <label className="block text-base font-extrabold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                <span>💰</span>
+                                <span>How Much Protection? {quoteRequest.coverageAmount.toLocaleString()} {quoteRequest.currency}</span>
                               </label>
                               <input
                                 type="range"
@@ -2147,16 +2238,17 @@ const RiskMitigation: React.FC = () => {
                                 step="100000"
                                 value={quoteRequest.coverageAmount}
                                 onChange={(e) => setQuoteRequest({ ...quoteRequest, coverageAmount: parseInt(e.target.value) })}
-                                className="w-full"
+                                className="w-full h-4 bg-gradient-to-r from-blue-200 to-purple-200 dark:from-blue-800 dark:to-purple-800 rounded-full appearance-none cursor-pointer accent-blue-600 shadow-inner"
                               />
-                              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                <span>100K</span>
-                                <span>10M</span>
+                              <div className="flex justify-between text-sm font-bold text-gray-700 dark:text-gray-300 mt-2">
+                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-blue-300 dark:border-blue-700">💵 100K</span>
+                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-purple-300 dark:border-purple-700">💎 10M</span>
                               </div>
                             </div>
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Coverage Term: {Math.round(quoteRequest.termDays / 30)} months
+                              <label className="block text-base font-extrabold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                <span>⏰</span>
+                                <span>How Long? {Math.round(quoteRequest.termDays / 30)} months</span>
                               </label>
                               <input
                                 type="range"
@@ -2165,11 +2257,11 @@ const RiskMitigation: React.FC = () => {
                                 step="30"
                                 value={quoteRequest.termDays}
                                 onChange={(e) => setQuoteRequest({ ...quoteRequest, termDays: parseInt(e.target.value) })}
-                                className="w-full"
+                                className="w-full h-4 bg-gradient-to-r from-green-200 to-emerald-200 dark:from-green-800 dark:to-emerald-800 rounded-full appearance-none cursor-pointer accent-green-600 shadow-inner"
                               />
-                              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                <span>1 month</span>
-                                <span>24 months</span>
+                              <div className="flex justify-between text-sm font-bold text-gray-700 dark:text-gray-300 mt-2">
+                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-green-300 dark:border-green-700">1 month</span>
+                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-emerald-300 dark:border-emerald-700">24 months</span>
                               </div>
                             </div>
                             <div className="flex gap-3 pt-4">
@@ -2178,16 +2270,26 @@ const RiskMitigation: React.FC = () => {
                                   setShowQuoteModal(false);
                                   setSelectedProvider(null);
                                 }}
-                                className="flex-1 px-4 py-2 text-sm font-medium border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                className="flex-1 px-5 py-3 text-base font-bold border-4 border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all shadow-lg"
                               >
-                                Cancel
+                                <span>❌</span> Cancel
                               </button>
                               <button
                                 onClick={handleSubmitQuote}
                                 disabled={requestingQuote}
-                                className="flex-1 px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex-1 px-5 py-3 text-base font-extrabold bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
                               >
-                                {requestingQuote ? 'Requesting...' : 'Request Quote'}
+                                {requestingQuote ? (
+                                  <>
+                                    <RefreshCw className="h-5 w-5 animate-spin" />
+                                    <span>Asking...</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <span>💬</span>
+                                    <span>Ask for Price!</span>
+                                  </>
+                                )}
                               </button>
                             </div>
                           </div>
