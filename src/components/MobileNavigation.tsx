@@ -55,21 +55,22 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
     }));
   };
 
-  const NavItem = ({ to, icon: Icon, label, end, onClick }: { 
+  const NavItem = ({ to, icon: Icon, label, end, onClick, emoji }: { 
     to: string, 
     icon: React.ElementType, 
     label: string, 
     end?: boolean,
-    onClick?: () => void 
+    onClick?: () => void,
+    emoji?: string
   }) => (
     <NavLink 
       to={to} 
       end={end}
       className={({ isActive }) => `
-        flex items-center gap-3 py-3 px-4 rounded-lg text-sm font-medium transition-colors
+        flex items-center gap-3 py-3.5 px-4 rounded-xl text-sm font-bold transition-all transform hover:scale-105
         ${isActive 
-          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300' 
-          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105' 
+          : 'text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:bg-blue-900/20'
         }
       `}
       onClick={() => {
@@ -77,6 +78,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
         onClick?.();
       }}
     >
+      {emoji && <span className="text-xl">{emoji}</span>}
       <Icon size={20} />
       <span>{label}</span>
     </NavLink>
@@ -86,19 +88,22 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
     icon: Icon, 
     label, 
     section, 
-    children 
+    children,
+    emoji
   }: { 
     icon: React.ElementType, 
     label: string, 
     section: string,
-    children: React.ReactNode 
+    children: React.ReactNode,
+    emoji?: string
   }) => (
     <div className="space-y-1">
       <button
         onClick={() => toggleSection(section)}
-        className="flex items-center justify-between w-full py-3 px-4 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+        className="flex items-center justify-between w-full py-3.5 px-4 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:bg-blue-900/20 rounded-xl transition-all transform hover:scale-105"
       >
         <div className="flex items-center gap-3">
+          {emoji && <span className="text-xl">{emoji}</span>}
           <Icon size={20} />
           <span>{label}</span>
         </div>
@@ -123,14 +128,17 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
       />
       
       {/* Navigation Panel */}
-      <div className="fixed inset-y-0 right-0 w-80 bg-white dark:bg-gray-800 shadow-xl transform transition-transform">
+      <div className="fixed inset-y-0 right-0 w-80 bg-gradient-to-b from-white via-blue-50/20 to-purple-50/20 dark:from-gray-800 dark:via-blue-900/10 dark:to-purple-900/10 shadow-2xl transform transition-transform border-l-2 border-blue-200 dark:border-blue-700">
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Menu</h2>
+          <div className="flex items-center justify-between p-4 border-b-2 border-blue-200 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+            <h2 className="text-xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
+              <span>🎯</span>
+              Menu
+            </h2>
             <button
               onClick={onClose}
-              className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
               <X size={20} />
             </button>
@@ -160,31 +168,31 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
 
           {/* Navigation */}
           <div className="flex-1 overflow-y-auto p-4 space-y-2">
-            <NavItem to="/app" icon={LayoutDashboard} label="Dashboard" end />
+            <NavItem to="/app" icon={LayoutDashboard} label="Dashboard" end emoji="📊" />
 
             {/* Market Intelligence Dropdown - Matching Desktop */}
-            <SectionDropdown icon={BarChart2} label="Market" section="market">
-              <NavItem to="/app/prices" icon={TrendingUp} label="Price Tracking" />
-              <NavItem to="/app/countries" icon={MapPin} label="Countries" />
-              <NavItem to="/app/demand" icon={Map} label="Demand Mapping" />
-              <NavItem to="/app/analytics" icon={BarChart2} label="Analytics" />
+            <SectionDropdown icon={BarChart2} label="Market" section="market" emoji="📊">
+              <NavItem to="/app/prices" icon={TrendingUp} label="Price Tracking" emoji="💰" />
+              <NavItem to="/app/countries" icon={MapPin} label="Countries" emoji="🌍" />
+              <NavItem to="/app/demand" icon={Map} label="Demand Mapping" emoji="🗺️" />
+              <NavItem to="/app/analytics" icon={BarChart2} label="Analytics" emoji="📈" />
             </SectionDropdown>
 
             {/* Supply Chain Dropdown - Matching Desktop */}
-            <SectionDropdown icon={Package} label="Supply" section="supply">
-              <NavItem to="/app/supplier-directory" icon={Users} label="Suppliers" />
-              <NavItem to="/app/agents" icon={UserCog} label="Agents" />
-              <NavItem to="/app/logistics" icon={Truck} label="Logistics" />
+            <SectionDropdown icon={Package} label="Supply" section="supply" emoji="📦">
+              <NavItem to="/app/supplier-directory" icon={Users} label="Suppliers" emoji="👥" />
+              <NavItem to="/app/agents" icon={UserCog} label="Agents" emoji="🤝" />
+              <NavItem to="/app/logistics" icon={Truck} label="Logistics" emoji="🚚" />
             </SectionDropdown>
 
             {/* Risk - Matching Desktop */}
-            <NavItem to="/app/risk" icon={Shield} label="Risk" />
+            <NavItem to="/app/risk" icon={Shield} label="Risk" emoji="🛡️" />
 
             {/* Financial Services - Matching Desktop */}
-            <NavItem to="/app/financing" icon={Wallet} label="Financing" />
+            <NavItem to="/app/financing" icon={Wallet} label="Financing" emoji="💳" />
 
             {/* Documents - Matching Desktop */}
-            <NavItem to="/app/documents" icon={FileText} label="Documents" />
+            <NavItem to="/app/documents" icon={FileText} label="Documents" emoji="📄" />
 
             {/* Profile - Added for Mobile */}
             <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2">

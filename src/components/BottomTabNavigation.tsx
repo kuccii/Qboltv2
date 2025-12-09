@@ -30,6 +30,7 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
       label: 'Dashboard',
       exact: true,
       color: 'blue',
+      emoji: '📊',
     },
     {
       to: '/app/countries/rw/pricing',
@@ -37,6 +38,7 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
       label: 'Prices',
       exact: false,
       color: 'blue',
+      emoji: '💰',
     },
     {
       to: '/app/countries/rw/contacts',
@@ -44,6 +46,7 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
       label: 'Suppliers',
       exact: false,
       color: 'blue',
+      emoji: '👥',
     },
     {
       to: '/app/risk',
@@ -51,6 +54,7 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
       label: 'Risk',
       exact: false,
       color: 'red',
+      emoji: '🛡️',
     },
     {
       to: '#',
@@ -59,6 +63,7 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
       exact: false,
       color: 'gray',
       isButton: true,
+      emoji: '⚙️',
     },
   ];
 
@@ -120,8 +125,8 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
   };
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50 safe-area-bottom">
-      <div className="flex items-center justify-around h-16 px-1">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-white via-blue-50/30 to-purple-50/30 dark:from-gray-800 dark:via-blue-900/20 dark:to-purple-900/20 border-t-2 border-blue-200 dark:border-blue-700 z-50 safe-area-bottom shadow-2xl">
+      <div className="flex items-center justify-around h-18 px-1 py-1">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const active = !tab.isButton && isActive(tab.to, tab.exact);
@@ -133,23 +138,24 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
               <button
                 key={tab.label}
                 onClick={onMoreClick}
-                className="flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 hover:opacity-80"
+                className="flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 transform hover:scale-110"
               >
                 <div className={`
-                  flex flex-col items-center justify-center w-full h-full rounded-lg transition-all duration-200 px-2 py-1.5
-                  ${colors.bg}
+                  flex flex-col items-center justify-center w-full h-full rounded-xl transition-all duration-200 px-2 py-2
+                  ${active ? 'bg-gradient-to-b from-blue-500 to-blue-600 shadow-lg' : colors.bg}
                 `}>
+                  {tab.emoji && <span className="text-lg mb-0.5">{tab.emoji}</span>}
                   <Icon 
-                    size={20} 
+                    size={18} 
                     className={`
                       mb-1 transition-colors
-                      ${colors.icon}
+                      ${active ? 'text-white' : colors.icon}
                     `}
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                   />
                   <span className={`
-                    text-xs font-medium transition-colors leading-tight
-                    ${colors.text}
+                    text-xs font-bold transition-colors leading-tight
+                    ${active ? 'text-white' : colors.text}
                   `}>
                     {tab.label}
                   </span>
@@ -166,30 +172,45 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
               className={({ isActive: navIsActive }) => {
                 const isTabActive = navIsActive || active;
                 return `
-                  flex flex-col items-center justify-center flex-1 h-full transition-all duration-200
-                  ${isTabActive ? '' : 'hover:opacity-80'}
+                  flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 transform
+                  ${isTabActive ? 'scale-110' : 'hover:scale-105'}
                 `;
               }}
             >
               {({ isActive: navIsActive }) => {
                 const isTabActive = navIsActive || active;
                 const activeColors = getActiveColors(tab.color, isTabActive);
+                const gradientClass = isTabActive 
+                  ? tab.color === 'red' 
+                    ? 'bg-gradient-to-b from-red-500 to-red-600 shadow-lg'
+                    : tab.color === 'green'
+                      ? 'bg-gradient-to-b from-green-500 to-green-600 shadow-lg'
+                      : 'bg-gradient-to-b from-blue-500 to-blue-600 shadow-lg'
+                  : activeColors.bg;
+                
                 return (
                   <div className={`
-                    flex flex-col items-center justify-center w-full h-full rounded-lg transition-all duration-200 px-2 py-1.5
-                    ${activeColors.bg}
+                    flex flex-col items-center justify-center w-full h-full rounded-xl transition-all duration-200 px-2 py-2
+                    ${gradientClass}
                   `}>
+                    {tab.emoji && <span className={`text-lg mb-0.5 ${isTabActive ? '' : ''}`}>{tab.emoji}</span>}
                     <Icon 
-                      size={20} 
+                      size={18} 
                       className={`
                         mb-1 transition-colors
-                        ${activeColors.icon}
+                        ${isTabActive 
+                          ? 'text-white' 
+                          : activeColors.icon
+                        }
                       `}
                       strokeWidth={isTabActive ? 2.5 : 2}
                     />
                     <span className={`
-                      text-xs font-medium transition-colors leading-tight
-                      ${activeColors.text}
+                      text-xs font-bold transition-colors leading-tight
+                      ${isTabActive 
+                        ? 'text-white' 
+                        : activeColors.text
+                      }
                     `}>
                       {tab.label}
                     </span>
