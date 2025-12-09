@@ -217,47 +217,50 @@ const Home: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-white dark:bg-gray-900">
-        {/* Subtle background pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        {/* Subtle gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-50/30 to-transparent dark:via-blue-950/20"></div>
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 dark:from-blue-700 dark:via-purple-700 dark:to-pink-700">
+        {/* Animated background pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        {/* Animated gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-transparent animate-pulse"></div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-              East Africa's Premier
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                {' '}Trade Intelligence{' '}
+            <div className="mb-6 flex justify-center">
+              <div className="text-6xl sm:text-8xl animate-bounce">🚀</div>
+            </div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
+              Your Trade Adventure
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-200 animate-pulse">
+                Starts Here! 🎯
               </span>
-              Platform
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              Connect suppliers, track prices, optimize logistics, and access financing - all in one powerful platform designed for East Africa's construction and agriculture sectors.
+            <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto font-medium">
+              The <strong>super fun</strong> way to find suppliers, track prices, get money for your business, and grow bigger! 
+              Made just for East Africa! 🌍✨
             </p>
             
-            {/* Live Price Ticker */}
+            {/* Live Price Ticker - Kid Friendly */}
             <div className="mb-8">
-              <div className="inline-flex items-center bg-white dark:bg-gray-800 rounded-lg shadow-lg px-6 py-4 border border-gray-200 dark:border-gray-700">
-                <div className="flex items-center space-x-4">
+              <div className="inline-flex items-center bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-2xl shadow-2xl px-6 py-4 border-4 border-yellow-300 dark:border-yellow-600 transform hover:scale-105 transition-transform">
+                <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Live Prices</span>
+                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm font-bold text-gray-700 dark:text-gray-300">💰 Live Prices!</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <span className="font-semibold text-gray-900 dark:text-white">{currentPrice.material}</span>
-                    <span className="text-lg font-bold text-gray-900 dark:text-white">{currentPrice.price}</span>
-                    <div className={`flex items-center space-x-1 ${
-                      currentPrice.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                    <span className="text-lg font-extrabold text-gray-900 dark:text-white">{currentPrice.material}</span>
+                    <span className="text-xl font-bold text-blue-600 dark:text-blue-400">{currentPrice.price}</span>
+                    <div className={`flex items-center space-x-1 px-2 py-1 rounded-lg ${
+                      currentPrice.trend === 'up' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                     }`}>
                       {currentPrice.trend === 'up' ? (
                         <TrendingUpIcon className="h-4 w-4" />
                       ) : (
                         <TrendingDown className="h-4 w-4" />
                       )}
-                      <span className="text-sm font-medium">{currentPrice.change}</span>
+                      <span className="text-sm font-bold">{currentPrice.change}</span>
                     </div>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{currentPrice.region}</span>
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">📍 {currentPrice.region}</span>
                   </div>
                 </div>
               </div>
@@ -267,37 +270,40 @@ const Home: React.FC = () => {
               {isLoggedIn ? (
                 <Link
                   to="/app"
-                  className="inline-flex items-center px-8 py-4 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl hover:from-yellow-500 hover:to-orange-600 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
                 >
-                  Go to Dashboard
+                  🎯 Go to Dashboard
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               ) : (
                 <>
                   <Link
                     to="/register"
-                    className="inline-flex items-center px-8 py-4 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                    className="inline-flex items-center px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl hover:from-yellow-500 hover:to-orange-600 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
                   >
-                    Get Started Free
+                    🚀 Start Your Adventure FREE!
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                   <button
                     onClick={() => setShowDemo(true)}
-                    className="inline-flex items-center px-8 py-4 text-lg font-medium text-blue-600 bg-white border-2 border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                    className="inline-flex items-center px-8 py-4 text-lg font-bold text-blue-600 bg-white border-4 border-blue-400 rounded-xl hover:bg-blue-50 transition-all shadow-xl transform hover:scale-110"
                   >
                     <Play className="mr-2 h-5 w-5" />
-                    Watch Demo
+                    🎬 Watch Demo
                   </button>
                 </>
               )}
             </div>
 
-            {/* Trust Indicators */}
+            {/* Trust Indicators - Kid Friendly */}
             <div className="mt-12 flex flex-col items-center">
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Trusted by leading companies across East Africa</p>
-              <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
+              <p className="text-base sm:text-lg font-bold text-white/90 mb-6 flex items-center gap-2">
+                <span>⭐</span>
+                <span>Trusted by awesome companies across East Africa! 🌍</span>
+              </p>
+              <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-8">
                 {logos.map((logo, index) => (
-                  <div key={index} className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  <div key={index} className="text-sm sm:text-base font-bold text-white/80 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl border-2 border-white/30 hover:bg-white/30 transition-all transform hover:scale-105">
                     {logo}
                   </div>
                 ))}
@@ -307,89 +313,109 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="bg-gray-50 dark:bg-gray-800 py-16">
+      {/* Stats Section - Kid Friendly */}
+      <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 py-16 border-t-4 border-b-4 border-yellow-300 dark:border-yellow-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-gray-900 dark:text-white mb-8 flex items-center justify-center gap-2">
+            <span>📊</span>
+            <span>Look How Awesome We Are! 🎉</span>
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="flex items-center justify-center mb-2">
+              <div key={index} className="text-center bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-lg border-4 border-blue-200 dark:border-blue-700 transform hover:scale-110 transition-all">
+                <div className="flex items-center justify-center mb-3 text-3xl">
                   {stat.icon}
                 </div>
-                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">{stat.label}</div>
-                <div className="text-xs text-green-600 font-medium">{stat.change} this month</div>
+                <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-2">{stat.value}</div>
+                <div className="text-xs sm:text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">{stat.label}</div>
+                <div className="text-xs text-green-600 dark:text-green-400 font-bold bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-lg inline-block">
+                  {stat.change} this month! 📈
+                </div>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Features Section */}
-      <div id="features" className="py-20">
+      {/* Features Section - Kid Friendly */}
+      <div id="features" className="py-16 sm:py-20 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Everything You Need for Trade Success
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 flex items-center justify-center gap-3">
+              <span>🎁</span>
+              <span>Super Cool Features That Make You Win! 🏆</span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Our comprehensive platform provides all the tools and insights you need to make informed decisions and grow your business.
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-medium">
+              Everything you need to be a <strong>trade superstar</strong>! All in one fun place! 🎮✨
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="group p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-300">
-                <div className="flex items-center mb-4">
-                  {feature.icon}
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white ml-3">{feature.title}</h3>
+              <Link
+                key={index}
+                to={feature.link}
+                className="group p-6 bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-blue-900/20 rounded-2xl shadow-lg border-4 border-blue-200 dark:border-blue-700 hover:shadow-2xl hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 transform hover:scale-105"
+              >
+                <div className="flex items-start mb-4">
+                  <div className="text-4xl mr-3 transform group-hover:scale-125 transition-transform">
+                    {index === 0 && '💰'}
+                    {index === 1 && '👥'}
+                    {index === 2 && '🗺️'}
+                    {index === 3 && '💳'}
+                    {index === 4 && '🛡️'}
+                    {index === 5 && '🚚'}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{feature.title}</h3>
+                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4">{feature.description}</p>
+                  </div>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">{feature.description}</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-blue-600 dark:text-blue-400">{feature.stats}</span>
-                  <Link
-                    to={feature.link}
-                    className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
-                  >
-                    Learn More
-                    <ChevronRight className="ml-1 h-4 w-4" />
-                  </Link>
+                  <span className="text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-lg">
+                    {feature.stats}
+                  </span>
+                  <div className="inline-flex items-center text-blue-600 dark:text-blue-400 font-bold group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
+                    Try It! 
+                    <ChevronRight className="ml-1 h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Coverage Map Section */}
-      <div id="coverage" className="bg-gray-50 dark:bg-gray-800 py-20">
+      {/* Coverage Map Section - Kid Friendly */}
+      <div id="coverage" className="bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 dark:from-green-900/20 dark:via-blue-900/20 dark:to-purple-900/20 py-16 sm:py-20 border-t-4 border-b-4 border-green-300 dark:border-green-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Comprehensive Coverage Across East Africa
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 flex items-center justify-center gap-3">
+              <span>🌍</span>
+              <span>We're Everywhere in East Africa! 🗺️</span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Our network spans four countries with thousands of verified suppliers and real-time market data.
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-medium">
+              Our <strong>super network</strong> covers <strong>4 amazing countries</strong> with thousands of awesome suppliers! 🎯
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {coverageMap.map((country, index) => (
-              <div key={index} className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+              <div key={index} className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border-4 border-green-200 dark:border-green-700 hover:border-green-400 dark:hover:border-green-500 transform hover:scale-105 transition-all">
                 <div className="flex items-center mb-4">
-                  <MapPin className="h-6 w-6 text-blue-600 mr-2" />
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{country.country}</h3>
+                  <div className="text-3xl mr-2">📍</div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">{country.country}</h3>
                 </div>
                 <div className="space-y-2 mb-4">
                   {country.cities.map((city, cityIndex) => (
-                    <div key={cityIndex} className="flex items-center text-sm text-gray-600 dark:text-gray-300">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                    <div key={cityIndex} className="flex items-center text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 px-3 py-2 rounded-lg">
+                      <div className="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>
                       {city}
                     </div>
                   ))}
                 </div>
-                <div className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                  {country.suppliers} suppliers
+                <div className="text-sm sm:text-base font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-3 py-2 rounded-lg text-center">
+                  👥 {country.suppliers} Awesome Suppliers!
                 </div>
               </div>
             ))}
@@ -397,77 +423,79 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* Testimonials Section */}
-      <div id="testimonials" className="py-20">
+      {/* Testimonials Section - Kid Friendly */}
+      <div id="testimonials" className="py-16 sm:py-20 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              What Our Customers Say
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 flex items-center justify-center gap-3">
+              <span>💬</span>
+              <span>What Our Super Happy Users Say! 😊</span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Join thousands of satisfied customers who have transformed their business with Qivook.
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-medium">
+              Join <strong>thousands</strong> of awesome people who made their business <strong>super successful</strong> with Qivook! 🎉
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+              <div key={index} className="bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 dark:from-yellow-900/20 dark:via-orange-900/20 dark:to-pink-900/20 rounded-2xl p-6 shadow-xl border-4 border-yellow-200 dark:border-yellow-700 transform hover:scale-105 transition-all">
                 <div className="flex items-center mb-4">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full mr-4"
-                  />
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-2xl font-bold text-white mr-4 border-4 border-white shadow-lg">
+                    {testimonial.name.charAt(0)}
+                  </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">{testimonial.name}</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{testimonial.role}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-500">{testimonial.company}</p>
+                    <h4 className="font-bold text-gray-900 dark:text-white">{testimonial.name}</h4>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{testimonial.role}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{testimonial.company}</p>
                   </div>
                 </div>
                 <div className="flex items-center mb-3">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                    <span key={i} className="text-2xl">⭐</span>
                   ))}
                 </div>
-                <p className="text-gray-600 dark:text-gray-300 italic">"{testimonial.content}"</p>
+                <p className="text-gray-700 dark:text-gray-300 font-medium leading-relaxed">"{testimonial.content}"</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* CTA Section */}
-      <div className="bg-blue-600 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ready to Transform Your Business?
+      {/* CTA Section - Kid Friendly */}
+      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-700 dark:via-purple-700 dark:to-pink-700 py-16 sm:py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="text-6xl sm:text-8xl mb-4 animate-bounce">🎉</div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4">
+            Ready to Become a Trade Superstar? 🚀
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-            Join thousands of companies already using Qivook to optimize their supply chain, reduce costs, and grow their business.
+          <p className="text-lg sm:text-xl text-white/90 mb-8 max-w-3xl mx-auto font-medium">
+            Join <strong>thousands</strong> of awesome people already using Qivook to make their business <strong>super successful</strong>! 
+            It's FREE to start! 🎁
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {isLoggedIn ? (
               <Link
                 to="/app"
-                className="inline-flex items-center px-8 py-4 text-lg font-medium text-blue-600 bg-white rounded-lg hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center px-8 py-4 text-lg font-bold text-blue-600 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
               >
-                Go to Dashboard
+                🎯 Go to Dashboard
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             ) : (
               <>
                 <Link
                   to="/register"
-                  className="inline-flex items-center px-8 py-4 text-lg font-medium text-blue-600 bg-white rounded-lg hover:bg-gray-50 transition-colors"
+                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-blue-600 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
                 >
-                  Start Free Trial
+                  🚀 Start FREE Now!
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
                 <Link
-                  to="/contact"
-                  className="inline-flex items-center px-8 py-4 text-lg font-medium text-white border-2 border-white rounded-lg hover:bg-white hover:text-blue-600 transition-colors"
+                  to="/login"
+                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-white border-4 border-white rounded-xl hover:bg-white hover:text-blue-600 transition-all shadow-xl transform hover:scale-110"
                 >
-                  Contact Sales
+                  📞 Need Help?
                   <Phone className="ml-2 h-5 w-5" />
                 </Link>
               </>
