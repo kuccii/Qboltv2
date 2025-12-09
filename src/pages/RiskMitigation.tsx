@@ -1664,100 +1664,99 @@ const RiskMitigation: React.FC = () => {
                       <p className="text-base font-medium text-gray-700 dark:text-gray-300">See how protected you are and get more protection if you need it! 💪</p>
                     </div>
 
-                    {/* Insurance Overview Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-200 dark:border-blue-800 p-6">
+                    {/* Insurance Overview Cards - Kid Friendly */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border-4 border-blue-300 dark:border-blue-700 p-5 sm:p-6 shadow-xl transform hover:scale-105 transition-all">
                         <div className="flex items-center gap-3 mb-4">
-                          <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                            <ShieldCheck className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                          <div className="p-3 bg-gradient-to-br from-blue-200 to-indigo-200 dark:from-blue-900/40 dark:to-indigo-900/40 rounded-xl shadow-lg">
+                            <span className="text-3xl">🛡️</span>
                           </div>
                           <div>
-                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Active Policies</h4>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">Current coverage</p>
+                            <h4 className="text-base sm:text-lg font-extrabold text-gray-900 dark:text-white">Your Shields!</h4>
+                            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">How many you have</p>
                           </div>
                         </div>
-                        <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                        <div className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
                           {riskMetrics.insuranceCoverage.activePolicies}
                         </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          Total coverage: ${(riskMetrics.insuranceCoverage.totalCoverage / 1000000).toFixed(1)}M
+                        <div className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                          <span>💰</span> Total: ${(riskMetrics.insuranceCoverage.totalCoverage / 1000000).toFixed(1)}M
                         </div>
                       </div>
 
-                      <div className={`bg-gradient-to-br rounded-lg border p-6 ${
+                      <div className={`bg-gradient-to-br rounded-2xl border-4 p-5 sm:p-6 shadow-xl transform hover:scale-105 transition-all ${
                         riskMetrics.insuranceCoverage.coverageGaps === 0 
-                          ? 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800'
-                          : 'from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-200 dark:border-yellow-800'
+                          ? 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-300 dark:border-green-700'
+                          : 'from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-300 dark:border-yellow-700'
                       }`}>
                         <div className="flex items-center gap-3 mb-4">
-                          <div className={`p-2 rounded-lg ${
+                          <div className={`p-3 rounded-xl shadow-lg ${
                             riskMetrics.insuranceCoverage.coverageGaps === 0
-                              ? 'bg-green-100 dark:bg-green-900/30'
-                              : 'bg-yellow-100 dark:bg-yellow-900/30'
+                              ? 'bg-gradient-to-br from-green-200 to-emerald-200 dark:from-green-900/40 dark:to-emerald-900/40'
+                              : 'bg-gradient-to-br from-yellow-200 to-orange-200 dark:from-yellow-900/40 dark:to-orange-900/40'
                           }`}>
-                            {riskMetrics.insuranceCoverage.coverageGaps === 0 ? (
-                              <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
-                            ) : (
-                              <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-                            )}
+                            <span className="text-3xl">{riskMetrics.insuranceCoverage.coverageGaps === 0 ? '✅' : '⚠️'}</span>
                           </div>
                           <div>
-                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Coverage Gaps</h4>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">Areas needing protection</p>
+                            <h4 className="text-base sm:text-lg font-extrabold text-gray-900 dark:text-white">Missing Shields</h4>
+                            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Need more protection?</p>
                           </div>
                         </div>
-                        <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                        <div className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
                           {riskMetrics.insuranceCoverage.coverageGaps}
                         </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                        <div className="text-sm font-bold text-gray-700 dark:text-gray-300">
                           {riskMetrics.insuranceCoverage.coverageGaps === 0 
-                            ? 'All risks covered' 
-                            : 'Consider additional coverage'}
+                            ? '🎉 All safe!' 
+                            : '📋 Get more shields!'}
                         </div>
                       </div>
 
-                      <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg border border-purple-200 dark:border-purple-800 p-6">
+                      <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl border-4 border-purple-300 dark:border-purple-700 p-5 sm:p-6 shadow-xl transform hover:scale-105 transition-all">
                         <div className="flex items-center gap-3 mb-4">
-                          <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                            <DollarSign className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                          <div className="p-3 bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-900/40 dark:to-pink-900/40 rounded-xl shadow-lg">
+                            <span className="text-3xl">💡</span>
                           </div>
                           <div>
-                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Recommended</h4>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">Optimal coverage</p>
+                            <h4 className="text-base sm:text-lg font-extrabold text-gray-900 dark:text-white">We Recommend</h4>
+                            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Best amount for you</p>
                           </div>
                         </div>
-                        <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                        <div className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
                           ${(riskMetrics.insuranceCoverage.recommendedCoverage / 1000000).toFixed(1)}M
                         </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          Based on current risk profile
+                        <div className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                          <span>🎯</span> Perfect for you!
                         </div>
                       </div>
                     </div>
 
-                    {/* Insurance Policies */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                    {/* Insurance Policies - Kid Friendly */}
+                    <div className="bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-800 dark:to-blue-900/20 rounded-2xl shadow-xl border-4 border-blue-200 dark:border-blue-700 overflow-hidden">
+                      <div className="p-5 sm:p-6 border-b-4 border-blue-200 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Active Insurance Policies</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Your current insurance coverage</p>
+                            <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white flex items-center gap-3">
+                              <span className="text-3xl">🛡️</span>
+                              <span>Your Protection Shields!</span>
+                            </h3>
+                            <p className="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300 mt-2">See all the shields protecting your business! 💪</p>
                           </div>
                           {insuranceLoading && (
-                            <RefreshCw className="h-4 w-4 animate-spin text-gray-400" />
+                            <RefreshCw className="h-5 w-5 animate-spin text-blue-500" />
                           )}
                         </div>
                       </div>
                       <div className="divide-y divide-gray-200 dark:divide-gray-700">
                         {insuranceLoading ? (
-                          <div className="p-6 text-center">
-                            <RefreshCw className="h-6 w-6 animate-spin text-primary-600 mx-auto mb-2" />
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Loading insurance policies...</p>
+                          <div className="p-8 text-center">
+                            <RefreshCw className="h-10 w-10 animate-spin text-blue-500 mx-auto mb-4" />
+                            <p className="text-base font-bold text-gray-700 dark:text-gray-300">Loading your shields... ⏳</p>
                           </div>
                         ) : insuranceError ? (
-                          <div className="p-6 text-center">
-                            <AlertTriangle className="h-6 w-6 text-yellow-600 mx-auto mb-2" />
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{insuranceError}</p>
+                          <div className="p-8 text-center">
+                            <div className="text-6xl mb-4">⚠️</div>
+                            <p className="text-base font-bold text-gray-900 dark:text-white mb-3">{insuranceError}</p>
                             <button
                               onClick={async () => {
                                 try {
@@ -1771,58 +1770,79 @@ const RiskMitigation: React.FC = () => {
                                   setInsuranceLoading(false);
                                 }
                               }}
-                              className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700"
+                              className="px-6 py-3 text-base font-bold bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg transform hover:scale-105 flex items-center gap-2 mx-auto"
                             >
-                              Retry
+                              <span>🔄</span>
+                              <span>Try Again!</span>
                             </button>
                           </div>
                         ) : insuranceData?.policies && insuranceData.policies.length > 0 ? (
                           insuranceData.policies.map((policy: any) => (
-                          <div key={policy.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <div className="flex items-start justify-between">
+                          <div key={policy.id} className="p-5 sm:p-6 bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-800 dark:to-blue-900/20 border-b-4 border-blue-200 dark:border-blue-700 hover:bg-blue-50/50 dark:hover:bg-blue-900/30 transition-all">
+                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                               <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                  <InsuranceIndicator 
-                                    status={policy.status as any} 
-                                    type={policy.type === 'cargo' ? 'cargo' : policy.type === 'supplier_liability' ? 'liability' : 'general'} 
-                                    coverageAmount={policy.coverageAmount}
-                                    expiryDate={policy.expiryDate}
-                                    showAmount={true}
-                                  />
-                                  <h4 className="text-base font-semibold text-gray-900 dark:text-white">
-                                    {policy.type === 'cargo' ? 'Cargo Insurance' : 
-                                     policy.type === 'supplier_liability' ? 'Supplier Liability Insurance' :
-                                     policy.type === 'liability' ? 'Professional Liability' : 'Insurance Policy'}
-                                  </h4>
-                                </div>
-                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                  {policy.details.description || 
-                                   (policy.type === 'cargo' ? 'Covers goods in transit across East Africa. Protects against theft, damage, and loss during transportation.' :
-                                    policy.type === 'supplier_liability' ? `Insurance for supplier: ${policy.entityName}` :
-                                    'Protects against claims of negligence or errors in professional services and advice.')}
-                                </p>
-                                <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-                                  {policy.coverageAmount > 0 && (
-                                    <span className="flex items-center gap-1">
-                                      <DollarSign className="h-3 w-3" />
-                                      Coverage: ${(policy.coverageAmount / 1000000).toFixed(1)}M USD
+                                <div className="flex items-center gap-3 mb-3">
+                                  <div className="p-3 bg-gradient-to-br from-blue-200 to-indigo-200 dark:from-blue-900/40 dark:to-indigo-900/40 rounded-xl shadow-lg">
+                                    <span className="text-3xl">
+                                      {policy.type === 'cargo' ? '🚚' : policy.type === 'supplier_liability' ? '👥' : '🛡️'}
                                     </span>
+                                  </div>
+                                  <div>
+                                    <h4 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
+                                      <span>{policy.type === 'cargo' ? '🚚' : policy.type === 'supplier_liability' ? '👥' : '🛡️'}</span>
+                                      <span>
+                                        {policy.type === 'cargo' ? 'Cargo Shield' : 
+                                         policy.type === 'supplier_liability' ? 'Supplier Shield' :
+                                         policy.type === 'liability' ? 'Professional Shield' : 'Protection Shield'}
+                                      </span>
+                                    </h4>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-1">
+                                      {policy.type === 'cargo' ? 'Protects your stuff when moving!' : 
+                                       policy.type === 'supplier_liability' ? `Shield for: ${policy.entityName}` :
+                                       'Keeps you safe from problems!'}
+                                    </p>
+                                  </div>
+                                </div>
+                                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4 bg-white/50 dark:bg-gray-700/50 px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 leading-relaxed">
+                                  {policy.details.description || 
+                                   (policy.type === 'cargo' ? '🛡️ This shield protects your things when they travel! It keeps them safe from getting lost, broken, or stolen! 💪' :
+                                    policy.type === 'supplier_liability' ? `🛡️ This shield protects you when working with ${policy.entityName}!` :
+                                    '🛡️ This shield keeps you safe from mistakes and problems!')}
+                                </p>
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                  {policy.coverageAmount > 0 && (
+                                    <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-blue-300 dark:border-blue-700 text-center shadow-md">
+                                      <div className="text-xl mb-1">💰</div>
+                                      <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Protection</div>
+                                      <div className="text-sm font-extrabold text-gray-900 dark:text-white">
+                                        ${(policy.coverageAmount / 1000000).toFixed(1)}M
+                                      </div>
+                                    </div>
                                   )}
                                   {policy.expiryDate && (
-                                    <span className="flex items-center gap-1">
-                                      <Clock className="h-3 w-3" />
-                                      Expires: {policy.expiryDate.toLocaleDateString()}
-                                    </span>
+                                    <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-green-300 dark:border-green-700 text-center shadow-md">
+                                      <div className="text-xl mb-1">⏰</div>
+                                      <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Expires</div>
+                                      <div className="text-sm font-extrabold text-gray-900 dark:text-white">
+                                        {policy.expiryDate.toLocaleDateString()}
+                                      </div>
+                                    </div>
                                   )}
-                                  <span className="flex items-center gap-1">
-                                    <Shield className="h-3 w-3" />
-                                    Provider: {policy.provider}
-                                  </span>
+                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-purple-300 dark:border-purple-700 text-center shadow-md">
+                                    <div className="text-xl mb-1">🏢</div>
+                                    <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Provider</div>
+                                    <div className="text-sm font-extrabold text-gray-900 dark:text-white truncate">
+                                      {policy.provider}
+                                    </div>
+                                  </div>
                                   {policy.entityType && (
-                                    <span className="flex items-center gap-1">
-                                      <FileText className="h-3 w-3" />
-                                      {policy.entityType === 'supplier' ? 'Supplier' : 'Shipment'} Policy
-                                    </span>
+                                    <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-orange-300 dark:border-orange-700 text-center shadow-md">
+                                      <div className="text-xl mb-1">{policy.entityType === 'supplier' ? '👥' : '📦'}</div>
+                                      <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Type</div>
+                                      <div className="text-sm font-extrabold text-gray-900 dark:text-white">
+                                        {policy.entityType === 'supplier' ? 'Supplier' : 'Shipment'}
+                                      </div>
+                                    </div>
                                   )}
                                 </div>
                               </div>
@@ -1834,25 +1854,29 @@ const RiskMitigation: React.FC = () => {
                                     navigate(`/app/logistics`);
                                   }
                                 }}
-                                className="ml-4 px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 border border-primary-200 dark:border-primary-800 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+                                className="px-5 py-3 text-sm font-bold bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2 flex-shrink-0"
                               >
-                                View Details
+                                <span>👀</span>
+                                <span>See More!</span>
+                                <ArrowRight className="h-4 w-4" />
                               </button>
                             </div>
                           </div>
                           ))
                         ) : (
-                          <div className="p-6 text-center">
-                            <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4 opacity-50" />
-                            <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">No Insurance Policies Found</p>
-                            <p className="text-xs text-gray-600 dark:text-gray-400 mb-4">
-                              You don't have any active insurance policies. Consider adding insurance to protect your supply chain.
+                          <div className="p-8 text-center">
+                            <div className="text-8xl mb-6">🛡️</div>
+                            <h3 className="text-xl font-extrabold text-gray-900 dark:text-white mb-3">No Shields Yet! 😊</h3>
+                            <p className="text-base font-medium text-gray-700 dark:text-gray-300 mb-4 max-w-md mx-auto">
+                              You don't have any protection shields yet! Get some to keep your business safe! 💪
                             </p>
                             <button
                               onClick={() => navigate('/app/supplier-directory')}
-                              className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-1 mx-auto"
+                              className="px-6 py-3 text-base font-bold bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg transform hover:scale-105 flex items-center gap-2 mx-auto"
                             >
-                              Find Insured Suppliers <ArrowRight className="h-4 w-4" />
+                              <span>🔍</span>
+                              <span>Find Protected Suppliers!</span>
+                              <ArrowRight className="h-5 w-5" />
                             </button>
                           </div>
                         )}
@@ -2182,30 +2206,30 @@ const RiskMitigation: React.FC = () => {
                     </h3>
                     <p className="text-base font-medium text-gray-700 dark:text-gray-300">Learn step-by-step how to solve problems! It's like a recipe for fixing things! 🎯</p>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="p-6 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-lg border border-red-200 dark:border-red-800">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
-                          <TrendingUp className="h-5 w-5 text-red-600 dark:text-red-400" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                    <div className="p-5 sm:p-6 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-2xl border-4 border-red-300 dark:border-red-700 shadow-xl transform hover:scale-105 transition-all">
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="p-3 bg-gradient-to-br from-red-200 to-orange-200 dark:from-red-900/40 dark:to-orange-900/40 rounded-xl shadow-lg">
+                          <span className="text-4xl">💰</span>
                         </div>
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Price Spike Response</h4>
+                        <h4 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white">When Prices Go Up! 📈</h4>
                       </div>
-                      <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-red-500 flex-shrink-0" />
-                          <span>Activate alternative suppliers immediately</span>
+                      <ul className="space-y-3 mb-5">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-red-200 dark:border-red-800">
+                          <span className="text-2xl">1️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Find other suppliers fast! 🏃</span>
                         </li>
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-red-500 flex-shrink-0" />
-                          <span>Review and renegotiate contract terms</span>
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-red-200 dark:border-red-800">
+                          <span className="text-2xl">2️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Talk to them about better prices! 💬</span>
                         </li>
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-red-500 flex-shrink-0" />
-                          <span>Notify all stakeholders of price changes</span>
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-red-200 dark:border-red-800">
+                          <span className="text-2xl">3️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Tell everyone about the change! 📢</span>
                         </li>
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-red-500 flex-shrink-0" />
-                          <span>Update pricing models and forecasts</span>
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-red-200 dark:border-red-800">
+                          <span className="text-2xl">4️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Update your price plans! 📊</span>
                         </li>
                       </ul>
                       <button 
@@ -2216,35 +2240,36 @@ const RiskMitigation: React.FC = () => {
                             message: 'Price Spike Response playbook is now active. We\'ll help you follow these steps!',
                           });
                         }}
-                        className="mt-4 w-full px-4 py-3 text-base font-bold bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:from-red-600 hover:to-orange-600 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
+                        className="w-full px-5 py-3.5 text-base font-extrabold bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:from-red-600 hover:to-orange-600 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
                       >
-                        <span>🚀 Execute Playbook!</span>
+                        <span>🚀</span>
+                        <span>Let's Fix It!</span>
                       </button>
                     </div>
 
-                    <div className="p-6 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-                          <Activity className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                    <div className="p-5 sm:p-6 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl border-4 border-yellow-300 dark:border-yellow-700 shadow-xl transform hover:scale-105 transition-all">
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="p-3 bg-gradient-to-br from-yellow-200 to-orange-200 dark:from-yellow-900/40 dark:to-orange-900/40 rounded-xl shadow-lg">
+                          <span className="text-4xl">📦</span>
                         </div>
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Supply Disruption</h4>
+                        <h4 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white">When Stuff Stops Coming! 🚚</h4>
                       </div>
-                      <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-yellow-500 flex-shrink-0" />
-                          <span>Assess current inventory levels</span>
+                      <ul className="space-y-3 mb-5">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-yellow-200 dark:border-yellow-800">
+                          <span className="text-2xl">1️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Check what you have left! 📋</span>
                         </li>
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-yellow-500 flex-shrink-0" />
-                          <span>Contact backup suppliers immediately</span>
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-yellow-200 dark:border-yellow-800">
+                          <span className="text-2xl">2️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Call backup suppliers NOW! 📞</span>
                         </li>
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-yellow-500 flex-shrink-0" />
-                          <span>Adjust production schedules accordingly</span>
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-yellow-200 dark:border-yellow-800">
+                          <span className="text-2xl">3️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Change your work schedule! ⏰</span>
                         </li>
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-yellow-500 flex-shrink-0" />
-                          <span>Communicate delays to customers proactively</span>
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-yellow-200 dark:border-yellow-800">
+                          <span className="text-2xl">4️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Tell customers about delays! 💬</span>
                         </li>
                       </ul>
                       <button 
@@ -2255,35 +2280,36 @@ const RiskMitigation: React.FC = () => {
                             message: 'Supply Disruption playbook is now active. We\'ll help you follow these steps!',
                           });
                         }}
-                        className="mt-4 w-full px-4 py-3 text-base font-bold bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
+                        className="w-full px-5 py-3.5 text-base font-extrabold bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
                       >
-                        <span>🚀 Execute Playbook!</span>
+                        <span>🚀</span>
+                        <span>Let's Fix It!</span>
                       </button>
                     </div>
 
-                    <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                          <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    <div className="p-5 sm:p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border-4 border-blue-300 dark:border-blue-700 shadow-xl transform hover:scale-105 transition-all">
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="p-3 bg-gradient-to-br from-blue-200 to-indigo-200 dark:from-blue-900/40 dark:to-indigo-900/40 rounded-xl shadow-lg">
+                          <span className="text-4xl">📋</span>
                         </div>
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Regulatory Change</h4>
+                        <h4 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white">When Rules Change! 📄</h4>
                       </div>
-                      <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-blue-500 flex-shrink-0" />
-                          <span>Review new regulations thoroughly</span>
+                      <ul className="space-y-3 mb-5">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-blue-200 dark:border-blue-800">
+                          <span className="text-2xl">1️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Read the new rules carefully! 👀</span>
                         </li>
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-blue-500 flex-shrink-0" />
-                          <span>Update compliance checklists</span>
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-blue-200 dark:border-blue-800">
+                          <span className="text-2xl">2️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Update your checklists! ✅</span>
                         </li>
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-blue-500 flex-shrink-0" />
-                          <span>Consult with legal team</span>
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-blue-200 dark:border-blue-800">
+                          <span className="text-2xl">3️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Ask a lawyer for help! ⚖️</span>
                         </li>
-                        <li className="flex items-start gap-2">
-                          <Target className="h-4 w-4 mt-0.5 text-blue-500 flex-shrink-0" />
-                          <span>Train staff on new requirements</span>
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-blue-200 dark:border-blue-800">
+                          <span className="text-2xl">4️⃣</span>
+                          <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Teach your team the new rules! 🎓</span>
                         </li>
                       </ul>
                       <button 
@@ -2294,9 +2320,10 @@ const RiskMitigation: React.FC = () => {
                             message: 'Regulatory Change playbook is now active. We\'ll help you follow these steps!',
                           });
                         }}
-                        className="mt-4 w-full px-4 py-3 text-base font-bold bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
+                        className="w-full px-5 py-3.5 text-base font-extrabold bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
                       >
-                        <span>🚀 Execute Playbook!</span>
+                        <span>🚀</span>
+                        <span>Let's Fix It!</span>
                       </button>
                     </div>
                   </div>
