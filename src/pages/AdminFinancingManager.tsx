@@ -11,7 +11,7 @@ import {
   Download
 } from 'lucide-react';
 import { unifiedApi } from '../services/unifiedApi';
-import DashboardCard from '../components/DashboardCard';
+import { AdminCard } from '../components/AdminCard';
 import StatusBadge from '../components/StatusBadge';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -169,7 +169,7 @@ const AdminFinancingManager: React.FC = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <DashboardCard>
+        <AdminCard>
           <div className="flex items-center gap-3">
             <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
               <CreditCard className="h-6 w-6 text-blue-600 dark:text-blue-400" />
@@ -179,9 +179,9 @@ const AdminFinancingManager: React.FC = () => {
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{offers.length}</p>
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
 
-        <DashboardCard>
+        <AdminCard>
           <div className="flex items-center gap-3">
             <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg">
               <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
@@ -193,9 +193,9 @@ const AdminFinancingManager: React.FC = () => {
               </p>
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
 
-        <DashboardCard>
+        <AdminCard>
           <div className="flex items-center gap-3">
             <div className="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg">
               <AlertCircle className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
@@ -207,9 +207,9 @@ const AdminFinancingManager: React.FC = () => {
               </p>
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
 
-        <DashboardCard>
+        <AdminCard>
           <div className="flex items-center gap-3">
             <div className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
               <CreditCard className="h-6 w-6 text-purple-600 dark:text-purple-400" />
@@ -221,7 +221,7 @@ const AdminFinancingManager: React.FC = () => {
               </p>
             </div>
           </div>
-        </DashboardCard>
+        </AdminCard>
       </div>
 
       {/* Actions */}

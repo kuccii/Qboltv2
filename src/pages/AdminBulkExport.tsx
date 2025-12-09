@@ -160,6 +160,7 @@ const AdminBulkExport: React.FC = () => {
             </div>
           </div>
         </AdminCard>
+        </div>
       </div>
     </div>
   );

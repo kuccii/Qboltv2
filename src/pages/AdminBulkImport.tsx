@@ -192,6 +192,7 @@ const AdminBulkImport: React.FC = () => {
           </div>
         </AdminCard>
       </div>
+      </div>
     </div>
   );
 };
