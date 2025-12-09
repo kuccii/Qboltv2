@@ -29,7 +29,8 @@ import {
   ChevronRight,
   Eye,
   Download,
-  BookOpen
+  BookOpen,
+  X
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useIndustry } from '../contexts/IndustryContext';
