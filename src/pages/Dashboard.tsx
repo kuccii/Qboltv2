@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   TrendingUp, 
   Users, 
@@ -396,9 +396,10 @@ const Dashboard: React.FC = () => {
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
             {/* View Prices */}
-            <button
-              onClick={() => navigate('/app/countries/rw/pricing')}
-              className="relative bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-blue-300 dark:border-blue-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            <Link
+              to="/app/countries/rw/pricing"
+              className="relative bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-blue-300 dark:border-blue-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2 cursor-pointer"
+              title="Go to Prices Page - Track material prices"
             >
               <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8" />
               <span className="text-xs sm:text-sm font-bold text-center">💰 Prices</span>
@@ -407,12 +408,13 @@ const Dashboard: React.FC = () => {
                   {realPrices.length > 9 ? '9+' : realPrices.length}
                 </span>
               )}
-            </button>
+            </Link>
 
             {/* Find Suppliers */}
-            <button
-              onClick={() => navigate('/app/countries/rw/contacts')}
-              className="relative bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-green-300 dark:border-green-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            <Link
+              to="/app/countries/rw/contacts"
+              className="relative bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-green-300 dark:border-green-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2 cursor-pointer"
+              title="Go to Suppliers Page - Find verified suppliers"
             >
               <Users className="h-6 w-6 sm:h-8 sm:w-8" />
               <span className="text-xs sm:text-sm font-bold text-center">👥 Suppliers</span>
@@ -421,21 +423,23 @@ const Dashboard: React.FC = () => {
                   {realSuppliers.length > 9 ? '9+' : realSuppliers.length}
                 </span>
               )}
-            </button>
+            </Link>
 
             {/* Apply for Financing */}
-            <button
-              onClick={() => navigate('/app/financing')}
-              className="relative bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-purple-300 dark:border-purple-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            <Link
+              to="/app/financing"
+              className="relative bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-purple-300 dark:border-purple-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2 cursor-pointer"
+              title="Go to Financing Page - Apply for business loans"
             >
               <Wallet className="h-6 w-6 sm:h-8 sm:w-8" />
               <span className="text-xs sm:text-sm font-bold text-center">💳 Financing</span>
-            </button>
+            </Link>
 
             {/* Risk Alerts */}
-            <button
-              onClick={() => navigate('/app/risk')}
-              className="relative bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-red-300 dark:border-red-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            <Link
+              to="/app/risk"
+              className="relative bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-red-300 dark:border-red-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2 cursor-pointer"
+              title="Go to Risk Page - View risk alerts and mitigation"
             >
               <Shield className="h-6 w-6 sm:h-8 sm:w-8" />
               <span className="text-xs sm:text-sm font-bold text-center">🛡️ Risk</span>
@@ -444,25 +448,27 @@ const Dashboard: React.FC = () => {
                   {realAlerts.length > 9 ? '9+' : realAlerts.length}
                 </span>
               )}
-            </button>
+            </Link>
 
             {/* View Documents */}
-            <button
-              onClick={() => navigate('/app/documents')}
-              className="relative bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-indigo-300 dark:border-indigo-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            <Link
+              to="/app/documents"
+              className="relative bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-indigo-300 dark:border-indigo-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2 cursor-pointer"
+              title="Go to Documents Page - Manage trade documents"
             >
               <FileText className="h-6 w-6 sm:h-8 sm:w-8" />
               <span className="text-xs sm:text-sm font-bold text-center">📄 Documents</span>
-            </button>
+            </Link>
 
             {/* Track Demand */}
-            <button
-              onClick={() => navigate('/app/demand')}
-              className="relative bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-orange-300 dark:border-orange-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2"
+            <Link
+              to="/app/demand"
+              className="relative bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-orange-300 dark:border-orange-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2 cursor-pointer"
+              title="Go to Demand Mapping Page - View demand patterns"
             >
               <Map className="h-6 w-6 sm:h-8 sm:w-8" />
               <span className="text-xs sm:text-sm font-bold text-center">🗺️ Demand</span>
-            </button>
+            </Link>
           </div>
         </div>
       </div>
