@@ -62,83 +62,10 @@ const MobileOptimization: React.FC<MobileOptimizationProps> = ({ children }) => 
     return 'Dashboard';
   };
 
-  if (!isMobile) {
-    return <>{children}</>;
-  }
-
+  // Just return children with mobile styles - header and navigation are handled by Layout
   return (
     <div className="mobile-optimized">
-      {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between px-4 py-3">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">Q</span>
-            </div>
-            <div>
-              <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Qivook</h1>
-              <p className="text-xs text-gray-500 dark:text-gray-400">{getCurrentSection()}</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-              <Search className="w-5 h-5" />
-            </button>
-            <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-              <Filter className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content with Mobile Padding */}
-      <div className="pt-16 pb-20">
-        {children}
-      </div>
-
-      {/* Mobile Bottom Navigation */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-around py-2">
-          {navigationItems.slice(0, 5).map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path || 
-                           (item.path !== '/app' && location.pathname.startsWith(item.path));
-            
-            return (
-              <button
-                key={item.path}
-                className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors ${
-                  isActive
-                    ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                }`}
-                onClick={() => {
-                  window.location.href = item.path;
-                }}
-                aria-label={item.label}
-              >
-                <Icon className="w-5 h-5 mb-1" />
-                <span className="text-xs font-medium">{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Mobile Floating Action Button for Rwanda */}
-      {location.pathname.includes('/rwanda') && (
-        <div className="lg:hidden fixed bottom-20 right-4 z-50">
-          <div className="flex flex-col space-y-2">
-            <button className="w-12 h-12 bg-primary-600 text-white rounded-full shadow-lg hover:bg-primary-700 transition-colors flex items-center justify-center">
-              <Download className="w-5 h-5" />
-            </button>
-            <button className="w-12 h-12 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition-colors flex items-center justify-center">
-              <Phone className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-      )}
+      {children}
 
       {/* Mobile Styles */}
       <style jsx global>{`
