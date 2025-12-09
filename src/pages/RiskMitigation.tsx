@@ -604,7 +604,7 @@ const RiskMitigation: React.FC = () => {
       />
 
       <PageLayout maxWidth="full" padding="none">
-        <div className="px-10 md:px-14 lg:px-20 py-8 space-y-8">
+        <div className="px-3 sm:px-4 md:px-6 lg:px-10 xl:px-14 py-4 sm:py-6 md:py-8 space-y-4 sm:space-y-6 md:space-y-8">
           {/* Loading State - Only show if still loading and not timed out */}
           {(loading || (alertsLoading && !initialLoadTimeout)) && (
             <div className="flex flex-col items-center justify-center py-12">
@@ -685,7 +685,7 @@ const RiskMitigation: React.FC = () => {
 
           {/* Tabs Container - Matching DocumentVault Style */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide">
+            <div className="flex border-b-2 border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
               {[
                 { id: 'overview', label: 'Overview', icon: <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.totalAlerts },
                 { id: 'alerts', label: 'Alerts', icon: <Bell className="h-3.5 w-3.5 sm:h-4 sm:w-4" />, badge: riskMetrics.totalAlerts, urgent: riskMetrics.highRisk },
@@ -696,7 +696,7 @@ const RiskMitigation: React.FC = () => {
                 <button
                   key={tab.id}
                   onClick={() => setSelectedTab(tab.id as any)}
-                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap relative flex-shrink-0 ${
+                  className={`flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 md:px-4 lg:px-6 py-2.5 sm:py-3 md:py-4 font-bold text-xs sm:text-sm transition-colors whitespace-nowrap relative flex-shrink-0 ${
                     selectedTab === tab.id
                       ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400'
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
@@ -734,7 +734,7 @@ const RiskMitigation: React.FC = () => {
                         </div>
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Insurance Coverage Summary</h3>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-3 sm:mt-4">
                             <div>
                               <div className="text-2xl font-bold text-gray-900 dark:text-white">
                                 {riskMetrics.insuranceCoverage.activePolicies || 0}

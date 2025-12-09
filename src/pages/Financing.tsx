@@ -543,12 +543,12 @@ const Financing: React.FC = () => {
             </div>
           }
         >
-          <div className="px-6 py-6 space-y-6">
+          <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
             {/* Tab Navigation - Fun and Colorful */}
-            <div className="flex items-center gap-3 border-b-4 border-gray-200 dark:border-gray-700 mb-6 overflow-x-auto scrollbar-hide">
+            <div className="flex items-center gap-2 sm:gap-3 border-b-4 border-gray-200 dark:border-gray-700 mb-4 sm:mb-6 overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
               <button
                 onClick={() => setSelectedTab('offers')}
-                className={`px-6 py-3 text-base font-bold border-b-4 transition-all transform hover:scale-105 ${
+                className={`px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-bold border-b-4 transition-all transform hover:scale-105 flex-shrink-0 ${
                   selectedTab === 'offers'
                     ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
                     : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
@@ -587,7 +587,7 @@ const Financing: React.FC = () => {
               title="🧮 Financing Calculator" 
               subtitle="🎯 Move the sliders to see how much money you can get and what you'll pay back!"
             >
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-6">
                   <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-6 border-4 border-blue-300 dark:border-blue-700 shadow-lg">
                     <label className="block text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">

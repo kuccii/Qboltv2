@@ -11,6 +11,7 @@ import {
   TrendingUp,
   Users,
   Shield,
+  Wallet,
   Menu
 } from 'lucide-react';
 
@@ -22,7 +23,7 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
   const location = useLocation();
 
   // Main navigation items from web app navigation structure:
-  // Dashboard, Prices (from Market dropdown), Suppliers (from Supply dropdown), Risk, and More
+  // Dashboard, Prices (from Market dropdown), Suppliers (from Supply dropdown), Risk, Financing, and More
   const tabs = [
     {
       to: '/app',
@@ -57,6 +58,14 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
       emoji: '🛡️',
     },
     {
+      to: '/app/financing',
+      icon: Wallet,
+      label: 'Finance',
+      exact: false,
+      color: 'green',
+      emoji: '💳',
+    },
+    {
       to: '#',
       icon: Menu,
       label: 'More',
@@ -80,6 +89,10 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
       return location.pathname.includes('/contacts') || 
              location.pathname.includes('/supplier-directory') ||
              location.pathname.includes('/suppliers');
+    }
+    // Handle financing route
+    if (to === '/app/financing') {
+      return location.pathname.startsWith('/app/financing');
     }
     return location.pathname.startsWith(to);
   };
