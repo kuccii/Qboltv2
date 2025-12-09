@@ -544,39 +544,41 @@ const Financing: React.FC = () => {
           }
         >
           <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
-            {/* Tab Navigation - Fun and Colorful */}
-            <div className="flex items-center gap-2 sm:gap-3 border-b-4 border-gray-200 dark:border-gray-700 mb-4 sm:mb-6 overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
-              <button
-                onClick={() => setSelectedTab('offers')}
-                className={`px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-bold border-b-4 transition-all transform hover:scale-105 flex-shrink-0 ${
-                  selectedTab === 'offers'
-                    ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                    : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                }`}
-              >
-                <span className="flex items-center gap-2">
+            {/* Tab Navigation - Matching Country Profile Style */}
+            <div className="mb-6">
+              <div className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-blue-200 dark:border-gray-700 shadow-lg overflow-x-auto scrollbar-hide">
+                <button
+                  onClick={() => setSelectedTab('offers')}
+                  className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
+                    selectedTab === 'offers'
+                      ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg scale-105'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-green-100 dark:hover:bg-gray-700 hover:text-green-700 dark:hover:text-green-300'
+                  }`}
+                >
                   <span>💵</span>
                   <span>Browse Offers</span>
-                </span>
-              </button>
-              <button
-                onClick={() => setSelectedTab('applications')}
-                className={`px-6 py-3 text-base font-bold border-b-4 transition-all transform hover:scale-105 relative ${
-                  selectedTab === 'applications'
-                    ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                    : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                }`}
-              >
-                <span className="flex items-center gap-2">
+                </button>
+                <button
+                  onClick={() => setSelectedTab('applications')}
+                  className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 relative ${
+                    selectedTab === 'applications'
+                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-300'
+                  }`}
+                >
                   <span>📝</span>
                   <span>My Applications</span>
                   {applications.length > 0 && (
-                    <span className="ml-2 px-3 py-1 text-xs font-bold bg-gradient-to-r from-primary-500 to-purple-500 text-white rounded-full shadow-lg">
+                    <span className={`ml-1.5 px-2 py-1 text-xs font-bold rounded-full shadow-md ${
+                      selectedTab === 'applications' 
+                        ? 'bg-white/30 text-white' 
+                        : 'bg-gradient-to-r from-primary-500 to-purple-500 text-white'
+                    }`}>
                       {applications.length}
                     </span>
                   )}
-                </span>
-              </button>
+                </button>
+              </div>
             </div>
 
             {/* Offers Tab */}

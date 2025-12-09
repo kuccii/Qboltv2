@@ -1290,18 +1290,18 @@ const RiskMitigation: React.FC = () => {
 
                 {selectedTab === 'alerts' && (
               <div className="space-y-6">
-                {/* Search and Filter Bar */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                {/* Search and Filter Bar - Kid Friendly */}
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border-2 border-blue-200 dark:border-gray-700 p-4 sm:p-6 shadow-lg">
                   <div className="flex flex-col gap-4">
                     {/* Search Bar */}
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-blue-500" />
                       <input
                         type="text"
-                        placeholder="Search alerts by title, region, material, or type..."
+                        placeholder="🔍 Search for problems by name, place, or type..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-10 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full pl-12 pr-12 py-3 text-base border-2 border-blue-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
                       />
                       {searchQuery && (
                         <button
@@ -1313,55 +1313,54 @@ const RiskMitigation: React.FC = () => {
                       )}
                     </div>
                     
-                    {/* Filters */}
+                    {/* Filters - Kid Friendly */}
                     <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-                      <div className="flex items-center gap-4 flex-wrap">
+                      <div className="flex items-center gap-3 flex-wrap">
                         <div className="flex items-center gap-2">
-                          <Filter className="h-4 w-4 text-gray-500" />
-                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Filters:</span>
+                          <Filter className="h-5 w-5 text-blue-600" />
+                          <span className="text-base font-bold text-gray-900 dark:text-white">🔍 Filter by:</span>
                         </div>
                         <select
                           value={selectedRiskLevel}
                           onChange={(e) => setSelectedRiskLevel(e.target.value)}
-                          className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="px-4 py-2.5 text-sm font-bold border-2 border-blue-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
                         >
-                          <option value="all">All Severities</option>
-                          <option value="high">High Priority</option>
-                          <option value="medium">Medium Priority</option>
-                          <option value="low">Low Priority</option>
+                          <option value="all">🔍 All Problems</option>
+                          <option value="high">🚨 Super Important!</option>
+                          <option value="medium">⚠️ Kinda Important</option>
+                          <option value="low">✅ Not Too Bad</option>
                         </select>
                         <select
                           value={selectedRegion}
                           onChange={(e) => setSelectedRegion(e.target.value)}
-                          className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="px-4 py-2.5 text-sm font-bold border-2 border-purple-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
                         >
-                          <option value="all">All Regions</option>
-                          <option value="Rwanda">Rwanda</option>
-                          <option value="Kenya">Kenya</option>
-                          <option value="Uganda">Uganda</option>
-                          <option value="Tanzania">Tanzania</option>
-                          <option value="Ethiopia">Ethiopia</option>
+                          <option value="all">🌍 All Places</option>
+                          <option value="Rwanda">🇷🇼 Rwanda</option>
+                          <option value="Kenya">🇰🇪 Kenya</option>
+                          <option value="Uganda">🇺🇬 Uganda</option>
+                          <option value="Tanzania">🇹🇿 Tanzania</option>
+                          <option value="Ethiopia">🇪🇹 Ethiopia</option>
                         </select>
                         <select
                           value={selectedAlertType}
                           onChange={(e) => setSelectedAlertType(e.target.value)}
-                          className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="px-4 py-2.5 text-sm font-bold border-2 border-green-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm"
                         >
-                          <option value="all">All Types</option>
-                          <option value="price">Price</option>
-                          <option value="supply">Supply</option>
-                          <option value="logistics_delay">Logistics</option>
-                          <option value="supplier_risk">Supplier</option>
-                          <option value="market_risk">Market</option>
-                          <option value="compliance_issue">Compliance</option>
+                          <option value="all">📋 All Types</option>
+                          <option value="price">💰 Price Problems</option>
+                          <option value="supply">📦 Supply Problems</option>
+                          <option value="logistics_delay">🚚 Delivery Problems</option>
+                          <option value="supplier_risk">👥 Supplier Problems</option>
+                          <option value="market_risk">📊 Market Problems</option>
+                          <option value="compliance_issue">📄 Paper Problems</option>
                         </select>
                       </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        Showing {processedAlerts.filter(a => 
+                      <div className="text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border-2 border-gray-300 dark:border-gray-600 shadow-sm">
+                        <span>📊</span> Found {processedAlerts.filter(a => 
                           (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                           (selectedRegion === 'all' || a.region === selectedRegion)
-                        ).length} of {processedAlerts.length} alert{processedAlerts.length !== 1 ? 's' : ''}
-                        {searchQuery && ` matching "${searchQuery}"`}
+                        ).length} of {processedAlerts.length} problem{processedAlerts.length !== 1 ? 's' : ''}!
                       </div>
                     </div>
                   </div>
@@ -1369,32 +1368,36 @@ const RiskMitigation: React.FC = () => {
 
                 {/* Alerts List - Prioritized by Severity */}
                 <div className="space-y-4">
-                  {/* High Priority Alerts */}
+                  {/* High Priority Alerts - Kid Friendly */}
                   {criticalAlerts.filter(a => 
                     (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                     (selectedRegion === 'all' || a.region === selectedRegion)
                   ).length > 0 && (
                     <div>
-                      <h3 className="text-sm font-semibold text-red-700 dark:text-red-400 mb-3 flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4" />
-                        High Priority ({criticalAlerts.filter(a => 
-                          (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
-                          (selectedRegion === 'all' || a.region === selectedRegion)
-                        ).length})
+                      <h3 className="text-lg font-extrabold text-red-700 dark:text-red-400 mb-4 flex items-center gap-3 bg-gradient-to-r from-red-100 to-orange-100 dark:from-red-900/30 dark:to-orange-900/30 px-4 py-3 rounded-xl border-2 border-red-300 dark:border-red-700 shadow-lg">
+                        <span className="text-2xl animate-pulse">🚨</span>
+                        <span>Super Important Problems!</span>
+                        <span className="ml-auto px-3 py-1 bg-red-500 text-white rounded-full text-sm font-bold shadow-md">
+                          {criticalAlerts.filter(a => 
+                            (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
+                            (selectedRegion === 'all' || a.region === selectedRegion)
+                          ).length}
+                        </span>
                       </h3>
                       <div className="space-y-3">
                         {criticalAlerts.filter(a => 
                           (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                           (selectedRegion === 'all' || a.region === selectedRegion)
                         ).map((alert) => (
-                          <div key={alert.id} className="p-5 rounded-lg border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20 shadow-sm">
-                            <div className="flex items-start justify-between">
+                          <div key={alert.id} className="p-5 sm:p-6 rounded-2xl border-4 border-red-400 dark:border-red-700 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/30 shadow-xl transform hover:scale-[1.02] transition-all">
+                            <div className="flex items-start justify-between gap-4">
                               <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                  <h4 className="text-base font-semibold text-gray-900 dark:text-white">{alert.title}</h4>
-                                  <StatusBadge type="error" text="HIGH" />
+                                <div className="flex items-center gap-3 mb-3">
+                                  <span className="text-3xl">⚠️</span>
+                                  <h4 className="text-lg font-extrabold text-gray-900 dark:text-white">{alert.title}</h4>
+                                  <div className="px-3 py-1 bg-red-500 text-white rounded-full text-xs font-bold shadow-md">HIGH</div>
                                 </div>
-                                <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">{alert.message}</p>
+                                <p className="text-base font-medium text-gray-800 dark:text-gray-200 mb-4 leading-relaxed">{alert.message}</p>
                                 <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
                                   <span className="flex items-center gap-1">
                                     <MapPin className="h-3 w-3" />
@@ -1410,24 +1413,28 @@ const RiskMitigation: React.FC = () => {
                                   </span>
                                 </div>
                                 {alert.recommendedAction && (
-                                  <div className="mt-3 p-3 bg-white dark:bg-gray-800 rounded border border-red-200 dark:border-red-800">
-                                    <p className="text-xs font-medium text-gray-900 dark:text-white mb-1">Recommended Action:</p>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400">{alert.recommendedAction}</p>
+                                  <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-yellow-300 dark:border-yellow-700 shadow-md">
+                                    <p className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                                      <span>💡</span>
+                                      <span>What to Do:</span>
+                                    </p>
+                                    <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{alert.recommendedAction}</p>
                                   </div>
                                 )}
                               </div>
-                              <div className="flex flex-col gap-2 ml-4">
+                              <div className="flex flex-col gap-2 flex-shrink-0">
                                 <button
                                   onClick={() => handleResolveAlert(alert.id)}
-                                  className="px-4 py-2 text-xs font-medium bg-red-600 text-white rounded hover:bg-red-700 transition-colors whitespace-nowrap"
+                                  className="px-4 py-2.5 text-sm font-bold bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:from-red-600 hover:to-orange-600 transition-all shadow-lg transform hover:scale-105 whitespace-nowrap flex items-center gap-2"
                                 >
-                                  Resolve
+                                  <span>✅</span>
+                                  <span>Fix It!</span>
                                 </button>
                                 <button
                                   onClick={() => handleDismissAlert(alert.id)}
-                                  className="px-4 py-2 text-xs font-medium border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors whitespace-nowrap"
+                                  className="px-4 py-2.5 text-sm font-bold border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all whitespace-nowrap"
                                 >
-                                  Dismiss
+                                  <span>👋</span> Later
                                 </button>
                               </div>
                             </div>
@@ -1437,32 +1444,36 @@ const RiskMitigation: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Medium Priority Alerts */}
+                  {/* Medium Priority Alerts - Kid Friendly */}
                   {mediumAlerts.filter(a => 
                     (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                     (selectedRegion === 'all' || a.region === selectedRegion)
                   ).length > 0 && (
                     <div>
-                      <h3 className="text-sm font-semibold text-yellow-700 dark:text-yellow-400 mb-3 flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4" />
-                        Medium Priority ({mediumAlerts.filter(a => 
-                          (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
-                          (selectedRegion === 'all' || a.region === selectedRegion)
-                        ).length})
+                      <h3 className="text-lg font-extrabold text-yellow-700 dark:text-yellow-400 mb-4 flex items-center gap-3 bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 px-4 py-3 rounded-xl border-2 border-yellow-300 dark:border-yellow-700 shadow-lg">
+                        <span className="text-2xl">⚠️</span>
+                        <span>Kinda Important Problems</span>
+                        <span className="ml-auto px-3 py-1 bg-yellow-500 text-white rounded-full text-sm font-bold shadow-md">
+                          {mediumAlerts.filter(a => 
+                            (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
+                            (selectedRegion === 'all' || a.region === selectedRegion)
+                          ).length}
+                        </span>
                       </h3>
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         {mediumAlerts.filter(a => 
                           (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                           (selectedRegion === 'all' || a.region === selectedRegion)
                         ).map((alert) => (
-                          <div key={alert.id} className="p-5 rounded-lg border-l-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 shadow-sm">
-                            <div className="flex items-start justify-between">
+                          <div key={alert.id} className="p-5 sm:p-6 rounded-2xl border-4 border-yellow-400 dark:border-yellow-700 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/30 dark:to-orange-900/30 shadow-xl transform hover:scale-[1.02] transition-all">
+                            <div className="flex items-start justify-between gap-4">
                               <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                  <h4 className="text-base font-semibold text-gray-900 dark:text-white">{alert.title}</h4>
-                                  <StatusBadge type="warning" text="MEDIUM" />
+                                <div className="flex items-center gap-3 mb-3">
+                                  <span className="text-3xl">📋</span>
+                                  <h4 className="text-lg font-extrabold text-gray-900 dark:text-white">{alert.title}</h4>
+                                  <div className="px-3 py-1 bg-yellow-500 text-white rounded-full text-xs font-bold shadow-md">MEDIUM</div>
                                 </div>
-                                <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">{alert.message}</p>
+                                <p className="text-base font-medium text-gray-800 dark:text-gray-200 mb-4 leading-relaxed">{alert.message}</p>
                                 <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
                                   <span className="flex items-center gap-1">
                                     <MapPin className="h-3 w-3" />
@@ -1478,18 +1489,19 @@ const RiskMitigation: React.FC = () => {
                                   </span>
                                 </div>
                               </div>
-                              <div className="flex flex-col gap-2 ml-4">
+                              <div className="flex flex-col gap-2 flex-shrink-0">
                                 <button
                                   onClick={() => handleResolveAlert(alert.id)}
-                                  className="px-4 py-2 text-xs font-medium bg-yellow-600 text-white rounded hover:bg-yellow-700 transition-colors whitespace-nowrap"
+                                  className="px-4 py-2.5 text-sm font-bold bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all shadow-lg transform hover:scale-105 whitespace-nowrap flex items-center gap-2"
                                 >
-                                  Resolve
+                                  <span>✅</span>
+                                  <span>Fix It!</span>
                                 </button>
                                 <button
                                   onClick={() => handleDismissAlert(alert.id)}
-                                  className="px-4 py-2 text-xs font-medium border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors whitespace-nowrap"
+                                  className="px-4 py-2.5 text-sm font-bold border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all whitespace-nowrap"
                                 >
-                                  Dismiss
+                                  <span>👋</span> Later
                                 </button>
                               </div>
                             </div>
@@ -1499,32 +1511,36 @@ const RiskMitigation: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Low Priority Alerts */}
+                  {/* Low Priority Alerts - Kid Friendly */}
                   {lowAlerts.filter(a => 
                     (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                     (selectedRegion === 'all' || a.region === selectedRegion)
                   ).length > 0 && (
                     <div>
-                      <h3 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-3 flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4" />
-                        Low Priority ({lowAlerts.filter(a => 
-                          (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
-                          (selectedRegion === 'all' || a.region === selectedRegion)
-                        ).length})
+                      <h3 className="text-lg font-extrabold text-green-700 dark:text-green-400 mb-4 flex items-center gap-3 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 px-4 py-3 rounded-xl border-2 border-green-300 dark:border-green-700 shadow-lg">
+                        <span className="text-2xl">✅</span>
+                        <span>Not Too Bad Problems</span>
+                        <span className="ml-auto px-3 py-1 bg-green-500 text-white rounded-full text-sm font-bold shadow-md">
+                          {lowAlerts.filter(a => 
+                            (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
+                            (selectedRegion === 'all' || a.region === selectedRegion)
+                          ).length}
+                        </span>
                       </h3>
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         {lowAlerts.filter(a => 
                           (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                           (selectedRegion === 'all' || a.region === selectedRegion)
                         ).map((alert) => (
-                          <div key={alert.id} className="p-5 rounded-lg border-l-4 border-green-500 bg-green-50 dark:bg-green-900/20 shadow-sm">
-                            <div className="flex items-start justify-between">
+                          <div key={alert.id} className="p-5 sm:p-6 rounded-2xl border-4 border-green-400 dark:border-green-700 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 shadow-xl transform hover:scale-[1.02] transition-all">
+                            <div className="flex items-start justify-between gap-4">
                               <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                  <h4 className="text-base font-semibold text-gray-900 dark:text-white">{alert.title}</h4>
-                                  <StatusBadge type="success" text="LOW" />
+                                <div className="flex items-center gap-3 mb-3">
+                                  <span className="text-3xl">📝</span>
+                                  <h4 className="text-lg font-extrabold text-gray-900 dark:text-white">{alert.title}</h4>
+                                  <div className="px-3 py-1 bg-green-500 text-white rounded-full text-xs font-bold shadow-md">LOW</div>
                                 </div>
-                                <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">{alert.message}</p>
+                                <p className="text-base font-medium text-gray-800 dark:text-gray-200 mb-4 leading-relaxed">{alert.message}</p>
                                 <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
                                   <span className="flex items-center gap-1">
                                     <MapPin className="h-3 w-3" />
@@ -1561,16 +1577,16 @@ const RiskMitigation: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Empty State */}
+                  {/* Empty State - Kid Friendly */}
                   {processedAlerts.filter(a => 
                     (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                     (selectedRegion === 'all' || a.region === selectedRegion)
                   ).length === 0 && (
-                    <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                      <CheckCircle className="h-16 w-16 mx-auto mb-4 text-green-500 opacity-50" />
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">All Clear!</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">No active alerts match your filter criteria.</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-500">Your supply chain is operating smoothly.</p>
+                    <div className="text-center py-16 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl border-4 border-green-300 dark:border-green-700 shadow-xl">
+                      <div className="text-8xl mb-6">🎉</div>
+                      <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-3">All Clear! ✨</h3>
+                      <p className="text-base font-medium text-gray-700 dark:text-gray-300 mb-2">No problems found! You're doing great! 🌟</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Everything is running smoothly! Keep it up! 🚀</p>
                     </div>
                   )}
                 </div>
@@ -1579,9 +1595,12 @@ const RiskMitigation: React.FC = () => {
 
                 {selectedTab === 'timeline' && (
                   <div className="space-y-6">
-                    <div className="mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Risk Timeline</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Recent risk events and actions taken</p>
+                    <div className="mb-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-6 border-2 border-blue-200 dark:border-blue-700 shadow-lg">
+                      <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+                        <span className="text-4xl">📅</span>
+                        <span>What Happened Before!</span>
+                      </h3>
+                      <p className="text-base font-medium text-gray-700 dark:text-gray-300">See all the problems and what you did about them! 🎯</p>
                     </div>
                     <div className="space-y-4">
                     {riskTimeline.length > 0 ? riskTimeline.map((event) => (
@@ -1637,9 +1656,12 @@ const RiskMitigation: React.FC = () => {
 
                 {selectedTab === 'insurance' && (
                   <div className="space-y-6">
-                    <div className="mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Insurance Coverage & Risk Protection</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Manage your insurance policies and identify coverage gaps</p>
+                    <div className="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border-2 border-green-200 dark:border-green-700 shadow-lg">
+                      <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+                        <span className="text-4xl">🛡️</span>
+                        <span>Your Safety Shield!</span>
+                      </h3>
+                      <p className="text-base font-medium text-gray-700 dark:text-gray-300">See how protected you are and get more protection if you need it! 💪</p>
                     </div>
 
                     {/* Insurance Overview Cards */}
@@ -2153,9 +2175,12 @@ const RiskMitigation: React.FC = () => {
 
                 {selectedTab === 'playbooks' && (
                   <div className="space-y-6">
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Risk Playbooks</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Predefined response strategies for common risk scenarios</p>
+                  <div className="mb-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border-2 border-purple-200 dark:border-purple-700 shadow-lg">
+                    <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+                      <span className="text-4xl">📚</span>
+                      <span>How to Fix Things!</span>
+                    </h3>
+                    <p className="text-base font-medium text-gray-700 dark:text-gray-300">Learn step-by-step how to solve problems! It's like a recipe for fixing things! 🎯</p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="p-6 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-lg border border-red-200 dark:border-red-800">
