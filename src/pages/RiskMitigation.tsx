@@ -619,7 +619,7 @@ const RiskMitigation: React.FC = () => {
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-yellow-900 dark:text-yellow-100 mb-1">
+                  <h3 className="text-sm font-semibold text-white dark:text-yellow-100 mb-1">
                     Unable to load risk alerts
                   </h3>
                   <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-3">
@@ -627,7 +627,7 @@ const RiskMitigation: React.FC = () => {
                   </p>
                   <button
                     onClick={handleRefresh}
-                    className="text-sm font-medium text-yellow-700 dark:text-yellow-300 hover:text-yellow-900 dark:hover:text-yellow-100 flex items-center gap-1"
+                    className="text-sm font-medium text-yellow-700 dark:text-yellow-300 hover:text-white dark:hover:text-yellow-100 flex items-center gap-1"
                   >
                     <RefreshCw className="h-4 w-4" />
                     Retry
@@ -639,7 +639,7 @@ const RiskMitigation: React.FC = () => {
 
           {/* CRITICAL ALERTS BANNER - Fun and Playful */}
           {(!loading && (!alertsLoading || initialLoadTimeout)) && criticalAlerts.length > 0 && (
-            <div className="bg-gradient-to-br from-red-100 via-orange-100 to-yellow-100 dark:from-red-900/30 dark:via-orange-900/30 dark:to-yellow-900/30 border-4 border-red-400 dark:border-red-700 rounded-2xl p-6 shadow-2xl animate-pulse">
+            <div className="bg-gradient-to-br from-red-100 via-orange-100 to-yellow-100 dark:from-red-900/30 dark:via-orange-900/30 dark:to-yellow-900/30 border border-red-400 dark:border-red-700 rounded-2xl p-6 shadow-md animate-pulse">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <div className="text-5xl animate-bounce">🚨</div>
@@ -650,14 +650,14 @@ const RiskMitigation: React.FC = () => {
                       <span>{criticalAlerts.length} Super Important Thing{criticalAlerts.length !== 1 ? 's' : ''} Need Your Help!</span>
                       <span className="text-3xl">⚡</span>
                     </h3>
-                    <div className="px-4 py-2 bg-red-500 text-white rounded-full text-sm font-bold animate-pulse">URGENT!</div>
+                    <div className="px-4 py-2 bg-red-600 text-white rounded-full text-sm font-bold animate-pulse">URGENT!</div>
                   </div>
                   <p className="text-base text-red-800 dark:text-red-200 mb-5 font-medium leading-relaxed">
                     🎯 We found some really important problems! Check them out and fix them so nothing bad happens! 🛡️
                   </p>
                   <div className="flex flex-wrap gap-3">
                     {criticalAlerts.slice(0, 3).map((alert) => (
-                      <div key={alert.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-red-300 dark:border-red-800 shadow-lg">
+                      <div key={alert.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 rounded-xl border border-red-300 dark:border-red-800 shadow-lg">
                         <span className="text-2xl">⚠️</span>
                         <span className="text-sm font-bold text-gray-900 dark:text-gray-100">{alert.title}</span>
                         <button
@@ -671,7 +671,7 @@ const RiskMitigation: React.FC = () => {
                     {criticalAlerts.length > 3 && (
                       <button
                         onClick={() => setSelectedTab('alerts')}
-                        className="flex items-center gap-2 px-5 py-3 text-base font-bold text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 bg-white dark:bg-gray-800 rounded-xl border-2 border-red-300 dark:border-red-800 shadow-lg hover:scale-105 transition-all"
+                        className="flex items-center gap-2 px-5 py-3 text-base font-bold text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 bg-white dark:bg-gray-800 rounded-xl border border-red-300 dark:border-red-800 shadow-lg hover:scale-105 transition-all"
                       >
                         <span>👀 See All {criticalAlerts.length} Problems</span>
                         <ArrowRight className="h-5 w-5" />
@@ -685,7 +685,7 @@ const RiskMitigation: React.FC = () => {
 
           {/* Tabs Container - Matching Country Profile Style */}
           <div className="mb-6">
-            <div className="flex items-center gap-2 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-primary-200 dark:border-gray-700 shadow-lg overflow-x-auto scrollbar-hide">
+            <div className="flex items-center gap-2 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border border-primary-200 dark:border-gray-700 shadow-lg overflow-x-auto scrollbar-hide">
               {[
                 { id: 'overview', label: 'Overview', emoji: '📊', color: 'blue', badge: riskMetrics.totalAlerts },
                 { id: 'alerts', label: 'Alerts', emoji: '🚨', color: 'red', badge: riskMetrics.totalAlerts, urgent: riskMetrics.highRisk },
@@ -850,7 +850,7 @@ const RiskMitigation: React.FC = () => {
                 )}
 
                 {/* Fun Value Proposition Banner */}
-                <div className="bg-gradient-to-br from-purple-100 via-pink-100 to-primary-100 dark:from-purple-900/30 dark:via-pink-900/30 dark:to-primary-900/30 rounded-2xl p-6 border-4 border-purple-300 dark:border-purple-700 shadow-xl">
+                <div className="bg-gradient-to-br from-purple-100 via-pink-100 to-primary-100 dark:from-purple-900/30 dark:via-pink-900/30 dark:to-primary-900/30 rounded-2xl p-6 border border-purple-300 dark:border-purple-700 shadow-md">
                   <div className="flex items-start gap-4">
                     <div className="text-5xl">🎯</div>
                     <div className="flex-1">
@@ -863,7 +863,7 @@ const RiskMitigation: React.FC = () => {
                         when things get delayed ⏰, and when you need to do something important 📋 - all before it becomes a problem! 
                       </p>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                        <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-purple-200 dark:border-purple-800 shadow-lg transform hover:scale-105 transition-all">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-purple-200 dark:border-purple-800 shadow-lg transform hover:scale-105 transition-all">
                           <div className="flex items-center gap-3 mb-3">
                             <span className="text-3xl">💰</span>
                             <span className="text-lg font-bold text-gray-900 dark:text-white">Price Protection</span>
@@ -872,7 +872,7 @@ const RiskMitigation: React.FC = () => {
                             We'll tell you when prices go up so you can buy things before they get expensive! 💸
                           </p>
                         </div>
-                        <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-pink-200 dark:border-pink-800 shadow-lg transform hover:scale-105 transition-all">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-pink-200 dark:border-pink-800 shadow-lg transform hover:scale-105 transition-all">
                           <div className="flex items-center gap-3 mb-3">
                             <span className="text-3xl">🚚</span>
                             <span className="text-lg font-bold text-gray-900 dark:text-white">Supply Alerts</span>
@@ -881,7 +881,7 @@ const RiskMitigation: React.FC = () => {
                             Know about delays and problems before they happen! We'll keep you in the loop! 📢
                           </p>
                         </div>
-                        <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-primary-200 dark:border-primary-800 shadow-lg transform hover:scale-105 transition-all">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-primary-200 dark:border-primary-800 shadow-lg transform hover:scale-105 transition-all">
                           <div className="flex items-center gap-3 mb-3">
                             <span className="text-3xl">✅</span>
                             <span className="text-lg font-bold text-gray-900 dark:text-white">Compliance Tracking</span>
@@ -897,7 +897,7 @@ const RiskMitigation: React.FC = () => {
 
                 {/* Key Metrics - Visual Priority with Emojis and Colors */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-                  <div className={`rounded-2xl shadow-lg border-2 p-6 transform hover:scale-105 transition-all ${
+                  <div className={`rounded-2xl shadow-lg border p-6 transform hover:scale-105 transition-all ${
                     riskMetrics.highRisk > 0 
                       ? 'bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/30 border-red-300 dark:border-red-700' 
                       : 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700'
@@ -919,9 +919,9 @@ const RiskMitigation: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <div className={`rounded-2xl shadow-lg border-2 p-6 transform hover:scale-105 transition-all ${
+                  <div className={`rounded-2xl shadow-lg border p-6 transform hover:scale-105 transition-all ${
                     riskMetrics.totalAlerts > 0 
-                      ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 border-yellow-300 dark:border-yellow-700' 
+                      ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 border-accent-300 dark:border-yellow-700' 
                       : 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700'
                   }`}>
                     <div className="flex items-center justify-between mb-3">
@@ -938,7 +938,7 @@ const RiskMitigation: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <div className="bg-gradient-to-br from-primary-50 to-cyan-50 dark:from-primary-900/30 dark:to-cyan-900/30 rounded-2xl shadow-lg border-2 border-primary-300 dark:border-primary-700 p-6 transform hover:scale-105 transition-all">
+                  <div className="bg-gradient-to-br from-primary-50 to-cyan-50 dark:from-primary-900/30 dark:to-cyan-900/30 rounded-2xl shadow-lg border border-primary-300 dark:border-primary-700 p-6 transform hover:scale-105 transition-all">
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-3xl">💰</span>
                       <TrendingUp className="h-6 w-6 text-primary-500" />
@@ -953,11 +953,11 @@ const RiskMitigation: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <div className={`rounded-2xl shadow-lg border-2 p-6 transform hover:scale-105 transition-all ${
+                  <div className={`rounded-2xl shadow-lg border p-6 transform hover:scale-105 transition-all ${
                     riskMetrics.complianceScore >= 90 
                       ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700'
                       : riskMetrics.complianceScore >= 80
-                      ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 border-yellow-300 dark:border-yellow-700'
+                      ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 border-accent-300 dark:border-yellow-700'
                       : 'bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/30 border-red-300 dark:border-red-700'
                   }`}>
                     <div className="flex items-center justify-between mb-3">
@@ -981,10 +981,10 @@ const RiskMitigation: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <div className={`rounded-2xl shadow-lg border-2 p-6 transform hover:scale-105 transition-all ${
+                  <div className={`rounded-2xl shadow-lg border p-6 transform hover:scale-105 transition-all ${
                     riskMetrics.insuranceCoverage.coverageGaps === 0 
                       ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-300 dark:border-green-700' 
-                      : 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 border-yellow-300 dark:border-yellow-700'
+                      : 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 border-accent-300 dark:border-yellow-700'
                   }`}>
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-3xl">🛡️</span>
@@ -1008,7 +1008,7 @@ const RiskMitigation: React.FC = () => {
 
                 {/* Quick Actions - Fun and Playful */}
                 {criticalAlerts.length > 0 && (
-                  <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-2xl shadow-xl border-4 border-red-300 dark:border-red-700 p-6">
+                  <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-2xl shadow-md border border-red-300 dark:border-red-700 p-6">
                     <div className="flex items-center justify-between mb-5">
                       <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                         <span className="text-4xl animate-bounce">⚡</span>
@@ -1017,7 +1017,7 @@ const RiskMitigation: React.FC = () => {
                       </h3>
                       <button
                         onClick={() => setSelectedTab('alerts')}
-                        className="text-base font-bold text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border-2 border-red-300 dark:border-red-700 hover:scale-105 transition-all shadow-lg"
+                        className="text-base font-bold text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border border-red-300 dark:border-red-700 hover:scale-105 transition-all shadow-lg"
                       >
                         See Everything
                         <ArrowRight className="h-5 w-5" />
@@ -1025,17 +1025,17 @@ const RiskMitigation: React.FC = () => {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                       {criticalAlerts.slice(0, 3).map((alert) => (
-                        <div key={alert.id} className="p-5 bg-white dark:bg-gray-800 border-4 border-red-300 dark:border-red-800 rounded-2xl shadow-lg transform hover:scale-105 transition-all">
+                        <div key={alert.id} className="p-5 bg-white dark:bg-gray-800 border border-red-300 dark:border-red-800 rounded-2xl shadow-lg transform hover:scale-105 transition-all">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center gap-2">
                               <span className="text-2xl">⚠️</span>
                               <h4 className="font-bold text-gray-900 dark:text-white text-base">{alert.title}</h4>
                             </div>
-                            <div className="px-3 py-1 bg-red-500 text-white rounded-full text-xs font-bold">HIGH</div>
+                            <div className="px-3 py-1 bg-red-600 text-white rounded-full text-xs font-bold">HIGH</div>
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 leading-relaxed">{alert.message}</p>
                           {alert.recommendedAction && (
-                            <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl mb-4 border-2 border-yellow-300 dark:border-yellow-700">
+                            <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl mb-4 border border-accent-300 dark:border-yellow-700">
                               <p className="text-sm text-yellow-800 dark:text-yellow-300 font-medium flex items-start gap-2">
                                 <span className="text-xl">💡</span>
                                 <span>{alert.recommendedAction}</span>
@@ -1051,7 +1051,7 @@ const RiskMitigation: React.FC = () => {
                             </button>
                             <button
                               onClick={() => setSelectedTab('alerts')}
-                              className="text-sm font-bold px-4 py-2.5 border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+                              className="text-sm font-bold px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
                             >
                               👀 More
                             </button>
@@ -1063,7 +1063,7 @@ const RiskMitigation: React.FC = () => {
                 )}
 
                 {/* Key Insights Section - Fun Version */}
-                <div className="bg-gradient-to-br from-primary-50 via-indigo-50 to-purple-50 dark:from-primary-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 rounded-2xl shadow-xl border-4 border-primary-300 dark:border-primary-700 p-6">
+                <div className="bg-gradient-to-br from-primary-50 via-indigo-50 to-purple-50 dark:from-primary-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 rounded-2xl shadow-md border border-primary-300 dark:border-primary-700 p-6">
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-3">
                     <span className="text-4xl">🧠</span>
                     <span>Smart Things We Found!</span>
@@ -1071,7 +1071,7 @@ const RiskMitigation: React.FC = () => {
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
-                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-primary-300 dark:border-primary-700 shadow-lg">
+                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-primary-300 dark:border-primary-700 shadow-lg">
                         <div className="flex items-start gap-4">
                           <span className="text-4xl">💰</span>
                           <div className="flex-1">
@@ -1084,7 +1084,7 @@ const RiskMitigation: React.FC = () => {
                             {riskMetrics.priceAlerts > 0 && (
                               <button 
                                 onClick={() => navigate('/app/prices')}
-                                className="text-sm font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-2 bg-primary-50 dark:bg-primary-900/20 px-4 py-2 rounded-xl border-2 border-primary-300 dark:border-primary-700 hover:scale-105 transition-all"
+                                className="text-sm font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-2 bg-primary-50 dark:bg-primary-900/20 px-4 py-2 rounded-xl border border-primary-300 dark:border-primary-700 hover:scale-105 transition-all"
                               >
                                 <span>See Price Trends</span>
                                 <ArrowRight className="h-4 w-4" />
@@ -1093,7 +1093,7 @@ const RiskMitigation: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-yellow-300 dark:border-yellow-700 shadow-lg">
+                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-accent-300 dark:border-yellow-700 shadow-lg">
                         <div className="flex items-start gap-4">
                           <span className="text-4xl">🚚</span>
                           <div className="flex-1">
@@ -1106,7 +1106,7 @@ const RiskMitigation: React.FC = () => {
                             {riskMetrics.supplyAlerts > 0 && (
                               <button 
                                 onClick={() => navigate('/app/supplier-directory')}
-                                className="text-sm font-bold text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-xl border-2 border-yellow-300 dark:border-yellow-700 hover:scale-105 transition-all"
+                                className="text-sm font-bold text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-xl border border-accent-300 dark:border-yellow-700 hover:scale-105 transition-all"
                               >
                                 <span>Find Backup Suppliers</span>
                                 <ArrowRight className="h-4 w-4" />
@@ -1117,7 +1117,7 @@ const RiskMitigation: React.FC = () => {
                       </div>
                     </div>
                     <div className="space-y-4">
-                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-green-300 dark:border-green-700 shadow-lg">
+                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-green-300 dark:border-green-700 shadow-lg">
                         <div className="flex items-start gap-4">
                           <span className="text-4xl">✅</span>
                           <div className="flex-1">
@@ -1133,7 +1133,7 @@ const RiskMitigation: React.FC = () => {
                             </p>
                             <button 
                               onClick={() => navigate('/app/documents')}
-                              className="text-sm font-bold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 flex items-center gap-2 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-xl border-2 border-green-300 dark:border-green-700 hover:scale-105 transition-all"
+                              className="text-sm font-bold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 flex items-center gap-2 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-xl border border-green-300 dark:border-green-700 hover:scale-105 transition-all"
                             >
                               <span>Check Documents</span>
                               <ArrowRight className="h-4 w-4" />
@@ -1141,7 +1141,7 @@ const RiskMitigation: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-purple-300 dark:border-purple-700 shadow-lg">
+                      <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-purple-300 dark:border-purple-700 shadow-lg">
                         <div className="flex items-start gap-4">
                           <span className="text-4xl">🛡️</span>
                           <div className="flex-1">
@@ -1154,7 +1154,7 @@ const RiskMitigation: React.FC = () => {
                             {riskMetrics.totalAlerts > 0 && (
                               <button 
                                 onClick={() => setSelectedTab('playbooks')}
-                                className="text-sm font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 flex items-center gap-2 bg-purple-50 dark:bg-purple-900/20 px-4 py-2 rounded-xl border-2 border-purple-300 dark:border-purple-700 hover:scale-105 transition-all"
+                                className="text-sm font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 flex items-center gap-2 bg-purple-50 dark:bg-purple-900/20 px-4 py-2 rounded-xl border border-purple-300 dark:border-purple-700 hover:scale-105 transition-all"
                               >
                                 <span>See How to Fix Things</span>
                                 <ArrowRight className="h-4 w-4" />
@@ -1168,7 +1168,7 @@ const RiskMitigation: React.FC = () => {
                 </div>
 
                 {/* Risk Assessment Cards - Fun and Colorful */}
-                <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-xl border-4 border-indigo-300 dark:border-indigo-700 p-6">
+                <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-md border border-indigo-300 dark:border-indigo-700 p-6">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                     <div>
                       <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3 mb-2">
@@ -1179,7 +1179,7 @@ const RiskMitigation: React.FC = () => {
                       <p className="text-sm text-gray-600 dark:text-gray-400 ml-12">See what risks you have and how to fix them!</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border-2 border-indigo-300 dark:border-indigo-700 shadow-lg">
+                      <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border border-indigo-300 dark:border-indigo-700 shadow-lg">
                         <Filter className="h-5 w-5 text-indigo-600" />
                         <select
                           value={selectedRiskLevel}
@@ -1198,7 +1198,7 @@ const RiskMitigation: React.FC = () => {
                     {filteredRisks.length > 0 ? filteredRisks.map((risk) => (
                       <div 
                         key={risk.id} 
-                        className={`rounded-2xl shadow-xl border-4 p-6 transform hover:scale-105 transition-all ${
+                        className={`rounded-2xl shadow-md border p-6 transform hover:scale-105 transition-all ${
                           risk.riskLevel === 'high' 
                             ? 'bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/30 border-red-400 dark:border-red-700' 
                             : risk.riskLevel === 'medium'
@@ -1224,7 +1224,7 @@ const RiskMitigation: React.FC = () => {
                         </div>
                         
                         <div className="space-y-3 mb-4">
-                          <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                          <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                             <div className="flex items-center gap-2">
                               <Bell className={`h-5 w-5 ${risk.alertCount > 0 ? 'text-yellow-500' : 'text-gray-400'}`} />
                               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Alerts</span>
@@ -1233,17 +1233,17 @@ const RiskMitigation: React.FC = () => {
                           </div>
                           
                           <div className="grid grid-cols-2 gap-2">
-                            <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                            <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Impact</div>
                               <div className="text-sm font-bold text-gray-900 dark:text-white">{risk.impact}</div>
                             </div>
-                            <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                            <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Chance</div>
                               <div className="text-sm font-bold text-gray-900 dark:text-white">{risk.probability}</div>
                             </div>
                           </div>
                           
-                          <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                          <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                             <div className="flex items-start gap-2">
                               <span className="text-xl">💡</span>
                               <div>
@@ -1253,7 +1253,7 @@ const RiskMitigation: React.FC = () => {
                             </div>
                           </div>
                           
-                          <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                          <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Trend</span>
                             <div className="flex items-center gap-2">
                               {risk.trend === 'up' ? (
@@ -1291,7 +1291,7 @@ const RiskMitigation: React.FC = () => {
                 {selectedTab === 'alerts' && (
               <div className="space-y-6">
                 {/* Search and Filter Bar - Kid Friendly */}
-                <div className="bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border-2 border-primary-200 dark:border-gray-700 p-4 sm:p-6 shadow-lg">
+                <div className="bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-primary-200 dark:border-gray-700 p-4 sm:p-6 shadow-lg">
                   <div className="flex flex-col gap-4">
                     {/* Search Bar */}
                     <div className="relative">
@@ -1301,7 +1301,7 @@ const RiskMitigation: React.FC = () => {
                         placeholder="🔍 Search for problems by name, place, or type..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-12 pr-12 py-3 text-base border-2 border-primary-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 shadow-sm"
+                        className="w-full pl-12 pr-12 py-3 text-base border border-primary-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 shadow-sm"
                       />
                       {searchQuery && (
                         <button
@@ -1323,7 +1323,7 @@ const RiskMitigation: React.FC = () => {
                         <select
                           value={selectedRiskLevel}
                           onChange={(e) => setSelectedRiskLevel(e.target.value)}
-                          className="px-4 py-2.5 text-sm font-bold border-2 border-primary-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-sm"
+                          className="px-4 py-2.5 text-sm font-bold border border-primary-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-sm"
                         >
                           <option value="all">🔍 All Problems</option>
                           <option value="high">🚨 Super Important!</option>
@@ -1333,7 +1333,7 @@ const RiskMitigation: React.FC = () => {
                         <select
                           value={selectedRegion}
                           onChange={(e) => setSelectedRegion(e.target.value)}
-                          className="px-4 py-2.5 text-sm font-bold border-2 border-purple-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
+                          className="px-4 py-2.5 text-sm font-bold border border-purple-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
                         >
                           <option value="all">🌍 All Places</option>
                           <option value="Rwanda">🇷🇼 Rwanda</option>
@@ -1345,7 +1345,7 @@ const RiskMitigation: React.FC = () => {
                         <select
                           value={selectedAlertType}
                           onChange={(e) => setSelectedAlertType(e.target.value)}
-                          className="px-4 py-2.5 text-sm font-bold border-2 border-green-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm"
+                          className="px-4 py-2.5 text-sm font-bold border border-green-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm"
                         >
                           <option value="all">📋 All Types</option>
                           <option value="price">💰 Price Problems</option>
@@ -1356,7 +1356,7 @@ const RiskMitigation: React.FC = () => {
                           <option value="compliance_issue">📄 Paper Problems</option>
                         </select>
                       </div>
-                      <div className="text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border-2 border-gray-300 dark:border-gray-600 shadow-sm">
+                      <div className="text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 shadow-sm">
                         <span>📊</span> Found {processedAlerts.filter(a => 
                           (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                           (selectedRegion === 'all' || a.region === selectedRegion)
@@ -1374,10 +1374,10 @@ const RiskMitigation: React.FC = () => {
                     (selectedRegion === 'all' || a.region === selectedRegion)
                   ).length > 0 && (
                     <div>
-                      <h3 className="text-lg font-extrabold text-red-700 dark:text-red-400 mb-4 flex items-center gap-3 bg-gradient-to-r from-red-100 to-orange-100 dark:from-red-900/30 dark:to-orange-900/30 px-4 py-3 rounded-xl border-2 border-red-300 dark:border-red-700 shadow-lg">
+                      <h3 className="text-lg font-extrabold text-red-700 dark:text-red-400 mb-4 flex items-center gap-3 bg-gradient-to-r from-red-100 to-orange-100 dark:from-red-900/30 dark:to-orange-900/30 px-4 py-3 rounded-xl border border-red-300 dark:border-red-700 shadow-lg">
                         <span className="text-2xl animate-pulse">🚨</span>
                         <span>Super Important Problems!</span>
-                        <span className="ml-auto px-3 py-1 bg-red-500 text-white rounded-full text-sm font-bold shadow-md">
+                        <span className="ml-auto px-3 py-1 bg-red-600 text-white rounded-full text-sm font-bold shadow-md">
                           {criticalAlerts.filter(a => 
                             (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                             (selectedRegion === 'all' || a.region === selectedRegion)
@@ -1389,13 +1389,13 @@ const RiskMitigation: React.FC = () => {
                           (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                           (selectedRegion === 'all' || a.region === selectedRegion)
                         ).map((alert) => (
-                          <div key={alert.id} className="p-5 sm:p-6 rounded-2xl border-4 border-red-400 dark:border-red-700 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/30 shadow-xl transform hover:scale-[1.02] transition-all">
+                          <div key={alert.id} className="p-5 sm:p-6 rounded-2xl border border-red-400 dark:border-red-700 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/30 shadow-md transform hover:scale-[1.02] transition-all">
                             <div className="flex items-start justify-between gap-4">
                               <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-3">
                                   <span className="text-3xl">⚠️</span>
                                   <h4 className="text-lg font-extrabold text-gray-900 dark:text-white">{alert.title}</h4>
-                                  <div className="px-3 py-1 bg-red-500 text-white rounded-full text-xs font-bold shadow-md">HIGH</div>
+                                  <div className="px-3 py-1 bg-red-600 text-white rounded-full text-xs font-bold shadow-md">HIGH</div>
                                 </div>
                                 <p className="text-base font-medium text-gray-800 dark:text-gray-200 mb-4 leading-relaxed">{alert.message}</p>
                                 <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
@@ -1413,7 +1413,7 @@ const RiskMitigation: React.FC = () => {
                                   </span>
                                 </div>
                                 {alert.recommendedAction && (
-                                  <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-yellow-300 dark:border-yellow-700 shadow-md">
+                                  <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-xl border border-accent-300 dark:border-yellow-700 shadow-md">
                                     <p className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                                       <span>💡</span>
                                       <span>What to Do:</span>
@@ -1432,7 +1432,7 @@ const RiskMitigation: React.FC = () => {
                                 </button>
                                 <button
                                   onClick={() => handleDismissAlert(alert.id)}
-                                  className="px-4 py-2.5 text-sm font-bold border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all whitespace-nowrap"
+                                  className="px-4 py-2.5 text-sm font-bold border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all whitespace-nowrap"
                                 >
                                   <span>👋</span> Later
                                 </button>
@@ -1450,7 +1450,7 @@ const RiskMitigation: React.FC = () => {
                     (selectedRegion === 'all' || a.region === selectedRegion)
                   ).length > 0 && (
                     <div>
-                      <h3 className="text-lg font-extrabold text-yellow-700 dark:text-yellow-400 mb-4 flex items-center gap-3 bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 px-4 py-3 rounded-xl border-2 border-yellow-300 dark:border-yellow-700 shadow-lg">
+                      <h3 className="text-lg font-extrabold text-yellow-700 dark:text-yellow-400 mb-4 flex items-center gap-3 bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 px-4 py-3 rounded-xl border border-accent-300 dark:border-yellow-700 shadow-lg">
                         <span className="text-2xl">⚠️</span>
                         <span>Kinda Important Problems</span>
                         <span className="ml-auto px-3 py-1 bg-yellow-500 text-white rounded-full text-sm font-bold shadow-md">
@@ -1465,7 +1465,7 @@ const RiskMitigation: React.FC = () => {
                           (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                           (selectedRegion === 'all' || a.region === selectedRegion)
                         ).map((alert) => (
-                          <div key={alert.id} className="p-5 sm:p-6 rounded-2xl border-4 border-yellow-400 dark:border-yellow-700 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/30 dark:to-orange-900/30 shadow-xl transform hover:scale-[1.02] transition-all">
+                          <div key={alert.id} className="p-5 sm:p-6 rounded-2xl border border-yellow-400 dark:border-yellow-700 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/30 dark:to-orange-900/30 shadow-md transform hover:scale-[1.02] transition-all">
                             <div className="flex items-start justify-between gap-4">
                               <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-3">
@@ -1499,7 +1499,7 @@ const RiskMitigation: React.FC = () => {
                                 </button>
                                 <button
                                   onClick={() => handleDismissAlert(alert.id)}
-                                  className="px-4 py-2.5 text-sm font-bold border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all whitespace-nowrap"
+                                  className="px-4 py-2.5 text-sm font-bold border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all whitespace-nowrap"
                                 >
                                   <span>👋</span> Later
                                 </button>
@@ -1517,7 +1517,7 @@ const RiskMitigation: React.FC = () => {
                     (selectedRegion === 'all' || a.region === selectedRegion)
                   ).length > 0 && (
                     <div>
-                      <h3 className="text-lg font-extrabold text-green-700 dark:text-green-400 mb-4 flex items-center gap-3 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 px-4 py-3 rounded-xl border-2 border-green-300 dark:border-green-700 shadow-lg">
+                      <h3 className="text-lg font-extrabold text-green-700 dark:text-green-400 mb-4 flex items-center gap-3 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 px-4 py-3 rounded-xl border border-green-300 dark:border-green-700 shadow-lg">
                         <span className="text-2xl">✅</span>
                         <span>Not Too Bad Problems</span>
                         <span className="ml-auto px-3 py-1 bg-green-500 text-white rounded-full text-sm font-bold shadow-md">
@@ -1532,7 +1532,7 @@ const RiskMitigation: React.FC = () => {
                           (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                           (selectedRegion === 'all' || a.region === selectedRegion)
                         ).map((alert) => (
-                          <div key={alert.id} className="p-5 sm:p-6 rounded-2xl border-4 border-green-400 dark:border-green-700 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 shadow-xl transform hover:scale-[1.02] transition-all">
+                          <div key={alert.id} className="p-5 sm:p-6 rounded-2xl border border-green-400 dark:border-green-700 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 shadow-md transform hover:scale-[1.02] transition-all">
                             <div className="flex items-start justify-between gap-4">
                               <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-3">
@@ -1582,7 +1582,7 @@ const RiskMitigation: React.FC = () => {
                     (selectedRiskLevel === 'all' || a.severity === selectedRiskLevel) &&
                     (selectedRegion === 'all' || a.region === selectedRegion)
                   ).length === 0 && (
-                    <div className="text-center py-16 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl border-4 border-green-300 dark:border-green-700 shadow-xl">
+                    <div className="text-center py-16 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl border border-green-300 dark:border-green-700 shadow-md">
                       <div className="text-8xl mb-6">🎉</div>
                       <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-3">All Clear! ✨</h3>
                       <p className="text-base font-medium text-gray-700 dark:text-gray-300 mb-2">No problems found! You're doing great! 🌟</p>
@@ -1595,7 +1595,7 @@ const RiskMitigation: React.FC = () => {
 
                 {selectedTab === 'timeline' && (
                   <div className="space-y-6">
-                    <div className="mb-6 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20 rounded-2xl p-6 border-2 border-primary-200 dark:border-primary-700 shadow-lg">
+                    <div className="mb-6 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20 rounded-2xl p-6 border border-primary-200 dark:border-primary-700 shadow-lg">
                       <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                         <span className="text-4xl">📅</span>
                         <span>What Happened Before!</span>
@@ -1606,7 +1606,7 @@ const RiskMitigation: React.FC = () => {
                     {riskTimeline.length > 0 ? riskTimeline.map((event) => (
                       <div key={event.id} className="relative flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
                         <div className={`flex-shrink-0 w-3 h-3 rounded-full mt-2 ${
-                          event.severity === 'high' ? 'bg-red-500' : 
+                          event.severity === 'high' ? 'bg-red-600' : 
                           event.severity === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
                         }`} />
                         <div className="flex-1 min-w-0">
@@ -1656,7 +1656,7 @@ const RiskMitigation: React.FC = () => {
 
                 {selectedTab === 'insurance' && (
                   <div className="space-y-6">
-                    <div className="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border-2 border-green-200 dark:border-green-700 shadow-lg">
+                    <div className="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border border-green-200 dark:border-green-700 shadow-lg">
                       <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                         <span className="text-4xl">🛡️</span>
                         <span>Your Safety Shield!</span>
@@ -1666,7 +1666,7 @@ const RiskMitigation: React.FC = () => {
 
                     {/* Insurance Overview Cards - Kid Friendly */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                      <div className="bg-gradient-to-br from-primary-50 to-indigo-50 dark:from-primary-900/20 dark:to-indigo-900/20 rounded-2xl border-4 border-primary-300 dark:border-primary-700 p-5 sm:p-6 shadow-xl transform hover:scale-105 transition-all">
+                      <div className="bg-gradient-to-br from-primary-50 to-indigo-50 dark:from-primary-900/20 dark:to-indigo-900/20 rounded-2xl border border-primary-300 dark:border-primary-700 p-5 sm:p-6 shadow-md transform hover:scale-105 transition-all">
                         <div className="flex items-center gap-3 mb-4">
                           <div className="p-3 bg-gradient-to-br from-primary-200 to-indigo-200 dark:from-primary-900/40 dark:to-indigo-900/40 rounded-xl shadow-lg">
                             <span className="text-3xl">🛡️</span>
@@ -1684,10 +1684,10 @@ const RiskMitigation: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className={`bg-gradient-to-br rounded-2xl border-4 p-5 sm:p-6 shadow-xl transform hover:scale-105 transition-all ${
+                      <div className={`bg-gradient-to-br rounded-2xl border p-5 sm:p-6 shadow-md transform hover:scale-105 transition-all ${
                         riskMetrics.insuranceCoverage.coverageGaps === 0 
                           ? 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-300 dark:border-green-700'
-                          : 'from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-300 dark:border-yellow-700'
+                          : 'from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-accent-300 dark:border-yellow-700'
                       }`}>
                         <div className="flex items-center gap-3 mb-4">
                           <div className={`p-3 rounded-xl shadow-lg ${
@@ -1712,7 +1712,7 @@ const RiskMitigation: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl border-4 border-purple-300 dark:border-purple-700 p-5 sm:p-6 shadow-xl transform hover:scale-105 transition-all">
+                      <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl border border-purple-300 dark:border-purple-700 p-5 sm:p-6 shadow-md transform hover:scale-105 transition-all">
                         <div className="flex items-center gap-3 mb-4">
                           <div className="p-3 bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-900/40 dark:to-pink-900/40 rounded-xl shadow-lg">
                             <span className="text-3xl">💡</span>
@@ -1732,7 +1732,7 @@ const RiskMitigation: React.FC = () => {
                     </div>
 
                     {/* Insurance Policies - Kid Friendly */}
-                    <div className="bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-2xl shadow-xl border-4 border-primary-200 dark:border-primary-700 overflow-hidden">
+                    <div className="bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-2xl shadow-md border border-primary-200 dark:border-primary-700 overflow-hidden">
                       <div className="p-5 sm:p-6 border-b-4 border-primary-200 dark:border-primary-700 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20">
                         <div className="flex items-center justify-between">
                           <div>
@@ -1803,7 +1803,7 @@ const RiskMitigation: React.FC = () => {
                                     </p>
                                   </div>
                                 </div>
-                                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4 bg-white/50 dark:bg-gray-700/50 px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 leading-relaxed">
+                                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4 bg-white/50 dark:bg-gray-700/50 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 leading-relaxed">
                                   {policy.details.description || 
                                    (policy.type === 'cargo' ? '🛡️ This shield protects your things when they travel! It keeps them safe from getting lost, broken, or stolen! 💪' :
                                     policy.type === 'supplier_liability' ? `🛡️ This shield protects you when working with ${policy.entityName}!` :
@@ -1811,7 +1811,7 @@ const RiskMitigation: React.FC = () => {
                                 </p>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                   {policy.coverageAmount > 0 && (
-                                    <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-primary-300 dark:border-primary-700 text-center shadow-md">
+                                    <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border border-primary-300 dark:border-primary-700 text-center shadow-md">
                                       <div className="text-xl mb-1">💰</div>
                                       <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Protection</div>
                                       <div className="text-sm font-extrabold text-gray-900 dark:text-white">
@@ -1820,7 +1820,7 @@ const RiskMitigation: React.FC = () => {
                                     </div>
                                   )}
                                   {policy.expiryDate && (
-                                    <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-green-300 dark:border-green-700 text-center shadow-md">
+                                    <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border border-green-300 dark:border-green-700 text-center shadow-md">
                                       <div className="text-xl mb-1">⏰</div>
                                       <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Expires</div>
                                       <div className="text-sm font-extrabold text-gray-900 dark:text-white">
@@ -1828,7 +1828,7 @@ const RiskMitigation: React.FC = () => {
                                       </div>
                                     </div>
                                   )}
-                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-purple-300 dark:border-purple-700 text-center shadow-md">
+                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border border-purple-300 dark:border-purple-700 text-center shadow-md">
                                     <div className="text-xl mb-1">🏢</div>
                                     <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Provider</div>
                                     <div className="text-sm font-extrabold text-gray-900 dark:text-white truncate">
@@ -1836,7 +1836,7 @@ const RiskMitigation: React.FC = () => {
                                     </div>
                                   </div>
                                   {policy.entityType && (
-                                    <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-orange-300 dark:border-orange-700 text-center shadow-md">
+                                    <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border border-orange-300 dark:border-orange-700 text-center shadow-md">
                                       <div className="text-xl mb-1">{policy.entityType === 'supplier' ? '👥' : '📦'}</div>
                                       <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Type</div>
                                       <div className="text-sm font-extrabold text-gray-900 dark:text-white">
@@ -1882,7 +1882,7 @@ const RiskMitigation: React.FC = () => {
                         )}
 
                         {riskMetrics.insuranceCoverage.expiringSoon > 0 && (
-                          <div className="p-6 bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 border-4 border-orange-300 dark:border-orange-700 rounded-2xl shadow-lg">
+                          <div className="p-6 bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 border border-orange-300 dark:border-orange-700 rounded-2xl shadow-lg">
                             <div className="flex items-start gap-4">
                               <span className="text-4xl">⏰</span>
                               <div className="flex-1">
@@ -1909,13 +1909,13 @@ const RiskMitigation: React.FC = () => {
 
                     {/* Coverage Recommendations - Kid Friendly */}
                     {riskMetrics.insuranceCoverage.coverageGaps > 0 && (
-                      <div className="bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 dark:from-yellow-900/20 dark:via-orange-900/20 dark:to-pink-900/20 rounded-2xl shadow-xl border-4 border-yellow-300 dark:border-yellow-700 p-5 sm:p-6">
+                      <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl shadow-md border border-accent-300 dark:border-yellow-700 p-5 sm:p-6">
                         <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white mb-5 flex items-center gap-3">
                           <span className="text-4xl">💡</span>
                           <span>We Think You Need More Shields!</span>
                         </h3>
                         <div className="space-y-4">
-                          <div className="p-5 bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 rounded-2xl border-4 border-yellow-300 dark:border-yellow-700 shadow-lg">
+                          <div className="p-5 bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 rounded-2xl border border-accent-300 dark:border-yellow-700 shadow-lg">
                             <div className="flex items-start gap-4">
                               <span className="text-4xl">💰</span>
                               <div className="flex-1">
@@ -1931,7 +1931,7 @@ const RiskMitigation: React.FC = () => {
                                     const firstProvider = insuranceProviders[0];
                                     if (firstProvider) setSelectedProvider(firstProvider);
                                   }}
-                                  className="text-base font-bold text-yellow-800 dark:text-yellow-200 hover:text-yellow-900 dark:hover:text-yellow-100 flex items-center gap-2 bg-white dark:bg-gray-800 px-5 py-3 rounded-xl border-4 border-yellow-400 dark:border-yellow-600 hover:scale-105 transition-all shadow-lg"
+                                  className="text-base font-bold text-yellow-800 dark:text-yellow-200 hover:text-white dark:hover:text-yellow-100 flex items-center gap-2 bg-white dark:bg-gray-800 px-5 py-3 rounded-xl border border-yellow-400 dark:border-accent-600 hover:scale-105 transition-all shadow-lg"
                                 >
                                   <span>🔍</span>
                                   <span>Get This Shield!</span>
@@ -1942,7 +1942,7 @@ const RiskMitigation: React.FC = () => {
                           </div>
 
                           {riskMetrics.supplyAlerts > 0 && (
-                            <div className="p-5 bg-gradient-to-br from-primary-100 to-indigo-100 dark:from-primary-900/30 dark:to-indigo-900/30 rounded-2xl border-4 border-primary-300 dark:border-primary-700 shadow-lg">
+                            <div className="p-5 bg-gradient-to-br from-primary-100 to-indigo-100 dark:from-primary-900/30 dark:to-indigo-900/30 rounded-2xl border border-primary-300 dark:border-primary-700 shadow-lg">
                               <div className="flex items-start gap-4">
                                 <span className="text-4xl">📦</span>
                                 <div className="flex-1">
@@ -1958,7 +1958,7 @@ const RiskMitigation: React.FC = () => {
                                       const firstProvider = insuranceProviders[0];
                                       if (firstProvider) setSelectedProvider(firstProvider);
                                     }}
-                                    className="text-base font-bold text-primary-800 dark:text-primary-200 hover:text-primary-900 dark:hover:text-primary-100 flex items-center gap-2 bg-white dark:bg-gray-800 px-5 py-3 rounded-xl border-4 border-primary-400 dark:border-primary-600 hover:scale-105 transition-all shadow-lg"
+                                    className="text-base font-bold text-primary-800 dark:text-primary-200 hover:text-primary-900 dark:hover:text-primary-100 flex items-center gap-2 bg-white dark:bg-gray-800 px-5 py-3 rounded-xl border border-primary-400 dark:border-primary-600 hover:scale-105 transition-all shadow-lg"
                                   >
                                     <span>📚</span>
                                     <span>Learn More!</span>
@@ -1973,7 +1973,7 @@ const RiskMitigation: React.FC = () => {
                     )}
 
                     {/* Insurance Providers - Kid Friendly */}
-                    <div className="bg-gradient-to-br from-white to-purple-50/30 dark:from-gray-800 dark:to-purple-900/20 rounded-2xl shadow-xl border-4 border-purple-200 dark:border-purple-700 p-5 sm:p-6">
+                    <div className="bg-gradient-to-br from-white to-purple-50/30 dark:from-gray-800 dark:to-purple-900/20 rounded-2xl shadow-md border border-purple-200 dark:border-purple-700 p-5 sm:p-6">
                       <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white mb-5 flex items-center gap-3">
                         <span className="text-4xl">🏢</span>
                         <span>Shield Companies We Like!</span>
@@ -1981,7 +1981,7 @@ const RiskMitigation: React.FC = () => {
                       {insuranceProviders.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                           {insuranceProviders.map((provider) => (
-                            <div key={provider.id} className="p-5 sm:p-6 bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-2xl border-4 border-primary-200 dark:border-primary-700 hover:border-primary-400 dark:hover:border-primary-600 transition-all shadow-lg transform hover:scale-105">
+                            <div key={provider.id} className="p-5 sm:p-6 bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-2xl border border-primary-200 dark:border-primary-700 hover:border-primary-400 dark:hover:border-primary-600 transition-all shadow-lg transform hover:scale-105">
                               <div className="flex items-center gap-4 mb-4">
                                 <div className="p-4 bg-gradient-to-br from-primary-200 to-indigo-200 dark:from-primary-900/40 dark:to-indigo-900/40 rounded-xl shadow-lg">
                                   <span className="text-4xl">🛡️</span>
@@ -1997,13 +1997,13 @@ const RiskMitigation: React.FC = () => {
                                   )}
                                 </div>
                               </div>
-                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4 leading-relaxed bg-white/50 dark:bg-gray-700/50 px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600">
+                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4 leading-relaxed bg-white/50 dark:bg-gray-700/50 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600">
                                 {provider.description || 'They give you super strong shields to keep your business safe! 💪'}
                               </p>
                               {provider.coverage_types && provider.coverage_types.length > 0 && (
                                 <div className="flex flex-wrap items-center gap-2 mb-4">
                                   {provider.coverage_types.slice(0, 3).map((type: string, idx: number) => (
-                                    <span key={idx} className="px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-primary-100 to-purple-100 dark:from-primary-900/30 dark:to-purple-900/30 text-primary-800 dark:text-primary-200 rounded-xl border-2 border-primary-300 dark:border-primary-700">
+                                    <span key={idx} className="px-3 py-1.5 text-xs font-bold bg-gradient-to-r from-primary-100 to-purple-100 dark:from-primary-900/30 dark:to-purple-900/30 text-primary-800 dark:text-primary-200 rounded-xl border border-primary-300 dark:border-primary-700">
                                       ✅ {type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
                                     </span>
                                   ))}
@@ -2046,7 +2046,7 @@ const RiskMitigation: React.FC = () => {
 
                     {/* Insurance Quotes - Kid Friendly */}
                     {insuranceQuotes.length > 0 && (
-                      <div className="bg-gradient-to-br from-white to-green-50/30 dark:from-gray-800 dark:to-green-900/20 rounded-2xl shadow-xl border-4 border-green-200 dark:border-green-700 p-5 sm:p-6">
+                      <div className="bg-gradient-to-br from-white to-green-50/30 dark:from-gray-800 dark:to-green-900/20 rounded-2xl shadow-md border border-green-200 dark:border-green-700 p-5 sm:p-6">
                         <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white mb-5 flex items-center gap-3">
                           <span className="text-4xl">💬</span>
                           <span>Shield Prices They Gave You!</span>
@@ -2059,7 +2059,7 @@ const RiskMitigation: React.FC = () => {
                                                'from-yellow-500 to-orange-600';
                             
                             return (
-                              <div key={quote.id} className="p-5 sm:p-6 bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-2xl border-4 border-primary-200 dark:border-primary-700 shadow-lg transform hover:scale-[1.02] transition-all">
+                              <div key={quote.id} className="p-5 sm:p-6 bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-2xl border border-primary-200 dark:border-primary-700 shadow-lg transform hover:scale-[1.02] transition-all">
                                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                                   <div className="flex-1">
                                     <div className="flex items-center gap-3 mb-3">
@@ -2082,28 +2082,28 @@ const RiskMitigation: React.FC = () => {
                                   </div>
                                 </div>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4">
-                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-primary-300 dark:border-primary-700 text-center shadow-md">
+                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border border-primary-300 dark:border-primary-700 text-center shadow-md">
                                     <div className="text-2xl mb-1">💰</div>
                                     <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Protection</div>
                                     <div className="text-sm font-extrabold text-gray-900 dark:text-white">
                                       {quote.currency} {(quote.coverage_amount / 1000000).toFixed(1)}M
                                     </div>
                                   </div>
-                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-green-300 dark:border-green-700 text-center shadow-md">
+                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border border-green-300 dark:border-green-700 text-center shadow-md">
                                     <div className="text-2xl mb-1">💵</div>
                                     <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Cost</div>
                                     <div className="text-sm font-extrabold text-gray-900 dark:text-white">
                                       {quote.currency} {quote.premium?.toLocaleString() || 'N/A'}
                                     </div>
                                   </div>
-                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-purple-300 dark:border-purple-700 text-center shadow-md">
+                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border border-purple-300 dark:border-purple-700 text-center shadow-md">
                                     <div className="text-2xl mb-1">⏰</div>
                                     <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Time</div>
                                     <div className="text-sm font-extrabold text-gray-900 dark:text-white">
                                       {Math.round(quote.term_days / 30)} months
                                     </div>
                                   </div>
-                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-orange-300 dark:border-orange-700 text-center shadow-md">
+                                  <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border border-orange-300 dark:border-orange-700 text-center shadow-md">
                                     <div className="text-2xl mb-1">📅</div>
                                     <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Expires</div>
                                     <div className="text-sm font-extrabold text-gray-900 dark:text-white">
@@ -2129,7 +2129,7 @@ const RiskMitigation: React.FC = () => {
 
                     {/* Insurance Applications - Kid Friendly */}
                     {insuranceApplications.length > 0 && (
-                      <div className="bg-gradient-to-br from-white to-indigo-50/30 dark:from-gray-800 dark:to-indigo-900/20 rounded-2xl shadow-xl border-4 border-indigo-200 dark:border-indigo-700 p-5 sm:p-6">
+                      <div className="bg-gradient-to-br from-white to-indigo-50/30 dark:from-gray-800 dark:to-indigo-900/20 rounded-2xl shadow-md border border-indigo-200 dark:border-indigo-700 p-5 sm:p-6">
                         <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white mb-5 flex items-center gap-3">
                           <span className="text-4xl">📝</span>
                           <span>Your Shield Requests!</span>
@@ -2142,7 +2142,7 @@ const RiskMitigation: React.FC = () => {
                                                'from-yellow-500 to-orange-600';
                             
                             return (
-                              <div key={app.id} className="p-5 sm:p-6 bg-gradient-to-br from-white to-indigo-50/30 dark:from-gray-800 dark:to-indigo-900/20 rounded-2xl border-4 border-indigo-200 dark:border-indigo-700 shadow-lg transform hover:scale-[1.02] transition-all">
+                              <div key={app.id} className="p-5 sm:p-6 bg-gradient-to-br from-white to-indigo-50/30 dark:from-gray-800 dark:to-indigo-900/20 rounded-2xl border border-indigo-200 dark:border-indigo-700 shadow-lg transform hover:scale-[1.02] transition-all">
                                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                                   <div className="flex-1">
                                     <div className="flex items-center gap-3 mb-3">
@@ -2159,14 +2159,14 @@ const RiskMitigation: React.FC = () => {
                                       </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-3 mt-4">
-                                      <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-indigo-300 dark:border-indigo-700 text-center shadow-md">
+                                      <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border border-indigo-300 dark:border-indigo-700 text-center shadow-md">
                                         <div className="text-xl mb-1">💰</div>
                                         <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Protection</div>
                                         <div className="text-sm font-extrabold text-gray-900 dark:text-white">
                                           {app.currency} {(app.coverage_amount / 1000000).toFixed(1)}M
                                         </div>
                                       </div>
-                                      <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-purple-300 dark:border-purple-700 text-center shadow-md">
+                                      <div className="bg-white dark:bg-gray-800 rounded-xl p-3 border border-purple-300 dark:border-purple-700 text-center shadow-md">
                                         <div className="text-xl mb-1">📅</div>
                                         <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">When Asked</div>
                                         <div className="text-sm font-extrabold text-gray-900 dark:text-white">
@@ -2190,7 +2190,7 @@ const RiskMitigation: React.FC = () => {
                     {/* Quote Request Modal - Kid Friendly */}
                     {showQuoteModal && selectedProvider && (
                       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                        <div className="bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border-4 border-primary-300 dark:border-primary-700">
+                        <div className="bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-2xl shadow-md max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-primary-300 dark:border-primary-700">
                           <div className="p-5 sm:p-6 border-b-4 border-primary-200 dark:border-primary-700 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20">
                             <div className="flex items-center justify-between">
                               <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white flex items-center gap-3">
@@ -2217,7 +2217,7 @@ const RiskMitigation: React.FC = () => {
                               <select
                                 value={quoteRequest.quoteType}
                                 onChange={(e) => setQuoteRequest({ ...quoteRequest, quoteType: e.target.value as any })}
-                                className="w-full px-4 py-3 text-base font-bold border-4 border-primary-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-md"
+                                className="w-full px-4 py-3 text-base font-bold border border-primary-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-md"
                               >
                                 <option value="cargo">🚚 Cargo Shield (Protects your stuff when moving!)</option>
                                 <option value="liability">👥 Liability Shield (Protects you from problems!)</option>
@@ -2241,8 +2241,8 @@ const RiskMitigation: React.FC = () => {
                                 className="w-full h-4 bg-gradient-to-r from-primary-200 to-purple-200 dark:from-primary-800 dark:to-purple-800 rounded-full appearance-none cursor-pointer accent-blue-600 shadow-inner"
                               />
                               <div className="flex justify-between text-sm font-bold text-gray-700 dark:text-gray-300 mt-2">
-                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-primary-300 dark:border-primary-700">💵 100K</span>
-                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-purple-300 dark:border-purple-700">💎 10M</span>
+                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border border-primary-300 dark:border-primary-700">💵 100K</span>
+                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border border-purple-300 dark:border-purple-700">💎 10M</span>
                               </div>
                             </div>
                             <div>
@@ -2260,8 +2260,8 @@ const RiskMitigation: React.FC = () => {
                                 className="w-full h-4 bg-gradient-to-r from-green-200 to-emerald-200 dark:from-green-800 dark:to-emerald-800 rounded-full appearance-none cursor-pointer accent-green-600 shadow-inner"
                               />
                               <div className="flex justify-between text-sm font-bold text-gray-700 dark:text-gray-300 mt-2">
-                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-green-300 dark:border-green-700">1 month</span>
-                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-emerald-300 dark:border-emerald-700">24 months</span>
+                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border border-green-300 dark:border-green-700">1 month</span>
+                                <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border border-emerald-300 dark:border-emerald-700">24 months</span>
                               </div>
                             </div>
                             <div className="flex gap-3 pt-4">
@@ -2270,7 +2270,7 @@ const RiskMitigation: React.FC = () => {
                                   setShowQuoteModal(false);
                                   setSelectedProvider(null);
                                 }}
-                                className="flex-1 px-5 py-3 text-base font-bold border-4 border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all shadow-lg"
+                                className="flex-1 px-5 py-3 text-base font-bold border border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all shadow-lg"
                               >
                                 <span>❌</span> Cancel
                               </button>
@@ -2301,7 +2301,7 @@ const RiskMitigation: React.FC = () => {
 
                 {selectedTab === 'playbooks' && (
                   <div className="space-y-6">
-                  <div className="mb-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border-2 border-purple-200 dark:border-purple-700 shadow-lg">
+                  <div className="mb-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border border-purple-200 dark:border-purple-700 shadow-lg">
                     <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                       <span className="text-4xl">📚</span>
                       <span>How to Fix Things!</span>
@@ -2309,7 +2309,7 @@ const RiskMitigation: React.FC = () => {
                     <p className="text-base font-medium text-gray-700 dark:text-gray-300">Learn step-by-step how to solve problems! It's like a recipe for fixing things! 🎯</p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-                    <div className="p-5 sm:p-6 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-2xl border-4 border-red-300 dark:border-red-700 shadow-xl transform hover:scale-105 transition-all">
+                    <div className="p-5 sm:p-6 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-2xl border border-red-300 dark:border-red-700 shadow-md transform hover:scale-105 transition-all">
                       <div className="flex items-center gap-3 mb-5">
                         <div className="p-3 bg-gradient-to-br from-red-200 to-orange-200 dark:from-red-900/40 dark:to-orange-900/40 rounded-xl shadow-lg">
                           <span className="text-4xl">💰</span>
@@ -2317,19 +2317,19 @@ const RiskMitigation: React.FC = () => {
                         <h4 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white">When Prices Go Up! 📈</h4>
                       </div>
                       <ul className="space-y-3 mb-5">
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-red-200 dark:border-red-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-red-200 dark:border-red-800">
                           <span className="text-2xl">1️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Find other suppliers fast! 🏃</span>
                         </li>
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-red-200 dark:border-red-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-red-200 dark:border-red-800">
                           <span className="text-2xl">2️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Talk to them about better prices! 💬</span>
                         </li>
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-red-200 dark:border-red-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-red-200 dark:border-red-800">
                           <span className="text-2xl">3️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Tell everyone about the change! 📢</span>
                         </li>
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-red-200 dark:border-red-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-red-200 dark:border-red-800">
                           <span className="text-2xl">4️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Update your price plans! 📊</span>
                         </li>
@@ -2349,7 +2349,7 @@ const RiskMitigation: React.FC = () => {
                       </button>
                     </div>
 
-                    <div className="p-5 sm:p-6 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl border-4 border-yellow-300 dark:border-yellow-700 shadow-xl transform hover:scale-105 transition-all">
+                    <div className="p-5 sm:p-6 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl border border-accent-300 dark:border-yellow-700 shadow-md transform hover:scale-105 transition-all">
                       <div className="flex items-center gap-3 mb-5">
                         <div className="p-3 bg-gradient-to-br from-yellow-200 to-orange-200 dark:from-yellow-900/40 dark:to-orange-900/40 rounded-xl shadow-lg">
                           <span className="text-4xl">📦</span>
@@ -2357,19 +2357,19 @@ const RiskMitigation: React.FC = () => {
                         <h4 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white">When Stuff Stops Coming! 🚚</h4>
                       </div>
                       <ul className="space-y-3 mb-5">
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-yellow-200 dark:border-yellow-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-yellow-200 dark:border-yellow-800">
                           <span className="text-2xl">1️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Check what you have left! 📋</span>
                         </li>
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-yellow-200 dark:border-yellow-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-yellow-200 dark:border-yellow-800">
                           <span className="text-2xl">2️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Call backup suppliers NOW! 📞</span>
                         </li>
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-yellow-200 dark:border-yellow-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-yellow-200 dark:border-yellow-800">
                           <span className="text-2xl">3️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Change your work schedule! ⏰</span>
                         </li>
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-yellow-200 dark:border-yellow-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-yellow-200 dark:border-yellow-800">
                           <span className="text-2xl">4️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Tell customers about delays! 💬</span>
                         </li>
@@ -2389,7 +2389,7 @@ const RiskMitigation: React.FC = () => {
                       </button>
                     </div>
 
-                    <div className="p-5 sm:p-6 bg-gradient-to-br from-primary-50 to-indigo-50 dark:from-primary-900/20 dark:to-indigo-900/20 rounded-2xl border-4 border-primary-300 dark:border-primary-700 shadow-xl transform hover:scale-105 transition-all">
+                    <div className="p-5 sm:p-6 bg-gradient-to-br from-primary-50 to-indigo-50 dark:from-primary-900/20 dark:to-indigo-900/20 rounded-2xl border border-primary-300 dark:border-primary-700 shadow-md transform hover:scale-105 transition-all">
                       <div className="flex items-center gap-3 mb-5">
                         <div className="p-3 bg-gradient-to-br from-primary-200 to-indigo-200 dark:from-primary-900/40 dark:to-indigo-900/40 rounded-xl shadow-lg">
                           <span className="text-4xl">📋</span>
@@ -2397,19 +2397,19 @@ const RiskMitigation: React.FC = () => {
                         <h4 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white">When Rules Change! 📄</h4>
                       </div>
                       <ul className="space-y-3 mb-5">
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-primary-200 dark:border-primary-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-primary-200 dark:border-primary-800">
                           <span className="text-2xl">1️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Read the new rules carefully! 👀</span>
                         </li>
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-primary-200 dark:border-primary-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-primary-200 dark:border-primary-800">
                           <span className="text-2xl">2️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Update your checklists! ✅</span>
                         </li>
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-primary-200 dark:border-primary-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-primary-200 dark:border-primary-800">
                           <span className="text-2xl">3️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Ask a lawyer for help! ⚖️</span>
                         </li>
-                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border-2 border-primary-200 dark:border-primary-800">
+                        <li className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-primary-200 dark:border-primary-800">
                           <span className="text-2xl">4️⃣</span>
                           <span className="text-sm font-bold text-gray-800 dark:text-gray-200">Teach your team the new rules! 🎓</span>
                         </li>
@@ -2441,7 +2441,7 @@ const RiskMitigation: React.FC = () => {
       {/* Risk Profile Modal */}
       {showRiskProfileModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Risk Profile Settings</h2>
@@ -2476,7 +2476,7 @@ const RiskMitigation: React.FC = () => {
                           onClick={() => {
                             setRiskProfile((prev: any) => ({ ...prev, risk_tolerance: level }));
                           }}
-                          className={`px-4 py-3 rounded-lg border-2 transition-all ${
+                          className={`px-4 py-3 rounded-lg border transition-all ${
                             riskProfile?.risk_tolerance === level
                               ? level === 'low'
                                 ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'

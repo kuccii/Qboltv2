@@ -454,7 +454,7 @@ const SupplierDirectory: React.FC = () => {
                 <FilterIcon className="h-4 w-4" />
                 Filters
                 {(selectedMaterial !== 'all' || selectedRegion !== 'all' || verification.length > 0 || minRating > 0) && (
-                  <span className="px-2 py-0.5 text-xs bg-yellow-400 text-yellow-900 rounded-full font-bold">Active</span>
+                  <span className="px-2 py-0.5 text-xs bg-yellow-500 text-white rounded-full font-bold">Active</span>
                 )}
               </button>
             </div>
@@ -591,7 +591,7 @@ const SupplierDirectory: React.FC = () => {
                   filteredSuppliers.map(supplier => (
                   <div 
                     key={supplier.id} 
-                    className="bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-xl shadow-lg border-2 border-primary-200 dark:border-primary-700 p-5 hover:shadow-xl hover:border-primary-400 dark:hover:border-primary-600 transition-all transform hover:scale-[1.02]"
+                    className="bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-xl shadow-lg border border-primary-200 dark:border-primary-700 p-5 hover:shadow-md hover:border-primary-400 dark:hover:border-primary-600 transition-all transform hover:scale-[1.02]"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
@@ -602,7 +602,7 @@ const SupplierDirectory: React.FC = () => {
                           </h3>
                           {/* Verification Badge */}
                           {(supplier as any).verification && (
-                            <div className="flex items-center text-green-600 dark:text-green-400 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/40 dark:to-green-800/40 px-2 py-1 rounded-lg border-2 border-green-300 dark:border-green-700">
+                            <div className="flex items-center text-green-600 dark:text-green-400 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/40 dark:to-green-800/40 px-2 py-1 rounded-lg border border-green-300 dark:border-green-700">
                               <CheckCircle className="w-4 h-4" />
                             </div>
                           )}
@@ -627,7 +627,7 @@ const SupplierDirectory: React.FC = () => {
                         )}
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <div className="flex items-center gap-1.5 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900/40 dark:to-yellow-800/40 px-2 py-1 rounded-lg border-2 border-yellow-300 dark:border-yellow-700">
+                        <div className="flex items-center gap-1.5 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900/40 dark:to-yellow-800/40 px-2 py-1 rounded-lg border border-accent-300 dark:border-yellow-700">
                           <Star size={16} className="text-yellow-600 dark:text-yellow-400 fill-yellow-500" />
                           <span className="text-sm font-bold text-yellow-700 dark:text-yellow-400">{supplier.rating}</span>
                         </div>
@@ -643,7 +643,7 @@ const SupplierDirectory: React.FC = () => {
                         {supplier.materials.map((material, index) => (
                           <span 
                             key={index} 
-                            className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-primary-100 to-primary-200 dark:from-primary-900/40 dark:to-primary-800/40 text-primary-800 dark:text-primary-200 border-2 border-primary-300 dark:border-primary-700"
+                            className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-primary-100 to-primary-200 dark:from-primary-900/40 dark:to-primary-800/40 text-primary-800 dark:text-primary-200 border border-primary-300 dark:border-primary-700"
                           >
                             {material}
                           </span>
@@ -701,7 +701,7 @@ const SupplierDirectory: React.FC = () => {
                         </button>
                         <button 
                           onClick={() => navigate(`/app/suppliers/${supplier.id}`)}
-                          className="py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105 text-sm font-bold shadow-md"
+                          className="py-2 bg-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105 text-sm font-bold shadow-md"
                         >
                           <span>👁️</span> View
                         </button>

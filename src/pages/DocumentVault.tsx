@@ -687,7 +687,7 @@ const DocumentVault: React.FC = () => {
     <AppLayout>
       <PageLayout>
         {/* Playful Header */}
-        <div className="mb-6 p-6 bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 rounded-2xl shadow-xl border-4 border-primary-300 dark:border-primary-700">
+        <div className="mb-6 p-6 bg-primary-800 rounded-2xl shadow-md border border-primary-300 dark:border-primary-700">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 flex items-center gap-3">
@@ -699,15 +699,15 @@ const DocumentVault: React.FC = () => {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/30">
                 <div className="text-white text-xs font-bold">📄 Documents</div>
                 <div className="text-white text-lg font-extrabold">{documentRequirements.length}</div>
               </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/30">
                 <div className="text-white text-xs font-bold">✅ Required</div>
                 <div className="text-white text-lg font-extrabold">{requiredDocs.length}</div>
               </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/30">
                 <div className="text-white text-xs font-bold">🌍 Countries</div>
                 <div className="text-white text-lg font-extrabold">{countries.length}</div>
               </div>
@@ -726,7 +726,7 @@ const DocumentVault: React.FC = () => {
       
         <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           {/* Playful Tab Navigation */}
-          <div className="bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-primary-200 dark:border-primary-700 p-2">
+          <div className="bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border border-primary-200 dark:border-primary-700 p-2">
             <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
               {[
                 { id: 'overview', label: 'Overview', icon: '👀', emoji: '👀' },
@@ -740,13 +740,13 @@ const DocumentVault: React.FC = () => {
                   className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                     activeTab === tab.id
                       ? tab.id === 'overview'
-                        ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg border-2 border-primary-300'
+                        ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg border border-primary-300'
                         : tab.id === 'documents'
-                          ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg border-2 border-purple-300'
+                          ? 'bg-purple-600 text-white shadow-lg border border-purple-300'
                           : tab.id === 'checklist'
-                            ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg border-2 border-green-300'
-                            : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg border-2 border-pink-300'
-                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
+                            ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg border border-green-300'
+                            : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg border border-pink-300'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -758,12 +758,12 @@ const DocumentVault: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
             {/* Tab Content */}
             {activeTab === 'overview' && (
                 <div className="space-y-6">
                   {/* Welcome Message */}
-                  <div className="bg-gradient-to-r from-primary-100 via-purple-100 to-pink-100 dark:from-primary-900/30 dark:via-purple-900/30 dark:to-pink-900/30 rounded-2xl p-6 border-4 border-primary-300 dark:border-primary-700">
+                  <div className="bg-gradient-to-r from-primary-100 via-purple-100 to-pink-100 dark:from-primary-900/30 dark:via-purple-900/30 dark:to-pink-900/30 rounded-2xl p-6 border border-primary-300 dark:border-primary-700">
                     <div className="flex items-start gap-4">
                       <div className="text-5xl">📚</div>
                       <div className="flex-1">
@@ -805,7 +805,7 @@ const DocumentVault: React.FC = () => {
                             setActiveTab('documents');
                             setSelectedCategory(cat.name === 'all' ? 'all' : cat.name);
                           }}
-                          className="bg-gradient-to-br from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-xl p-5 border-4 border-primary-200 dark:border-primary-700 hover:shadow-xl transition-all cursor-pointer transform hover:scale-105"
+                          className="bg-gradient-to-br from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-xl p-5 border border-primary-200 dark:border-primary-700 hover:shadow-md transition-all cursor-pointer transform hover:scale-105"
                         >
                           <div className="flex items-center gap-3 mb-2">
                             <span className="text-3xl">{getCategoryIcon(cat.name)}</span>
@@ -831,7 +831,7 @@ const DocumentVault: React.FC = () => {
                         { emoji: '✅', icon: <CheckCircle2 className="h-5 w-5 text-success-600" />, title: 'Double Check! 🔍', desc: 'Always ask the people in charge before you ship! Rules can change, so make sure you have everything!', color: 'from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30' },
                         { emoji: '🌐', icon: <Globe className="h-5 w-5 text-primary-600" />, title: 'Use the Internet! 💻', desc: 'Apply online when you can! It\'s faster and easier than going to offices in person!', color: 'from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30' },
                       ].map((tip, idx) => (
-                        <div key={idx} className={`flex items-start gap-4 p-5 bg-gradient-to-r ${tip.color} rounded-xl border-4 border-primary-200 dark:border-primary-700 hover:shadow-lg transition-all transform hover:scale-105`}>
+                        <div key={idx} className={`flex items-start gap-4 p-5 bg-gradient-to-r ${tip.color} rounded-xl border border-primary-200 dark:border-primary-700 hover:shadow-lg transition-all transform hover:scale-105`}>
                           <div className="text-4xl">{tip.emoji}</div>
                           <div className="flex-1">
                             <div className="font-extrabold text-lg text-gray-900 dark:text-white mb-1">{tip.title}</div>
@@ -1224,7 +1224,7 @@ const DocumentVault: React.FC = () => {
                                 ) : docStatus?.status === 'applied' ? (
                                   <Clock className="h-5 w-5" />
                                 ) : (
-                                  <div className="h-5 w-5 border-2 border-gray-300 dark:border-gray-600 rounded-full"></div>
+                                  <div className="h-5 w-5 border border-gray-300 dark:border-gray-600 rounded-full"></div>
                                 )}
                               </div>
                               <div className="flex-1">
@@ -1281,7 +1281,7 @@ const DocumentVault: React.FC = () => {
           {/* Status Modal */}
           {showStatusModal && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md max-w-md w-full p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                     Update Document Status

@@ -258,7 +258,7 @@ const PriceTracking: React.FC = () => {
     <AppLayout>
       {/* Playful Header */}
       <div className="px-3 sm:px-4 md:px-6 pt-4 sm:pt-5">
-        <div className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 dark:from-green-600 dark:via-emerald-600 dark:to-teal-600 rounded-2xl p-4 sm:p-5 md:p-6 shadow-2xl border-4 border-white/20 dark:border-white/10">
+        <div className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 dark:from-green-600 dark:via-emerald-600 dark:to-teal-600 rounded-2xl p-4 sm:p-5 md:p-6 shadow-md border border-white/20 dark:border-white/10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
@@ -271,7 +271,7 @@ const PriceTracking: React.FC = () => {
               </p>
             </div>
             <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-              <div className="hidden md:flex text-sm text-white/90 items-center gap-1 bg-white/20 px-3 py-2 rounded-xl border-2 border-white/30">
+              <div className="hidden md:flex text-sm text-white/90 items-center gap-1 bg-white/20 px-3 py-2 rounded-xl border border-white/30">
                 <RefreshCw className="h-4 w-4" />
                 Updated: {formatDate(lastUpdated)}
               </div>
@@ -283,7 +283,7 @@ const PriceTracking: React.FC = () => {
               />
               <button
                 onClick={() => setShowFilters(true)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-white/20 hover:bg-white/30 rounded-xl border-2 border-white/30 transition-all transform hover:scale-105"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-white/20 hover:bg-white/30 rounded-xl border border-white/30 transition-all transform hover:scale-105"
               >
                 <FilterIcon className="h-4 w-4" />
                 Filters
@@ -353,7 +353,7 @@ const PriceTracking: React.FC = () => {
               </p>
             </div>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="flex items-center space-x-2 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-primary-200 dark:border-gray-700">
+              <div className="flex items-center space-x-2 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border border-primary-200 dark:border-gray-700">
                 <TimeRangeButton value="1m" selected={timeRange === '1m'} onClick={() => setTimeRange('1m')} />
                 <TimeRangeButton value="3m" selected={timeRange === '3m'} onClick={() => setTimeRange('3m')} />
                 <TimeRangeButton value="6m" selected={timeRange === '6m'} onClick={() => setTimeRange('6m')} />
@@ -387,7 +387,7 @@ const PriceTracking: React.FC = () => {
                 See how prices go up and down over time!
               </p>
             </div>
-            <div className="bg-gradient-to-br from-indigo-400 via-indigo-500 to-indigo-600 dark:from-indigo-600 dark:via-indigo-700 dark:to-indigo-800 rounded-2xl shadow-2xl border-4 border-indigo-300 dark:border-indigo-500 p-6">
+            <div className="bg-indigo-600 dark:bg-gray-700 rounded-2xl shadow-md border border-indigo-300 dark:border-indigo-500 p-6">
               <div className="h-96 bg-white/10 dark:bg-white/5 rounded-xl p-4">
                 <PriceChart data={priceDataToUse} dataKeys={filteredDataKeys} height={384} />
               </div>
@@ -465,14 +465,14 @@ const PriceTracking: React.FC = () => {
                   value={savedViewName}
                   onChange={(e) => setSavedViewName(e.target.value)}
                   placeholder="Save current view"
-                  className="text-sm px-3 py-2 border-2 border-gray-300 rounded-xl"
+                  className="text-sm px-3 py-2 border border-gray-300 rounded-xl"
                 />
                 <button onClick={saveView} className="px-4 py-2 text-sm font-bold bg-primary-500 text-white rounded-xl hover:bg-primary-600">Save</button>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 dark:from-yellow-600 dark:via-yellow-700 dark:to-yellow-800 rounded-2xl shadow-2xl border-4 border-yellow-300 dark:border-yellow-500 p-6">
+            <div className="bg-primary-700 dark:bg-gray-700 rounded-2xl shadow-md border border-accent-300 dark:border-yellow-500 p-6">
               <div className="space-y-6">
-                <div className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border-2 border-white/30">
+                <div className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border border-white/30">
                   <h3 className="font-bold text-white text-lg mb-2 flex items-center gap-2">
                     <span>📊</span>
                     Market Summary
@@ -490,7 +490,7 @@ const PriceTracking: React.FC = () => {
                     Price Alerts
                   </h3>
                   <div className="space-y-4">
-                    <div className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border-2 border-white/30">
+                    <div className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border border-white/30">
                       <div className="flex items-start gap-3">
                         <span className="text-2xl">⚠️</span>
                         <div>
@@ -508,7 +508,7 @@ const PriceTracking: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border-2 border-white/30">
+                    <div className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border border-white/30">
                       <div className="flex items-start gap-3">
                         <span className="text-2xl">🔮</span>
                         <div>

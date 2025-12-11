@@ -410,7 +410,7 @@ const DemandMapping: React.FC = () => {
             </p>
             <div className="flex items-center justify-center gap-4 flex-wrap">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-red-600 rounded-full"></div>
                 <span className="text-sm text-gray-600 dark:text-gray-400">High Demand</span>
               </div>
               <div className="flex items-center gap-2">
@@ -461,8 +461,8 @@ const DemandMapping: React.FC = () => {
                   suppliers: Math.floor(Math.random() * 50) + 10
                 })}
               >
-                <div className={`w-4 h-4 rounded-full border-2 border-white shadow-lg ${
-                  point.demand > 800 ? 'bg-red-500' : 
+                <div className={`w-4 h-4 rounded-full border border-white shadow-lg ${
+                  point.demand > 800 ? 'bg-red-600' : 
                   point.demand > 600 ? 'bg-yellow-500' : 'bg-green-500'
                 }`}></div>
               </div>
@@ -581,7 +581,7 @@ const DemandMapping: React.FC = () => {
     <AppLayout>
       <PageLayout>
         {/* Playful Header */}
-        <div className="mb-6 p-6 bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 rounded-2xl shadow-xl border-4 border-primary-300 dark:border-primary-700">
+        <div className="mb-6 p-6 bg-primary-800 rounded-2xl shadow-md border border-primary-300 dark:border-primary-700">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 flex items-center gap-3">
@@ -593,11 +593,11 @@ const DemandMapping: React.FC = () => {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/30">
                 <div className="text-white text-xs font-bold">📍 Regions</div>
                 <div className="text-white text-lg font-extrabold">{regionDetails.length}</div>
               </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border-2 border-white/30">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/30">
                 <div className="text-white text-xs font-bold">📊 Data Points</div>
                 <div className="text-white text-lg font-extrabold">{filteredData.length}</div>
               </div>
@@ -616,8 +616,8 @@ const DemandMapping: React.FC = () => {
               onClick={() => setShowItcData(!showItcData)}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl transition-all shadow-lg transform hover:scale-105 ${
                 showItcData
-                  ? 'bg-green-500 text-white border-2 border-green-300'
-                  : 'bg-white text-gray-700 border-2 border-gray-300 hover:bg-gray-50'
+                  ? 'bg-green-500 text-white border border-green-300'
+                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
               }`}
               title="Toggle ITC (Export Potential Map & Trade Map) data"
             >
@@ -626,7 +626,7 @@ const DemandMapping: React.FC = () => {
             </button>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white text-purple-600 rounded-xl hover:bg-purple-50 border-2 border-purple-300 shadow-lg transform hover:scale-105 transition-all"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white text-purple-600 rounded-xl hover:bg-purple-50 border border-purple-300 shadow-lg transform hover:scale-105 transition-all"
             >
               <Filter className="h-4 w-4" />
               🔍 Filters
@@ -643,14 +643,14 @@ const DemandMapping: React.FC = () => {
       
         <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           {/* Playful Tab Navigation */}
-          <div className="bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-primary-200 dark:border-primary-700 p-2">
+          <div className="bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border border-primary-200 dark:border-primary-700 p-2">
             <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
               <button
                 onClick={() => setSelectedTab('demand')}
                 className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                   selectedTab === 'demand'
-                    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg border-2 border-primary-300'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
+                    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg border border-primary-300'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -662,8 +662,8 @@ const DemandMapping: React.FC = () => {
                 onClick={() => setSelectedTab('itc-export')}
                 className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                   selectedTab === 'itc-export'
-                    ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg border-2 border-purple-300'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-purple-50 dark:hover:bg-purple-900/20'
+                    ? 'bg-purple-600 text-white shadow-lg border border-purple-300'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-purple-50 dark:hover:bg-purple-900/20'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -675,8 +675,8 @@ const DemandMapping: React.FC = () => {
                 onClick={() => setSelectedTab('trade-data')}
                 className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                   selectedTab === 'trade-data'
-                    ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg border-2 border-pink-300'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-pink-50 dark:hover:bg-pink-900/20'
+                    ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg border border-pink-300'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-pink-50 dark:hover:bg-pink-900/20'
                 }`}
               >
                 <div className="flex items-center gap-2">
