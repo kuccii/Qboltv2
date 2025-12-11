@@ -71,7 +71,7 @@ const Home: React.FC = () => {
     {
       title: 'Real-time Price Tracking',
       description: 'Monitor construction materials and agricultural input prices across East Africa with live updates.',
-      icon: <TrendingUp className="text-blue-600" size={24} />,
+      icon: <TrendingUp className="text-primary-800" size={24} />,
       link: '/app/countries/rw/pricing',
       stats: '10,000+ daily updates'
     },
@@ -113,7 +113,7 @@ const Home: React.FC = () => {
   ];
 
   const stats = [
-    { label: 'Active Suppliers', value: '2,500+', icon: <Users className="text-blue-500" size={20} />, change: '+12%' },
+    { label: 'Active Suppliers', value: '2,500+', icon: <Users className="text-primary-600" size={20} />, change: '+12%' },
     { label: 'Price Updates Daily', value: '10,000+', icon: <TrendingUp className="text-green-500" size={20} />, change: '+25%' },
     { label: 'Countries Covered', value: '4', icon: <Globe className="text-purple-500" size={20} />, change: '+1' },
     { label: 'Cost Savings', value: '15%', icon: <DollarSign className="text-orange-500" size={20} />, change: '+3%' }
@@ -478,7 +478,7 @@ const Home: React.FC = () => {
             {isLoggedIn ? (
               <Link
                 to="/app"
-                className="inline-flex items-center px-8 py-4 text-lg font-bold text-blue-600 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
+                className="inline-flex items-center px-8 py-4 text-lg font-bold text-primary-800 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
               >
                 🎯 Go to Dashboard
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -487,7 +487,7 @@ const Home: React.FC = () => {
               <>
                 <Link
                   to="/register"
-                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-blue-600 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
+                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-primary-800 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
                 >
                   🚀 Start FREE Now!
                   <ArrowRight className="ml-2 h-5 w-5" />
