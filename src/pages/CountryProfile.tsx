@@ -141,7 +141,7 @@ const CountryProfile: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Playful Header */}
       <div className="mb-6">
-        <div className="bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 dark:from-primary-600 dark:via-purple-600 dark:to-pink-600 rounded-2xl p-5 sm:p-6 shadow-2xl border-4 border-white/20 dark:border-white/10 mb-4">
+        <div className="bg-primary-800 dark:bg-primary-900 rounded-lg p-5 sm:p-6 shadow-md mb-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
@@ -200,13 +200,13 @@ const CountryProfile: React.FC = () => {
         </div>
 
         {/* Playful Tabs */}
-        <div className="flex items-center gap-2 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-primary-200 dark:border-gray-700 shadow-lg overflow-x-auto scrollbar-hide">
+        <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-2 border border-primary-200 dark:border-gray-700 shadow-md overflow-x-auto scrollbar-hide">
           <button
             onClick={() => handleTabChange('overview')}
             className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
               activeTab === 'overview'
-                ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg scale-105'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-gray-700 hover:text-primary-700 dark:hover:text-primary-300'
+                ? 'bg-primary-800 text-white shadow-md scale-105'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-primary-700 dark:hover:text-primary-300'
             }`}
           >
             <span>📊</span>
@@ -216,8 +216,8 @@ const CountryProfile: React.FC = () => {
             onClick={() => handleTabChange('infrastructure')}
             className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
               activeTab === 'infrastructure'
-                ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg scale-105'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-purple-100 dark:hover:bg-gray-700 hover:text-purple-700 dark:hover:text-purple-300'
+                ? 'bg-primary-700 text-white shadow-md scale-105'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-primary-700 dark:hover:text-primary-300'
             }`}
           >
             <span>🏗️</span>
@@ -227,7 +227,7 @@ const CountryProfile: React.FC = () => {
             onClick={() => handleTabChange('pricing')}
             className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
               activeTab === 'pricing'
-                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg scale-105'
+                ? 'bg-green-600 text-white shadow-md scale-105'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-green-100 dark:hover:bg-gray-700 hover:text-green-700 dark:hover:text-green-300'
             }`}
           >
@@ -238,8 +238,8 @@ const CountryProfile: React.FC = () => {
             onClick={() => handleTabChange('contacts')}
             className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
               activeTab === 'contacts'
-                ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg scale-105'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-orange-100 dark:hover:bg-gray-700 hover:text-orange-700 dark:hover:text-orange-300'
+                ? 'bg-primary-700 text-white shadow-md scale-105'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-primary-700 dark:hover:text-primary-300'
             }`}
           >
             <span>👥</span>
@@ -249,7 +249,7 @@ const CountryProfile: React.FC = () => {
             onClick={() => handleTabChange('intelligence')}
             className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
               activeTab === 'intelligence'
-                ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg scale-105'
+                ? 'bg-red-600 text-white shadow-md scale-105'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-gray-700 hover:text-red-700 dark:hover:text-red-300'
             }`}
           >
