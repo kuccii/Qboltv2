@@ -120,13 +120,19 @@
   border-color: var(--industry-border);
 }
 
-/* Industry-specific gradients */
+/* Industry-specific gradients - Brand Book Compliant */
 .industry-gradient-primary {
-  background: linear-gradient(135deg, var(--industry-primary), var(--industry-secondary));
+  /* Construction: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%) */
+  /* Agriculture: linear-gradient(135deg, #166534 0%, #10B981 100%) */
+  background: linear-gradient(135deg, var(--industry-primary) 0%, var(--industry-info) 100%);
 }
 
 .industry-gradient-accent {
-  background: linear-gradient(135deg, var(--industry-accent), var(--industry-primary));
+  background: linear-gradient(135deg, var(--industry-accent) 0%, var(--industry-primary) 100%);
+}
+
+.industry-gradient-subtle {
+  background: linear-gradient(180deg, var(--industry-background) 0%, var(--industry-surface) 100%);
 }
 
 /* Industry-specific shadows */

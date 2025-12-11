@@ -72,14 +72,14 @@ const Home: React.FC = () => {
       title: 'Real-time Price Tracking',
       description: 'Monitor construction materials and agricultural input prices across East Africa with live updates.',
       icon: <TrendingUp className="text-blue-600" size={24} />,
-      link: '/app/prices',
+      link: '/app/countries/rw/pricing',
       stats: '10,000+ daily updates'
     },
     {
       title: 'Supplier Intelligence',
       description: 'Discover and evaluate suppliers with comprehensive scoring and verification systems.',
       icon: <Users className="text-green-600" size={24} />,
-      link: '/app/supplier-directory',
+      link: '/app/countries/rw/contacts',
       stats: '2,500+ verified suppliers'
     },
     {
@@ -107,7 +107,7 @@ const Home: React.FC = () => {
       title: 'Logistics Planning',
       description: 'Optimize routes and costs with intelligent logistics planning and tracking.',
       icon: <Truck className="text-indigo-600" size={24} />,
-      link: '/app/logistics',
+      link: '/app/countries/rw/infrastructure',
       stats: '15% cost savings'
     }
   ];

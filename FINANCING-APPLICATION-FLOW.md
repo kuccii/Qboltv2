@@ -426,3 +426,5 @@ CREATE TABLE financing_applications (
 - ✅ Error handling
 
 
+
+

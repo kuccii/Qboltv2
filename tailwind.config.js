@@ -85,16 +85,70 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'Helvetica', 'Arial', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Consolas', 'monospace'],
+      },
+      fontSize: {
+        xs: ['0.75rem', { lineHeight: '1.5rem' }], // 12px - Caption
+        sm: ['0.875rem', { lineHeight: '1.5rem' }], // 14px - Small Body
+        base: ['1rem', { lineHeight: '1.5rem' }], // 16px - Body
+        lg: ['1.125rem', { lineHeight: '1.75rem' }], // 18px - Large Body
+        xl: ['1.25rem', { lineHeight: '1.5rem' }], // 20px - H5
+        '2xl': ['1.5rem', { lineHeight: '1.5rem' }], // 24px - H4
+        '3xl': ['1.875rem', { lineHeight: '1.4rem' }], // 30px - H3
+        '4xl': ['2.25rem', { lineHeight: '1.3rem', letterSpacing: '-0.01em' }], // 36px - H2
+        '5xl': ['3rem', { lineHeight: '1.2rem', letterSpacing: '-0.02em' }], // 48px - H1
+      },
+      fontWeight: {
+        thin: '100',
+        extralight: '200',
+        light: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+        extrabold: '800',
+        black: '900',
+      },
+      letterSpacing: {
+        tighter: '-0.05em',
+        tight: '-0.025em',
+        normal: '0em',
+        wide: '0.025em',
+        wider: '0.05em',
+        widest: '0.1em',
       },
       spacing: {
         '72': '18rem',
         '84': '21rem',
         '96': '24rem',
       },
+      borderRadius: {
+        'none': '0',
+        'sm': '4px',
+        'DEFAULT': '8px',
+        'md': '8px',
+        'lg': '12px',
+        'xl': '16px',
+        'full': '9999px',
+      },
       boxShadow: {
+        'sm': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
         'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'DEFAULT': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
         'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        'inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+        'none': 'none',
+      },
+      backgroundImage: {
+        'gradient-primary-construction': 'linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%)',
+        'gradient-primary-agriculture': 'linear-gradient(135deg, #166534 0%, #10B981 100%)',
+        'gradient-accent': 'linear-gradient(135deg, #F59E0B 0%, #FB923C 100%)',
+        'gradient-subtle': 'linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)',
       },
     },
   },

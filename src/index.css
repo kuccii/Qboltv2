@@ -1,6 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  
+  body {
+    @apply text-gray-800 bg-gray-50;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  
+  /* Typography Scale - Brand Book Compliant */
+  h1 {
+    @apply text-5xl font-bold leading-tight tracking-tight;
+    letter-spacing: -0.02em;
+  }
+  
+  h2 {
+    @apply text-4xl font-bold leading-snug tracking-tight;
+    letter-spacing: -0.01em;
+  }
+  
+  h3 {
+    @apply text-3xl font-semibold leading-normal;
+  }
+  
+  h4 {
+    @apply text-2xl font-semibold leading-normal;
+  }
+  
+  h5 {
+    @apply text-xl font-semibold leading-normal;
+  }
+  
+  h6 {
+    @apply text-lg font-semibold leading-normal;
+  }
+  
+  p {
+    @apply text-base leading-relaxed;
+  }
+  
+  /* Text Colors - Brand Book Compliant */
+  .text-primary {
+    @apply text-gray-800;
+  }
+  
+  .text-secondary {
+    @apply text-gray-500;
+  }
+  
+  .text-tertiary {
+    @apply text-gray-400;
+  }
+  
+  .text-muted {
+    @apply text-gray-300;
+  }
+  
+  /* Dark Mode Typography */
+  .dark h1,
+  .dark h2,
+  .dark h3,
+  .dark h4,
+  .dark h5,
+  .dark h6 {
+    @apply text-gray-50;
+  }
+  
+  .dark p {
+    @apply text-gray-200;
+  }
+  
+  .dark .text-primary {
+    @apply text-gray-50;
+  }
+  
+  .dark .text-secondary {
+    @apply text-gray-400;
+  }
+  
+  .dark .text-tertiary {
+    @apply text-gray-500;
+  }
+}
+
+@layer components {
+  /* Button Styles - Brand Book Compliant */
+  .btn-primary {
+    @apply bg-primary-800 text-white px-6 py-3 rounded-lg font-semibold text-base;
+    @apply hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply transition-all duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border-2 border-primary-800 text-primary-800 px-6 py-3 rounded-lg font-semibold text-base;
+    @apply hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply transition-all duration-200;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent text-primary-800 px-6 py-3 font-medium text-base;
+    @apply hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply transition-all duration-200;
+  }
+  
+  /* Card Styles - Brand Book Compliant */
+  .card {
+    @apply bg-white border border-gray-200 rounded-xl p-6 shadow-card;
+    @apply hover:shadow-card-hover transition-shadow duration-200;
+  }
+  
+  /* Input Styles - Brand Book Compliant */
+  .input {
+    @apply bg-white border border-gray-300 rounded-lg px-4 py-3 text-base;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+    @apply transition-all duration-200;
+  }
+  
+  .input-error {
+    @apply border-error-500 focus:ring-error-500;
+  }
+  
+  /* Badge Styles - Brand Book Compliant */
+  .badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold;
+  }
+  
+  .badge-success {
+    @apply bg-green-100 text-green-800;
+  }
+  
+  .badge-warning {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+  
+  .badge-error {
+    @apply bg-red-100 text-red-800;
+  }
+  
+  .badge-info {
+    @apply bg-blue-100 text-blue-800;
+  }
+}
 
 @layer utilities {
   @keyframes fadeIn {
@@ -24,6 +171,15 @@
       transform: translateX(0);
     }
   }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
 
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out;
@@ -31,6 +187,10 @@
 
   .animate-slide-in {
     animation: slideIn 0.3s ease-out;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
   .scrollbar-hide {
@@ -44,5 +204,32 @@
 
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Brand Book Gradients */
+  .gradient-primary-construction {
+    background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+  }
+  
+  .gradient-primary-agriculture {
+    background: linear-gradient(135deg, #166534 0%, #10B981 100%);
+  }
+  
+  .gradient-accent {
+    background: linear-gradient(135deg, #F59E0B 0%, #FB923C 100%);
+  }
+  
+  .gradient-subtle {
+    background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+  }
+  
+  /* Line Length Control - Brand Book Compliant */
+  .text-optimal {
+    max-width: 65ch; /* 50-75 characters optimal */
+  }
+  
+  /* Focus Visible - Accessibility */
+  .focus-visible-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
   }
 }
