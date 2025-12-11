@@ -85,7 +85,7 @@ const Home: React.FC = () => {
     {
       title: 'Demand Mapping',
       description: 'Visualize regional demand patterns and identify market opportunities with interactive maps.',
-      icon: <Map className="text-purple-600" size={24} />,
+      icon: <Map className="text-primary-600" size={24} />,
       link: '/app/demand',
       stats: '4 countries covered'
     },
@@ -106,7 +106,7 @@ const Home: React.FC = () => {
     {
       title: 'Logistics Planning',
       description: 'Optimize routes and costs with intelligent logistics planning and tracking.',
-      icon: <Truck className="text-indigo-600" size={24} />,
+      icon: <Truck className="text-primary-600" size={24} />,
       link: '/app/countries/rw/infrastructure',
       stats: '15% cost savings'
     }
@@ -115,7 +115,7 @@ const Home: React.FC = () => {
   const stats = [
     { label: 'Active Suppliers', value: '2,500+', icon: <Users className="text-primary-600" size={20} />, change: '+12%' },
     { label: 'Price Updates Daily', value: '10,000+', icon: <TrendingUp className="text-green-500" size={20} />, change: '+25%' },
-    { label: 'Countries Covered', value: '4', icon: <Globe className="text-purple-500" size={20} />, change: '+1' },
+    { label: 'Countries Covered', value: '4', icon: <Globe className="text-primary-500" size={20} />, change: '+1' },
     { label: 'Cost Savings', value: '15%', icon: <DollarSign className="text-orange-500" size={20} />, change: '+3%' }
   ];
 
@@ -218,7 +218,7 @@ const Home: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden gradient-primary-construction dark:from-primary-900 dark:via-primary-800 dark:to-primary-700">
+      <div className="relative overflow-hidden gradient-primary-construction">
         {/* Animated background pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] bg-[size:24px_24px]"></div>
         {/* Animated gradient overlay */}
@@ -271,7 +271,7 @@ const Home: React.FC = () => {
               {isLoggedIn ? (
                 <Link
                   to="/app"
-                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl hover:from-yellow-500 hover:to-orange-600 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
+                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-white gradient-accent-construction rounded-xl hover:opacity-90 transition-all shadow-2xl border-4 border-accent-300 transform hover:scale-110"
                 >
                   🎯 Go to Dashboard
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -280,7 +280,7 @@ const Home: React.FC = () => {
                 <>
                   <Link
                     to="/register"
-                    className="inline-flex items-center px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl hover:from-yellow-500 hover:to-orange-600 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
+                    className="inline-flex items-center px-8 py-4 text-lg font-bold text-white gradient-accent-construction rounded-xl hover:opacity-90 transition-all shadow-2xl border-4 border-accent-300 transform hover:scale-110"
                   >
                     🚀 Start Your Adventure FREE!
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -315,7 +315,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Stats Section - Kid Friendly */}
-      <div className="bg-gradient-to-br from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 py-16 border-t-4 border-b-4 border-yellow-300 dark:border-yellow-600">
+      <div className="bg-gradient-to-br from-primary-50 via-primary-100 to-accent-50 dark:from-primary-900/20 dark:via-primary-800/20 dark:to-accent-900/20 py-16 border-t-4 border-b-4 border-accent-300 dark:border-accent-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-gray-900 dark:text-white mb-8 flex items-center justify-center gap-2">
             <span>📊</span>
@@ -388,7 +388,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Coverage Map Section - Kid Friendly */}
-      <div id="coverage" className="bg-gradient-to-br from-green-50 via-primary-50 to-purple-50 dark:from-green-900/20 dark:via-primary-900/20 dark:to-purple-900/20 py-16 sm:py-20 border-t-4 border-b-4 border-green-300 dark:border-green-600">
+      <div id="coverage" className="bg-gradient-to-br from-success-50 via-primary-50 to-primary-100 dark:from-success-900/20 dark:via-primary-900/20 dark:to-primary-800/20 py-16 sm:py-20 border-t-4 border-b-4 border-success-300 dark:border-success-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 flex items-center justify-center gap-3">
@@ -439,9 +439,9 @@ const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 dark:from-yellow-900/20 dark:via-orange-900/20 dark:to-pink-900/20 rounded-2xl p-6 shadow-xl border-4 border-yellow-200 dark:border-yellow-700 transform hover:scale-105 transition-all">
+              <div key={index} className="bg-gradient-to-br from-accent-50 via-accent-100 to-primary-50 dark:from-accent-900/20 dark:via-accent-800/20 dark:to-primary-900/20 rounded-2xl p-6 shadow-xl border-4 border-accent-200 dark:border-accent-700 transform hover:scale-105 transition-all">
                 <div className="flex items-center mb-4">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-400 to-purple-500 flex items-center justify-center text-2xl font-bold text-white mr-4 border-4 border-white shadow-lg">
+                  <div className="w-14 h-14 rounded-full gradient-primary-construction flex items-center justify-center text-2xl font-bold text-white mr-4 border-4 border-white shadow-lg">
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>
@@ -463,7 +463,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* CTA Section - Kid Friendly */}
-      <div className="bg-gradient-to-r from-primary-600 via-purple-600 to-pink-600 dark:from-primary-700 dark:via-purple-700 dark:to-pink-700 py-16 sm:py-20 relative overflow-hidden">
+      <div className="gradient-primary-construction py-16 sm:py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="text-6xl sm:text-8xl mb-4 animate-bounce">🎉</div>
@@ -512,7 +512,7 @@ const Home: React.FC = () => {
             {/* Company Info */}
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 gradient-primary-construction rounded-lg flex items-center justify-center">
                   <Building2 className="text-white" size={20} />
                 </div>
                 <span className="text-xl font-bold text-white">
