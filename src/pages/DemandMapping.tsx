@@ -616,7 +616,7 @@ const DemandMapping: React.FC = () => {
               onClick={() => setShowItcData(!showItcData)}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl transition-all shadow-lg transform hover:scale-105 ${
                 showItcData
-                  ? 'bg-green-500 text-white border border-green-300'
+                  ? 'bg-green-500 text-white border border-green-500'
                   : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
               }`}
               title="Toggle ITC (Export Potential Map & Trade Map) data"
@@ -643,13 +643,13 @@ const DemandMapping: React.FC = () => {
       
         <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           {/* Playful Tab Navigation */}
-          <div className="bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border border-primary-200 dark:border-primary-700 p-2">
+          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl shadow-lg border border-primary-200 dark:border-primary-700 p-2">
             <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
               <button
                 onClick={() => setSelectedTab('demand')}
                 className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                   selectedTab === 'demand'
-                    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg border border-primary-300'
+                    ? 'bg-primary-800 text-white shadow-lg border border-primary-300'
                     : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
                 }`}
               >
@@ -675,7 +675,7 @@ const DemandMapping: React.FC = () => {
                 onClick={() => setSelectedTab('trade-data')}
                 className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                   selectedTab === 'trade-data'
-                    ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg border border-pink-300'
+                    ? 'bg-primary-700 text-white shadow-lg border border-primary-600'
                     : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-pink-50 dark:hover:bg-pink-900/20'
                 }`}
               >

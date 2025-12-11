@@ -726,7 +726,7 @@ const DocumentVault: React.FC = () => {
       
         <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           {/* Playful Tab Navigation */}
-          <div className="bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border border-primary-200 dark:border-primary-700 p-2">
+          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl shadow-lg border border-primary-200 dark:border-primary-700 p-2">
             <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
               {[
                 { id: 'overview', label: 'Overview', icon: '👀', emoji: '👀' },
@@ -740,12 +740,12 @@ const DocumentVault: React.FC = () => {
                   className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                     activeTab === tab.id
                       ? tab.id === 'overview'
-                        ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg border border-primary-300'
+                        ? 'bg-primary-800 text-white shadow-lg border border-primary-300'
                         : tab.id === 'documents'
                           ? 'bg-purple-600 text-white shadow-lg border border-purple-300'
                           : tab.id === 'checklist'
-                            ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg border border-green-300'
-                            : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg border border-pink-300'
+                            ? 'bg-green-600 text-white shadow-lg border border-green-500'
+                            : 'bg-primary-700 text-white shadow-lg border border-primary-600'
                       : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
                   }`}
                 >
@@ -763,7 +763,7 @@ const DocumentVault: React.FC = () => {
             {activeTab === 'overview' && (
                 <div className="space-y-6">
                   {/* Welcome Message */}
-                  <div className="bg-gradient-to-r from-primary-100 via-purple-100 to-pink-100 dark:from-primary-900/30 dark:via-purple-900/30 dark:to-pink-900/30 rounded-2xl p-6 border border-primary-300 dark:border-primary-700">
+                  <div className="bg-gray-100 dark:bg-gray-800/50 rounded-2xl p-6 border border-primary-300 dark:border-primary-700">
                     <div className="flex items-start gap-4">
                       <div className="text-5xl">📚</div>
                       <div className="flex-1">
@@ -805,7 +805,7 @@ const DocumentVault: React.FC = () => {
                             setActiveTab('documents');
                             setSelectedCategory(cat.name === 'all' ? 'all' : cat.name);
                           }}
-                          className="bg-gradient-to-br from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-xl p-5 border border-primary-200 dark:border-primary-700 hover:shadow-md transition-all cursor-pointer transform hover:scale-105"
+                          className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-5 border border-primary-200 dark:border-primary-700 hover:shadow-md transition-all cursor-pointer transform hover:scale-105"
                         >
                           <div className="flex items-center gap-3 mb-2">
                             <span className="text-3xl">{getCategoryIcon(cat.name)}</span>
@@ -826,10 +826,10 @@ const DocumentVault: React.FC = () => {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {[
-                        { emoji: '⏰', icon: <Clock className="h-5 w-5 text-warning-600" />, title: 'Start Early! 🚀', desc: 'Get your papers ready 2-4 weeks before you ship stuff! This way you won\'t be in a rush!', color: 'from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30' },
-                        { emoji: '📋', icon: <FileText className="h-5 w-5 text-info-600" />, title: 'Keep Copies! 📄', desc: 'Save both digital (on your computer) and paper copies! You never know when you\'ll need them!', color: 'from-primary-100 to-cyan-100 dark:from-primary-900/30 dark:to-cyan-900/30' },
-                        { emoji: '✅', icon: <CheckCircle2 className="h-5 w-5 text-success-600" />, title: 'Double Check! 🔍', desc: 'Always ask the people in charge before you ship! Rules can change, so make sure you have everything!', color: 'from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30' },
-                        { emoji: '🌐', icon: <Globe className="h-5 w-5 text-primary-600" />, title: 'Use the Internet! 💻', desc: 'Apply online when you can! It\'s faster and easier than going to offices in person!', color: 'from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30' },
+                        { emoji: '⏰', icon: <Clock className="h-5 w-5 text-warning-600" />, title: 'Start Early! 🚀', desc: 'Get your papers ready 2-4 weeks before you ship stuff! This way you won\'t be in a rush!', color: 'from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-800/50' },
+                        { emoji: '📋', icon: <FileText className="h-5 w-5 text-info-600" />, title: 'Keep Copies! 📄', desc: 'Save both digital (on your computer) and paper copies! You never know when you\'ll need them!', color: 'from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/30' },
+                        { emoji: '✅', icon: <CheckCircle2 className="h-5 w-5 text-success-600" />, title: 'Double Check! 🔍', desc: 'Always ask the people in charge before you ship! Rules can change, so make sure you have everything!', color: 'from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-800/50' },
+                        { emoji: '🌐', icon: <Globe className="h-5 w-5 text-primary-600" />, title: 'Use the Internet! 💻', desc: 'Apply online when you can! It\'s faster and easier than going to offices in person!', color: 'from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/30' },
                       ].map((tip, idx) => (
                         <div key={idx} className={`flex items-start gap-4 p-5 bg-gradient-to-r ${tip.color} rounded-xl border border-primary-200 dark:border-primary-700 hover:shadow-lg transition-all transform hover:scale-105`}>
                           <div className="text-4xl">{tip.emoji}</div>
@@ -967,7 +967,7 @@ const DocumentVault: React.FC = () => {
                             </div>
 
                             {isExpanded && (
-                              <div className="border-t border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900/50 dark:to-gray-800 p-6 space-y-5">
+                              <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:from-gray-900/50 dark:to-gray-800 p-6 space-y-5">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                   <div className="space-y-3">
                                     <h4 className="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-2">
@@ -1182,7 +1182,7 @@ const DocumentVault: React.FC = () => {
               {activeTab === 'checklist' && (
                 <div className="space-y-6">
                   {/* Progress Overview */}
-                  <div className="bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 rounded-xl p-6 border border-primary-200 dark:border-primary-800">
+                  <div className="bg-primary-50 dark:from-primary-900/20 dark:to-primary-800/20 rounded-xl p-6 border border-primary-200 dark:border-primary-800">
                     <div className="flex items-center justify-between mb-4">
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Document Checklist Progress</h3>
