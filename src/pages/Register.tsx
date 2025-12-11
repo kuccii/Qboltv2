@@ -661,7 +661,7 @@ const Register: React.FC = () => {
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary-800 via-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="w-16 h-16 gradient-primary-construction rounded-2xl flex items-center justify-center shadow-lg">
                   <Building2 className="text-white" size={32} />
                 </div>
                 <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center animate-pulse">
