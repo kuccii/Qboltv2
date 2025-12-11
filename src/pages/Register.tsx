@@ -383,7 +383,7 @@ const Register: React.FC = () => {
                   onClick={() => setFormData(prev => ({ ...prev, industry: 'construction' }))}
                   className={`group p-5 border-2 rounded-xl text-left transition-all duration-200 ${
                     formData.industry === 'construction'
-                      ? 'border-primary-800 bg-gradient-to-br from-primary-800 to-primary-600 dark:from-primary-/30 dark:to-primary-/30 shadow-lg scale-105'
+                      ? 'border-primary-800 bg-gradient-to-br from-primary-800 to-primary-600 dark:from-primary-900/30 dark:to-primary-800/30 shadow-lg scale-105'
                       : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md'
                   }`}
                 >
@@ -503,7 +503,7 @@ const Register: React.FC = () => {
                       onClick={() => setFormData(prev => ({ ...prev, companySize: size.value }))}
                       className={`group p-4 border-2 rounded-xl text-left transition-all duration-200 ${
                         formData.companySize === size.value
-                          ? 'border-primary-800 bg-gradient-to-br from-primary-800 to-primary-600 dark:from-primary-/30 dark:to-primary-/30 shadow-lg scale-105'
+                          ? 'border-primary-800 bg-gradient-to-br from-primary-800 to-primary-600 dark:from-primary-900/30 dark:to-primary-800/30 shadow-lg scale-105'
                           : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md'
                       }`}
                     >
@@ -538,7 +538,7 @@ const Register: React.FC = () => {
                       onClick={() => handleInterestToggle(interest.name)}
                       className={`group p-4 border-2 rounded-xl text-left transition-all duration-200 ${
                         formData.interests.includes(interest.name)
-                          ? 'border-primary-800 bg-gradient-to-br from-primary-800 to-primary-600 dark:from-primary-/30 dark:to-primary-/30 shadow-md'
+                          ? 'border-primary-800 bg-gradient-to-br from-primary-800 to-primary-600 dark:from-primary-900/30 dark:to-primary-800/30 shadow-md'
                           : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-sm'
                       }`}
                     >
@@ -568,7 +568,7 @@ const Register: React.FC = () => {
       case 4:
         return (
           <div className="space-y-6 animate-fade-in">
-            <div className="bg-gradient-to-br from-primary-800 to-indigo-50 dark:from-primary-/20 dark:to-indigo-900/20 p-6 rounded-2xl border-2 border-primary-800 dark:border-primary-">
+            <div className="bg-gradient-to-br from-primary-800 to-indigo-50 dark:from-primary-900/20 dark:to-indigo-900/20 p-6 rounded-2xl border-2 border-primary-800 dark:border-primary-">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <div className="w-12 h-12 bg-gradient-to-br from-primary-800 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
