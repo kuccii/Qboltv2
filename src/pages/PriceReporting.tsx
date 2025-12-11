@@ -315,12 +315,12 @@ const PriceReporting: React.FC = () => {
               />
             </div>
 
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+            <div className="bg-primary-50 dark:bg-primary-900/20 p-4 rounded-lg">
               <div className="flex items-start">
-                <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3" />
+                <Info className="h-5 w-5 text-primary-600 dark:text-primary-400 mt-0.5 mr-3" />
                 <div>
-                  <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200">Price Guidelines</h4>
-                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                  <h4 className="text-sm font-medium text-primary-800 dark:text-primary-200">Price Guidelines</h4>
+                  <p className="text-sm text-primary-700 dark:text-primary-300 mt-1">
                     Report the actual market price you observed. Include any bulk discounts or special conditions in your notes.
                   </p>
                 </div>

@@ -58,7 +58,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
     <div className={cn('relative', className)}>
       {/* Selected Countries Display */}
       <div
-        className="min-h-[2.5rem] w-full rounded-md border border-gray-300 bg-white px-3 py-2 cursor-pointer hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="min-h-[2.5rem] w-full rounded-md border border-gray-300 bg-white px-3 py-2 cursor-pointer hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex flex-wrap gap-1">
@@ -66,7 +66,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
             selectedCountriesData.map(country => (
               <span
                 key={country.code}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-primary-100 text-primary-800 text-xs rounded-md"
               >
                 <span className="text-sm">{country.flag}</span>
                 {country.name}
@@ -75,7 +75,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
                     e.stopPropagation();
                     handleRemoveCountry(country.code);
                   }}
-                  className="ml-1 hover:text-blue-600"
+                  className="ml-1 hover:text-primary-600"
                 >
                   ×
                 </button>
@@ -98,7 +98,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
               placeholder="Search countries..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
@@ -114,7 +114,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
                     key={country.code}
                     className={cn(
                       'flex items-center justify-between px-3 py-2 text-sm cursor-pointer hover:bg-gray-50',
-                      isSelected && 'bg-blue-50',
+                      isSelected && 'bg-primary-50',
                       isDisabled && 'opacity-50 cursor-not-allowed'
                     )}
                     onClick={() => !isDisabled && handleToggleCountry(country.code)}
@@ -131,7 +131,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
                       </div>
                     </div>
                     {isSelected && (
-                      <Check className="h-4 w-4 text-blue-600" />
+                      <Check className="h-4 w-4 text-primary-600" />
                     )}
                   </div>
                 );

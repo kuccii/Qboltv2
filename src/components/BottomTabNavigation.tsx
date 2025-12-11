@@ -108,9 +108,9 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
 
     const colorMap: Record<string, { bg: string; text: string; icon: string }> = {
       blue: {
-        bg: 'bg-blue-50 dark:bg-blue-900/20',
-        text: 'text-blue-600 dark:text-blue-400',
-        icon: 'text-blue-600 dark:text-blue-400',
+        bg: 'bg-primary-50 dark:bg-primary-900/20',
+        text: 'text-primary-600 dark:text-primary-400',
+        icon: 'text-primary-600 dark:text-primary-400',
       },
       red: {
         bg: 'bg-red-50 dark:bg-red-900/20',
@@ -163,13 +163,13 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
                 <div className={`
                   relative flex flex-col items-center justify-center w-full max-w-[70px] h-full rounded-2xl transition-all duration-300 ease-out px-2 py-2
                   ${active 
-                    ? 'bg-gradient-to-b from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30 scale-105' 
+                    ? 'bg-gradient-to-b from-primary-500 to-primary-600 shadow-lg shadow-blue-500/30 scale-105' 
                     : 'hover:bg-gray-100/50 dark:hover:bg-gray-800/50'
                   }
                 `}>
                   {/* Active indicator dot */}
                   {active && (
-                    <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
+                    <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse" />
                   )}
                   
                   {tab.emoji && (
@@ -223,7 +223,7 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
                     ? 'bg-gradient-to-b from-red-500 to-red-600 shadow-lg shadow-red-500/30'
                     : tab.color === 'green'
                       ? 'bg-gradient-to-b from-green-500 to-green-600 shadow-lg shadow-green-500/30'
-                      : 'bg-gradient-to-b from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30'
+                      : 'bg-gradient-to-b from-primary-500 to-primary-600 shadow-lg shadow-blue-500/30'
                   : 'hover:bg-gray-100/50 dark:hover:bg-gray-800/50';
                 
                 return (
@@ -234,7 +234,7 @@ const BottomTabNavigation: React.FC<BottomTabNavigationProps> = ({ onMoreClick }
                     {/* Active indicator dot */}
                     {isTabActive && (
                       <div className={`absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 rounded-full animate-pulse ${
-                        tab.color === 'red' ? 'bg-red-500' : tab.color === 'green' ? 'bg-green-500' : 'bg-blue-500'
+                        tab.color === 'red' ? 'bg-red-500' : tab.color === 'green' ? 'bg-green-500' : 'bg-primary-500'
                       }`} />
                     )}
                     

@@ -190,14 +190,14 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
   const getTypeIcon = (type: string, title?: string) => {
     // Check if it's a financing notification
     if (title?.toLowerCase().includes('financing') || title?.toLowerCase().includes('application')) {
-      return <Wallet size={16} className="text-blue-500" />;
+      return <Wallet size={16} className="text-primary-500" />;
     }
 
     switch (type) {
       case 'warning': return <AlertTriangle size={16} className="text-orange-500" />;
       case 'error': return <AlertTriangle size={16} className="text-red-500" />;
       case 'success': return <Check size={16} className="text-green-500" />;
-      case 'info': return <TrendingUp size={16} className="text-blue-500" />;
+      case 'info': return <TrendingUp size={16} className="text-primary-500" />;
       default: return <Bell size={16} className="text-gray-500" />;
     }
   };
@@ -207,7 +207,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
       case 'warning': return 'border-l-orange-500 bg-orange-50 dark:bg-orange-900/20';
       case 'error': return 'border-l-red-500 bg-red-50 dark:bg-red-900/20';
       case 'success': return 'border-l-green-500 bg-green-50 dark:bg-green-900/20';
-      case 'info': return 'border-l-blue-500 bg-blue-50 dark:bg-blue-900/20';
+      case 'info': return 'border-l-blue-500 bg-primary-50 dark:bg-primary-900/20';
       default: return 'border-l-gray-500 bg-gray-50 dark:bg-gray-700';
     }
   };
@@ -235,7 +235,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
           {unreadCount > 0 && (
             <button
               onClick={markAllAsRead}
-              className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+              className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
             >
               Mark all read
             </button>
@@ -280,7 +280,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
                         {notification.title}
                       </h4>
                       {!notification.read && (
-                        <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
+                        <div className="w-2 h-2 bg-primary-500 rounded-full flex-shrink-0"></div>
                       )}
                     </div>
                     <p className={`text-sm mt-1 ${
@@ -301,7 +301,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
                             notification.action?.onClick();
                             markAsRead(notification.id);
                           }}
-                          className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                          className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
                         >
                           {notification.action.label}
                         </button>
@@ -323,7 +323,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
               navigate('/app/financing');
               onClose();
             }}
-            className="w-full text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center justify-center gap-2"
+            className="w-full text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium flex items-center justify-center gap-2"
           >
             <Wallet size={14} />
             View All Applications ({applications.length})
@@ -334,7 +334,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
             navigate('/app/notifications');
             onClose();
           }}
-          className="w-full text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+          className="w-full text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
         >
           View all notifications
         </button>

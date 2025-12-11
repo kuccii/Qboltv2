@@ -137,7 +137,7 @@ const RwandaPricingIntelligence: React.FC<PricingIntelligenceProps> = ({ classNa
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'fuel': return 'text-orange-600 dark:text-orange-400';
-      case 'labor': return 'text-blue-600 dark:text-blue-400';
+      case 'labor': return 'text-primary-600 dark:text-primary-400';
       case 'transport': return 'text-purple-600 dark:text-purple-400';
       case 'storage': return 'text-green-600 dark:text-green-400';
       case 'materials': return 'text-indigo-600 dark:text-indigo-400';
@@ -235,7 +235,7 @@ const RwandaPricingIntelligence: React.FC<PricingIntelligenceProps> = ({ classNa
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </button>
-          <button className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg font-bold">
+          <button className="flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all transform hover:scale-105 shadow-lg font-bold">
             <Download className="w-4 h-4 mr-2" />
             Export
           </button>
@@ -263,7 +263,7 @@ const RwandaPricingIntelligence: React.FC<PricingIntelligenceProps> = ({ classNa
           };
           const categoryColors: Record<PricingCategory, string> = {
             'fuel': 'from-orange-400 via-orange-500 to-orange-600 dark:from-orange-600 dark:via-orange-700 dark:to-orange-800 border-orange-300 dark:border-orange-500',
-            'labor': 'from-blue-400 via-blue-500 to-blue-600 dark:from-blue-600 dark:via-blue-700 dark:to-blue-800 border-blue-300 dark:border-blue-500',
+            'labor': 'from-primary-400 via-primary-500 to-primary-600 dark:from-primary-600 dark:via-primary-700 dark:to-primary-800 border-primary-300 dark:border-primary-500',
             'transport': 'from-purple-400 via-purple-500 to-purple-600 dark:from-purple-600 dark:via-purple-700 dark:to-purple-800 border-purple-300 dark:border-purple-500',
             'storage': 'from-green-400 via-green-500 to-green-600 dark:from-green-600 dark:via-green-700 dark:to-green-800 border-green-300 dark:border-green-500',
             'materials': 'from-indigo-400 via-indigo-500 to-indigo-600 dark:from-indigo-600 dark:via-indigo-700 dark:to-indigo-800 border-indigo-300 dark:border-indigo-500'
@@ -317,7 +317,7 @@ const RwandaPricingIntelligence: React.FC<PricingIntelligenceProps> = ({ classNa
               onClick={() => setSelectedCategory(category.value)}
               className={`flex items-center px-4 py-2 rounded-xl text-sm font-bold transition-all transform hover:scale-105 ${
                 selectedCategory === category.value
-                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105'
+                  ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg scale-105'
                   : 'bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border-2 border-gray-200 dark:border-gray-600'
               }`}
             >
@@ -339,7 +339,7 @@ const RwandaPricingIntelligence: React.FC<PricingIntelligenceProps> = ({ classNa
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
           <span className="text-sm font-bold text-gray-700 dark:text-gray-300">View:</span>
-          <div className="flex bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-xl p-1 border-2 border-blue-200 dark:border-gray-700">
+          <div className="flex bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-xl p-1 border-2 border-primary-200 dark:border-gray-700">
             {[
               { value: 'table', label: 'Table', icon: BarChart3, emoji: '📊' },
               { value: 'chart', label: 'Chart', icon: PieChart, emoji: '📈' },
@@ -352,8 +352,8 @@ const RwandaPricingIntelligence: React.FC<PricingIntelligenceProps> = ({ classNa
                   onClick={() => setViewMode(mode.value as ViewMode)}
                   className={`flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105 ${
                     viewMode === mode.value
-                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-300'
+                      ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg scale-105'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-primary-700 dark:hover:text-primary-300'
                   }`}
                 >
                   <span className="mr-1">{mode.emoji}</span>
@@ -388,11 +388,11 @@ const RwandaPricingIntelligence: React.FC<PricingIntelligenceProps> = ({ classNa
                 return (
                   <div 
                     key={index} 
-                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-600 transition-all"
+                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl hover:border-primary-300 dark:hover:border-primary-600 transition-all"
                   >
                     {/* Header */}
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                      <div className="p-2 bg-primary-50 dark:bg-primary-900/30 rounded-lg">
                         <span className="text-2xl">{emoji}</span>
                       </div>
                       <div className="flex-1 min-w-0">
@@ -518,12 +518,12 @@ const RwandaPricingIntelligence: React.FC<PricingIntelligenceProps> = ({ classNa
       </div>
 
       {/* Playful Data Source Info */}
-      <div className="bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 border-2 border-blue-300 dark:border-blue-700 rounded-2xl p-5 shadow-lg">
+      <div className="bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/30 dark:to-primary-800/30 border-2 border-primary-300 dark:border-primary-700 rounded-2xl p-5 shadow-lg">
         <div className="flex items-start">
           <span className="text-2xl mr-3 flex-shrink-0">ℹ️</span>
           <div>
-            <h4 className="text-base font-bold text-blue-900 dark:text-blue-200 mb-2">Data Source</h4>
-            <p className="text-sm text-blue-800 dark:text-blue-300 font-medium">
+            <h4 className="text-base font-bold text-primary-900 dark:text-primary-200 mb-2">Data Source</h4>
+            <p className="text-sm text-primary-800 dark:text-primary-300 font-medium">
               Pricing data comes from Logistics Cluster (logcluster.org) and might not be super up-to-date! 📊
               Prices are just for reference! 💡
             </p>

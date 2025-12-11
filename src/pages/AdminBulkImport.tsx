@@ -130,11 +130,11 @@ const AdminBulkImport: React.FC = () => {
             </div>
 
             {file && (
-              <div className="p-4 bg-blue-900/20 rounded-lg">
-                <div className="flex items-center gap-2 text-blue-300">
+              <div className="p-4 bg-primary-900/20 rounded-lg">
+                <div className="flex items-center gap-2 text-primary-300">
                   <FileText className="h-5 w-5" />
                   <span className="font-medium">{file.name}</span>
-                  <span className="text-sm text-blue-400">
+                  <span className="text-sm text-primary-400">
                     ({(file.size / 1024).toFixed(2)} KB)
                   </span>
                 </div>

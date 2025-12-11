@@ -234,7 +234,7 @@ const Notifications: React.FC = () => {
     switch (type) {
       case 'price': return <AlertTriangle size={16} className="text-orange-500" />;
       case 'supplier': return <CheckCircle size={16} className="text-green-500" />;
-      case 'document': return <Settings size={16} className="text-blue-500" />;
+      case 'document': return <Settings size={16} className="text-primary-500" />;
       case 'system': return <Bell size={16} className="text-purple-500" />;
       default: return <Bell size={16} />;
     }
@@ -257,7 +257,7 @@ const Notifications: React.FC = () => {
             <button
               onClick={handleSave}
               disabled={isLoading}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center"
+              className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 flex items-center"
             >
               {isLoading ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -294,8 +294,8 @@ const Notifications: React.FC = () => {
               {/* Email Notifications */}
               <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
-                    <Mail size={20} className="text-blue-600 dark:text-blue-400" />
+                  <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/20 rounded-lg flex items-center justify-center">
+                    <Mail size={20} className="text-primary-600 dark:text-primary-400" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white">Email</h3>
@@ -306,7 +306,7 @@ const Notifications: React.FC = () => {
                       type="checkbox"
                       checked={notificationSettings.email.enabled}
                       onChange={(e) => handleChannelSettingChange('email', 'enabled', e.target.checked)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
                     />
                   </label>
                 </div>
@@ -321,7 +321,7 @@ const Notifications: React.FC = () => {
                         checked={value as boolean}
                         onChange={(e) => handleChannelSettingChange('email', key, e.target.checked)}
                         disabled={!notificationSettings.email.enabled}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded disabled:opacity-50"
+                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded disabled:opacity-50"
                       />
                     </label>
                   ))}
@@ -411,7 +411,7 @@ const Notifications: React.FC = () => {
             actions={
               <button
                 onClick={() => setShowAddRule(true)}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors flex items-center"
               >
                 <Plus size={16} className="mr-2" />
                 Add Rule
@@ -501,7 +501,7 @@ const Notifications: React.FC = () => {
                       type="text"
                       value={newRule.name}
                       onChange={(e) => setNewRule(prev => ({ ...prev, name: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       placeholder="Enter rule name"
                     />
                   </FormField>
@@ -538,7 +538,7 @@ const Notifications: React.FC = () => {
                         type="number"
                         value={newRule.threshold}
                         onChange={(e) => setNewRule(prev => ({ ...prev, threshold: parseInt(e.target.value) || 0 }))}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                         placeholder="Enter threshold percentage"
                       />
                     </FormField>
@@ -558,7 +558,7 @@ const Notifications: React.FC = () => {
                                 setNewRule(prev => ({ ...prev, channels: prev.channels.filter(c => c !== channel) }));
                               }
                             }}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                            className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
                           />
                           <span className="text-sm text-gray-700 dark:text-gray-300 capitalize">{channel}</span>
                         </label>
@@ -572,7 +572,7 @@ const Notifications: React.FC = () => {
                       id="enabled"
                       checked={newRule.enabled}
                       onChange={(e) => setNewRule(prev => ({ ...prev, enabled: e.target.checked }))}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
                     />
                     <label htmlFor="enabled" className="text-sm text-gray-700 dark:text-gray-300">
                       Enable this rule
@@ -583,7 +583,7 @@ const Notifications: React.FC = () => {
                 <div className="flex items-center gap-3 mt-6">
                   <button
                     onClick={handleAddRule}
-                    className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                    className="flex-1 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
                   >
                     {editingRule ? 'Update Rule' : 'Add Rule'}
                   </button>

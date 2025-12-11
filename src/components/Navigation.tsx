@@ -120,8 +120,8 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
   }) => {
     const colorClasses = {
       blue: {
-        active: 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg',
-        inactive: 'bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400'
+        active: 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg',
+        inactive: 'bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-100 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400'
       },
       green: {
         active: 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg',
@@ -183,8 +183,8 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
       className={({ isActive }) => `
         flex items-center gap-2 xl:gap-2.5 py-2.5 xl:py-3 px-3 xl:px-4 rounded-lg text-xs xl:text-sm font-semibold transition-all transform hover:scale-105
         ${isActive 
-          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md' 
-          : 'text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:bg-blue-900/20'
+          ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-md' 
+          : 'text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-100 dark:hover:bg-primary-900/20'
         }
       `}
       onClick={() => {
@@ -228,8 +228,8 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
           className={`
             inline-flex items-center gap-1.5 sm:gap-2 xl:gap-2.5 py-2 sm:py-2.5 xl:py-3 px-3 sm:px-4 xl:px-5 rounded-xl text-xs xl:text-sm font-bold transition-all duration-200 whitespace-nowrap transform hover:scale-105
             ${activeDropdown === dropdownKey || isActive
-              ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-xl scale-105' 
-              : 'bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400'
+              ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-xl scale-105' 
+              : 'bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-100 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400'
             }
           `}
           title={label}
@@ -245,7 +245,7 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
           />
         </button>
         {activeDropdown === dropdownKey && (
-        <div className="absolute left-0 mt-2 bg-white dark:bg-gray-800 border-2 border-blue-200 dark:border-blue-700 shadow-2xl rounded-xl p-2 xl:p-3 min-w-[200px] sm:min-w-[220px] xl:min-w-[260px] z-50">
+        <div className="absolute left-0 mt-2 bg-white dark:bg-gray-800 border-2 border-primary-200 dark:border-primary-700 shadow-2xl rounded-xl p-2 xl:p-3 min-w-[200px] sm:min-w-[220px] xl:min-w-[260px] z-50">
           <div className="flex flex-col space-y-1">
               {children}
             </div>
@@ -256,7 +256,7 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
   };
 
   return (
-    <header className="bg-gradient-to-r from-white via-blue-50/30 to-purple-50/30 dark:from-gray-800 dark:via-blue-900/20 dark:to-purple-900/20 shadow-lg border-b-2 border-blue-200 dark:border-blue-700 sticky top-0 z-40">
+    <header className="bg-gradient-to-r from-white via-primary-50/30 to-purple-50/30 dark:from-gray-800 dark:via-primary-900/20 dark:to-purple-900/20 shadow-lg border-b-2 border-primary-200 dark:border-primary-700 sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         <div className="h-14 sm:h-16 flex items-center">
           {/* Left: Logo */}
@@ -265,10 +265,10 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
               to="/app" 
               className="flex items-center gap-1.5 sm:gap-2 hover:opacity-80 transition-opacity"
             >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg transform hover:scale-110 transition-transform">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-primary-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg transform hover:scale-110 transition-transform">
                 <span className="text-lg sm:text-xl">🚀</span>
               </div>
-              <span className="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
                 Qivook
               </span>
             </NavLink>
@@ -330,7 +330,7 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
                 className={({ isActive }) => `
                   hidden md:inline-flex items-center gap-1.5 xl:gap-2 py-1 xl:py-1.5 px-2 xl:px-2.5 rounded-md text-xs font-medium transition-colors
                   ${isActive 
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300' 
+                    ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300' 
                     : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                   }
                 `}
@@ -371,7 +371,7 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
                 className={({ isActive }) => `
                   p-1.5 sm:p-2 rounded-md transition-colors
                   ${isActive 
-                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' 
+                    ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20' 
                     : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                   }
                 `}
@@ -387,7 +387,7 @@ const Navigation: React.FC<NavigationProps> = ({ onMobileMenuToggle, mobileMenuO
                     onClick={toggleUserMenu}
                     className="flex items-center gap-1.5 sm:gap-2 xl:gap-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-1 sm:p-1.5 xl:p-2 transition-colors"
                   >
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 xl:w-8 xl:h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-xs xl:text-sm">
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 xl:w-8 xl:h-8 rounded-full bg-gradient-to-br from-primary-500 to-purple-600 flex items-center justify-center text-white font-semibold text-xs xl:text-sm">
                       {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
                     </div>
                     <div className="text-xs xl:text-sm text-left hidden sm:block xl:block">

@@ -167,16 +167,16 @@ const RwandaOverview: React.FC<RwandaOverviewProps> = ({ countryCode = 'RW' }) =
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-blue-600 dark:via-blue-700 dark:to-blue-800 rounded-2xl shadow-2xl border-4 border-blue-300 dark:border-blue-500 p-6 text-white transform hover:scale-105 transition-transform">
+        <div className="bg-gradient-to-br from-primary-400 via-primary-500 to-primary-600 dark:from-primary-600 dark:via-primary-700 dark:to-primary-800 rounded-2xl shadow-2xl border-4 border-primary-300 dark:border-primary-500 p-6 text-white transform hover:scale-105 transition-transform">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-blue-100 text-base font-bold flex items-center gap-2 mb-2">
+              <p className="text-primary-100 text-base font-bold flex items-center gap-2 mb-2">
                 <span>👥</span>
                 Total Suppliers
               </p>
               <p className="text-5xl font-extrabold">{stats?.totalSuppliers || 0}</p>
             </div>
-            <Users className="w-10 h-10 text-blue-200" />
+            <Users className="w-10 h-10 text-primary-200" />
           </div>
         </div>
         
@@ -361,7 +361,7 @@ const RwandaOverview: React.FC<RwandaOverviewProps> = ({ countryCode = 'RW' }) =
       </div>
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <button className="flex items-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-2 border-blue-200 dark:border-blue-700 rounded-xl hover:shadow-md transition-all transform hover:scale-105">
+          <button className="flex items-center p-4 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 border-2 border-primary-200 dark:border-primary-700 rounded-xl hover:shadow-md transition-all transform hover:scale-105">
             <span className="text-2xl mr-3">🏛️</span>
             <div className="text-left">
               <p className="font-bold text-gray-900 dark:text-white">Government Contacts</p>
@@ -396,12 +396,12 @@ const RwandaOverview: React.FC<RwandaOverviewProps> = ({ countryCode = 'RW' }) =
       </div>
 
       {/* Data Source Info */}
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+      <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
         <div className="flex items-start">
-          <AlertTriangle className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+          <AlertTriangle className="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5 mr-3 flex-shrink-0" />
           <div>
-            <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200">Data Source</h4>
-            <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+            <h4 className="text-sm font-medium text-primary-800 dark:text-primary-200">Data Source</h4>
+            <p className="text-sm text-primary-700 dark:text-primary-300 mt-1">
               This data is sourced from Logistics Cluster (logcluster.org) Digital Logistics Capacity Assessments. 
               Information is provided for reference purposes and may not reflect real-time conditions.
             </p>

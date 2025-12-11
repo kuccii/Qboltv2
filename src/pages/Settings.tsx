@@ -226,7 +226,7 @@ const Settings: React.FC = () => {
             <button
               onClick={handleSave}
               disabled={isLoading}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center"
+              className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 flex items-center"
             >
               {isLoading ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -350,7 +350,7 @@ const Settings: React.FC = () => {
                         type="checkbox"
                         checked={value as boolean}
                         onChange={(e) => handleSettingChange('notifications', key, e.target.checked)}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
                       />
                     </label>
                   ))}
@@ -384,7 +384,7 @@ const Settings: React.FC = () => {
                       type="checkbox"
                       checked={value as boolean}
                       onChange={(e) => handleSettingChange('privacy', key, e.target.checked)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
                     />
                   </label>
                 ))}
@@ -438,7 +438,7 @@ const Settings: React.FC = () => {
                       type="checkbox"
                       checked={value as boolean}
                       onChange={(e) => handleSettingChange('display', key, e.target.checked)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
                     />
                   </label>
                 ))}
@@ -451,14 +451,14 @@ const Settings: React.FC = () => {
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Download size={24} className="text-blue-600 dark:text-blue-400" />
+                  <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Download size={24} className="text-primary-600 dark:text-primary-400" />
                   </div>
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Export Data</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Download all your data</p>
                   <button
                     onClick={handleExport}
-                    className="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                    className="px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors"
                   >
                     Export
                   </button>

@@ -118,7 +118,7 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'airport': return <Plane className="w-5 h-5 text-blue-600" />;
+      case 'airport': return <Plane className="w-5 h-5 text-primary-600" />;
       case 'storage': return <Package className="w-5 h-5 text-green-600" />;
       case 'milling': return <Building2 className="w-5 h-5 text-orange-600" />;
       case 'port': return <Navigation className="w-5 h-5 text-purple-600" />;
@@ -131,7 +131,7 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'airport': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+      case 'airport': return 'bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200';
       case 'storage': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'milling': return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
       case 'port': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
@@ -308,7 +308,7 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
               onClick={() => setSelectedType(type.value)}
               className={`flex items-center px-4 py-2 rounded-xl text-sm font-bold transition-all transform hover:scale-105 ${
                 selectedType === type.value
-                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105'
+                  ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg scale-105'
                   : 'bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border-2 border-gray-200 dark:border-gray-600'
               }`}
               aria-label={`Filter by ${type.label}`}
@@ -394,7 +394,7 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
                   {facility.services.slice(0, 3).map((service, index) => (
                     <span
                       key={index}
-                      className="px-2 py-1 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-blue-800 dark:text-blue-200 text-xs font-bold rounded-lg border border-blue-300 dark:border-blue-700"
+                      className="px-2 py-1 bg-gradient-to-r from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 text-primary-800 dark:text-primary-200 text-xs font-bold rounded-lg border border-primary-300 dark:border-primary-700"
                     >
                       {service}
                     </span>
@@ -427,7 +427,7 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
                       e.stopPropagation();
                       handleContact('email', facility.contact.email);
                     }}
-                    className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-500 text-white rounded-xl hover:from-blue-500 hover:to-blue-600 transition-all transform hover:scale-110 shadow-md"
+                    className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-500 text-white rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all transform hover:scale-110 shadow-md"
                     title={`Email ${facility.contact.email}`}
                     aria-label={`Email ${facility.contact.email}`}
                   >
@@ -544,7 +544,7 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
                               e.stopPropagation();
                               handleContact('email', facility.contact.email);
                             }}
-                            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                            className="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300"
                             title="Email"
                             aria-label={`Email ${facility.contact.email}`}
                           >
@@ -669,7 +669,7 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
                     {selectedFacility.services.map((service, index) => (
                       <span
                         key={index}
-                        className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm rounded-full"
+                        className="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-sm rounded-full"
                       >
                         {service}
                       </span>
@@ -710,7 +710,7 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
                           <span className="font-mono text-gray-900 dark:text-white">{selectedFacility.contact.email}</span>
                           <button
                             onClick={() => handleContact('email', selectedFacility.contact.email)}
-                            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                            className="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300"
                             aria-label={`Email ${selectedFacility.contact.email}`}
                           >
                             <Mail className="w-4 h-4" />
@@ -741,12 +741,12 @@ const RwandaInfrastructureOverview: React.FC<InfrastructureOverviewProps> = ({ c
       )}
 
       {/* Data Source Info */}
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+      <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
         <div className="flex items-start">
-          <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+          <Info className="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5 mr-3 flex-shrink-0" />
           <div>
-            <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200">Data Source</h4>
-            <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+            <h4 className="text-sm font-medium text-primary-800 dark:text-primary-200">Data Source</h4>
+            <p className="text-sm text-primary-700 dark:text-primary-300 mt-1">
               Infrastructure data is sourced from Logistics Cluster (logcluster.org) and may not reflect real-time conditions. 
               Contact information should be verified before use.
             </p>

@@ -138,7 +138,7 @@ const Billing: React.FC = () => {
         'Export data',
         'API access'
       ],
-      icon: <Zap className="text-blue-500" size={24} />,
+      icon: <Zap className="text-primary-500" size={24} />,
       color: 'blue',
       current: true
     },
@@ -249,8 +249,8 @@ const Billing: React.FC = () => {
             <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
-                    <CreditCard size={24} className="text-blue-600 dark:text-blue-400" />
+                  <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/20 rounded-lg flex items-center justify-center">
+                    <CreditCard size={24} className="text-primary-600 dark:text-primary-400" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white capitalize">
@@ -268,7 +268,7 @@ const Billing: React.FC = () => {
                   {subscription.status === 'cancelled' ? (
                     <button
                       onClick={handleReactivateSubscription}
-                      className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                      className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
                     >
                       Reactivate
                     </button>
@@ -308,13 +308,13 @@ const Billing: React.FC = () => {
                   key={plan.id}
                   className={`relative bg-white dark:bg-gray-800 rounded-lg border-2 p-6 ${
                     plan.current
-                      ? 'border-blue-500 dark:border-blue-400'
+                      ? 'border-primary-500 dark:border-primary-400'
                       : 'border-gray-200 dark:border-gray-700'
                   }`}
                 >
                   {plan.current && (
                     <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <span className="bg-blue-500 text-white text-xs font-medium px-3 py-1 rounded-full">
+                      <span className="bg-primary-500 text-white text-xs font-medium px-3 py-1 rounded-full">
                         Current Plan
                       </span>
                     </div>
@@ -361,7 +361,7 @@ const Billing: React.FC = () => {
                         plan.color === 'purple'
                           ? 'text-white bg-purple-600 hover:bg-purple-700'
                           : plan.color === 'blue'
-                          ? 'text-white bg-blue-600 hover:bg-blue-700'
+                          ? 'text-white bg-primary-600 hover:bg-primary-700'
                           : 'text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'
                       }`}
                     >
@@ -380,7 +380,7 @@ const Billing: React.FC = () => {
             actions={
               <button
                 onClick={() => setShowAddPayment(true)}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors flex items-center"
               >
                 <Plus size={16} className="mr-2" />
                 Add Payment Method
@@ -473,7 +473,7 @@ const Billing: React.FC = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           <button
                             onClick={() => handleDownloadInvoice(invoice.id)}
-                            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center gap-1"
+                            className="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 flex items-center gap-1"
                           >
                             <Download size={14} />
                             Download

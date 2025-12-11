@@ -24,9 +24,9 @@ const IndustrySwitcher: React.FC<IndustrySwitcherProps> = ({ className = '' }) =
       name: 'Construction',
       description: 'Building materials & projects',
       icon: Building2,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
-      borderColor: 'border-blue-200'
+      color: 'text-primary-600',
+      bgColor: 'bg-primary-50',
+      borderColor: 'border-primary-200'
     },
     {
       id: 'agriculture',
@@ -62,7 +62,7 @@ const IndustrySwitcher: React.FC<IndustrySwitcherProps> = ({ className = '' }) =
         className="flex items-center space-x-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full"
       >
         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-          currentIndustry === 'construction' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600'
+          currentIndustry === 'construction' ? 'bg-primary-50 text-primary-600' : 'bg-green-50 text-green-600'
         }`}>
           {currentIndustry === 'construction' ? <Building2 size={16} /> : <Wheat size={16} />}
         </div>

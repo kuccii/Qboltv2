@@ -292,7 +292,7 @@ const RwandaLogistics: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
               <div className="flex items-center">
-                <Users className="w-8 h-8 text-blue-600" />
+                <Users className="w-8 h-8 text-primary-600" />
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Suppliers</p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalSuppliers}</p>

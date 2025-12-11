@@ -33,7 +33,7 @@ const RwandaSupplierCard: React.FC<RwandaSupplierCardProps> = ({
   const { announce } = useAccessibility();
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'laboratory': return <FlaskConical className="w-5 h-5 text-blue-600" />;
+      case 'laboratory': return <FlaskConical className="w-5 h-5 text-primary-600" />;
       case 'storage': return <Package className="w-5 h-5 text-green-600" />;
       case 'food': return <Utensils className="w-5 h-5 text-orange-600" />;
       case 'transport': return <Truck className="w-5 h-5 text-purple-600" />;
@@ -46,7 +46,7 @@ const RwandaSupplierCard: React.FC<RwandaSupplierCardProps> = ({
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'laboratory': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+      case 'laboratory': return 'bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200';
       case 'storage': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'food': return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
       case 'transport': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
@@ -138,7 +138,7 @@ const RwandaSupplierCard: React.FC<RwandaSupplierCardProps> = ({
           {supplier.services.slice(0, showDetailedInfo ? supplier.services.length : 3).map((service, index) => (
             <span
               key={index}
-              className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
+              className="px-2 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-xs rounded-full"
             >
               {service}
             </span>
@@ -211,7 +211,7 @@ const RwandaSupplierCard: React.FC<RwandaSupplierCardProps> = ({
         {supplier.contact.email && (
           <button
             onClick={() => handleContact('email', supplier.contact.email)}
-            className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+            className="flex items-center justify-center w-8 h-8 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-full hover:bg-primary-200 dark:hover:bg-primary-800 transition-colors"
             title={`Email ${supplier.contact.email}`}
           >
             <Mail className="w-4 h-4" />

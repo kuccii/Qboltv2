@@ -150,7 +150,7 @@ const AdminDashboard: React.FC = () => {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => navigate('/admin/import')}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
               >
                 <Upload className="w-4 h-4" />
                 <span>Bulk Import</span>
@@ -282,7 +282,7 @@ const AdminDashboard: React.FC = () => {
               {quickActions.map((action) => {
                 const Icon = action.icon;
                 const colorClasses: Record<string, string> = {
-                  blue: 'bg-blue-500/20 border-blue-500/30 hover:bg-blue-500/30 text-blue-400 border-2',
+                  blue: 'bg-primary-500/20 border-primary-500/30 hover:bg-primary-500/30 text-primary-400 border-2',
                   green: 'bg-green-500/20 border-green-500/30 hover:bg-green-500/30 text-green-400 border-2',
                   purple: 'bg-purple-500/20 border-purple-500/30 hover:bg-purple-500/30 text-purple-400 border-2',
                   orange: 'bg-orange-500/20 border-orange-500/30 hover:bg-orange-500/30 text-orange-400 border-2',
@@ -313,7 +313,7 @@ const AdminDashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <AdminCard>
                 <div className="flex items-center gap-3 mb-3">
-                  <Database className="h-6 w-6 text-blue-400" />
+                  <Database className="h-6 w-6 text-primary-400" />
                   <h3 className="font-semibold text-white">Database</h3>
                 </div>
                 <div className="flex items-center gap-2">

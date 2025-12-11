@@ -129,7 +129,7 @@ const CountryProfile: React.FC = () => {
         <p className="text-red-600">{error}</p>
         <button 
           onClick={loadCountryProfile}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="mt-4 px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
         >
           Retry
         </button>
@@ -141,7 +141,7 @@ const CountryProfile: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Playful Header */}
       <div className="mb-6">
-        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 dark:from-blue-600 dark:via-purple-600 dark:to-pink-600 rounded-2xl p-5 sm:p-6 shadow-2xl border-4 border-white/20 dark:border-white/10 mb-4">
+        <div className="bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 dark:from-primary-600 dark:via-purple-600 dark:to-pink-600 rounded-2xl p-5 sm:p-6 shadow-2xl border-4 border-white/20 dark:border-white/10 mb-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
@@ -200,13 +200,13 @@ const CountryProfile: React.FC = () => {
         </div>
 
         {/* Playful Tabs */}
-        <div className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-blue-200 dark:border-gray-700 shadow-lg overflow-x-auto scrollbar-hide">
+        <div className="flex items-center gap-2 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-primary-200 dark:border-gray-700 shadow-lg overflow-x-auto scrollbar-hide">
           <button
             onClick={() => handleTabChange('overview')}
             className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
               activeTab === 'overview'
-                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-300'
+                ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg scale-105'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-gray-700 hover:text-primary-700 dark:hover:text-primary-300'
             }`}
           >
             <span>📊</span>

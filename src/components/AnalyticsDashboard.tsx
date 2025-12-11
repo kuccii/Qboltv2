@@ -398,14 +398,14 @@ const AnalyticsDashboard: React.FC = () => {
           {!loading && (
             <div>
               {/* Playful Tab Navigation */}
-              <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-blue-200 dark:border-blue-700 p-2">
+              <div className="bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-primary-200 dark:border-primary-700 p-2">
                 <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
                   <button
                     onClick={() => setSelectedTab('overview')}
                     className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                       selectedTab === 'overview'
-                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg border-2 border-blue-300'
-                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                        ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg border-2 border-primary-300'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -485,7 +485,7 @@ const AnalyticsDashboard: React.FC = () => {
                 {/* Tab Content */}
                 {selectedTab === 'overview' && (
                   <div>
-                    <div className="mb-6 p-4 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-xl border-4 border-blue-300 dark:border-blue-700">
+                    <div className="mb-6 p-4 bg-gradient-to-r from-primary-100 to-purple-100 dark:from-primary-900/30 dark:to-purple-900/30 rounded-xl border-4 border-primary-300 dark:border-primary-700">
                       <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                         <span>🎯</span>
                         <span>Why This Page is SUPER Important! 💪</span>

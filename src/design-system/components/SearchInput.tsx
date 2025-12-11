@@ -72,9 +72,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           onBlur={() => setIsFocused(false)}
           disabled={disabled}
           className={cn(
-            'block w-full pl-10 pr-10 border border-gray-300 dark:border-slate-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 dark:disabled:bg-slate-800 disabled:text-gray-500 dark:text-slate-100 dark:bg-slate-900',
+            'block w-full pl-10 pr-10 border border-gray-300 dark:border-slate-700 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-50 dark:disabled:bg-slate-800 disabled:text-gray-500 dark:text-slate-100 dark:bg-slate-900',
             getSizeClasses(),
-            isFocused && 'ring-2 ring-blue-500 border-blue-500'
+            isFocused && 'ring-2 ring-primary-500 border-primary-500'
           )}
         />
         

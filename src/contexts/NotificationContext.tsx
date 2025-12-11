@@ -148,7 +148,7 @@ const NotificationContainer: React.FC = () => {
       case 'price_alert':
         return <TrendingUp className="w-5 h-5 text-orange-500" />;
       case 'supplier_update':
-        return <Users className="w-5 h-5 text-blue-500" />;
+        return <Users className="w-5 h-5 text-primary-500" />;
       case 'logistics_update':
         return <Truck className="w-5 h-5 text-green-500" />;
       case 'market_trend':
@@ -171,7 +171,7 @@ const NotificationContainer: React.FC = () => {
       case 'medium':
         return 'border-l-yellow-500 bg-yellow-50 dark:bg-yellow-900/20';
       case 'low':
-        return 'border-l-blue-500 bg-blue-50 dark:bg-blue-900/20';
+        return 'border-l-blue-500 bg-primary-50 dark:bg-primary-900/20';
       default:
         return 'border-l-gray-500 bg-gray-50 dark:bg-gray-800';
     }
@@ -215,7 +215,7 @@ const NotificationContainer: React.FC = () => {
               <div
                 key={notification.id}
                 className={`p-4 border-l-4 ${getPriorityColor(notification.priority)} ${
-                  !notification.read ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                  !notification.read ? 'bg-primary-50 dark:bg-primary-900/20' : ''
                 } hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer`}
                 onClick={() => {
                   markAsRead(notification.id);

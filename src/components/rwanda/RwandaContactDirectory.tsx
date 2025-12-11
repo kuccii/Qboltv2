@@ -263,7 +263,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
         </div>
-        <button className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg font-bold">
+        <button className="flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all transform hover:scale-105 shadow-lg font-bold">
           <Download className="w-4 h-4 mr-2" />
           Export Contacts
         </button>
@@ -299,7 +299,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
       </div>
 
       {/* Playful Tabs */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-blue-200 dark:border-gray-700 shadow-lg mb-6">
+      <div className="bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-primary-200 dark:border-gray-700 shadow-lg mb-6">
         <nav className="flex space-x-2 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => {
             const Icon = getTabIcon(tab.id);
@@ -319,8 +319,8 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 py-3 px-4 sm:px-6 rounded-xl font-bold text-sm sm:text-base whitespace-nowrap flex-shrink-0 transition-all transform hover:scale-105 ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-300'
+                    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg scale-105'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-gray-700 hover:text-primary-700 dark:hover:text-primary-300'
                 }`}
               >
                 <span className="text-lg">{tabEmojis[tab.id]}</span>
@@ -341,7 +341,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
       {/* Content */}
       <div className="space-y-4">
         {/* Results Count - Playful */}
-        <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-3 border-2 border-blue-200 dark:border-blue-800">
+        <div className="flex items-center justify-between bg-gradient-to-r from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20 rounded-xl p-3 border-2 border-primary-200 dark:border-primary-800">
           <p className="text-sm font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
             <span>📋</span>
             {activeTab === 'government' 
@@ -372,7 +372,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
         {activeTab === 'government' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {getFilteredGovernment().map((contact) => (
-              <div key={contact.id} className="bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-800 dark:to-blue-900/20 rounded-xl shadow-lg border-2 border-blue-200 dark:border-blue-700 p-5 hover:shadow-xl hover:border-blue-400 dark:hover:border-blue-600 transition-all transform hover:scale-[1.02]">
+              <div key={contact.id} className="bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-xl shadow-lg border-2 border-primary-200 dark:border-primary-700 p-5 hover:shadow-xl hover:border-primary-400 dark:hover:border-primary-600 transition-all transform hover:scale-[1.02]">
                 {/* Header */}
                 <div className="mb-4">
                   <div className="flex items-start justify-between mb-3">
@@ -382,9 +382,9 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                         {contact.name}
                       </h3>
                       <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{contact.title}</p>
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 rounded-lg border-2 border-blue-300 dark:border-blue-700">
-                        <Building2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                        <p className="text-xs font-bold text-blue-700 dark:text-blue-300 uppercase">{contact.ministry}</p>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-primary-100 to-primary-200 dark:from-primary-900/40 dark:to-primary-800/40 rounded-lg border-2 border-primary-300 dark:border-primary-700">
+                        <Building2 className="w-3.5 h-3.5 text-primary-600 dark:text-primary-400" />
+                        <p className="text-xs font-bold text-primary-700 dark:text-primary-300 uppercase">{contact.ministry}</p>
                       </div>
                     </div>
                     {contact.verified && (
@@ -400,7 +400,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                   {contact.contact.phone && (
                     <button
                       onClick={() => handleContact('phone', contact.contact.phone)}
-                      className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 rounded-lg hover:from-blue-200 hover:to-blue-300 dark:hover:from-blue-900/50 dark:hover:to-blue-800/50 transition-all border-2 border-blue-300 dark:border-blue-700 transform hover:scale-[1.02]"
+                      className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-primary-100 to-primary-200 dark:from-primary-900/40 dark:to-primary-800/40 rounded-lg hover:from-primary-200 hover:to-primary-300 dark:hover:from-primary-900/50 dark:hover:to-primary-800/50 transition-all border-2 border-primary-300 dark:border-primary-700 transform hover:scale-[1.02]"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         <span className="text-xl">📞</span>
@@ -462,7 +462,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                       {contact.services.slice(0, 3).map((service, index) => (
                         <span
                           key={index}
-                          className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-xs font-medium rounded border border-blue-200 dark:border-blue-700"
+                          className="px-2 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-xs font-medium rounded border border-primary-200 dark:border-primary-700"
                         >
                           {service}
                         </span>
@@ -538,7 +538,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                     {supplier.contact.phone && (
                       <button
                         onClick={() => handleContact('phone', supplier.contact.phone)}
-                        className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 rounded-lg hover:from-blue-200 hover:to-blue-300 dark:hover:from-blue-900/50 dark:hover:to-blue-800/50 transition-all border-2 border-blue-300 dark:border-blue-700 transform hover:scale-[1.02]"
+                        className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-primary-100 to-primary-200 dark:from-primary-900/40 dark:to-primary-800/40 rounded-lg hover:from-primary-200 hover:to-primary-300 dark:hover:from-primary-900/50 dark:hover:to-primary-800/50 transition-all border-2 border-primary-300 dark:border-primary-700 transform hover:scale-[1.02]"
                       >
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           <span className="text-xl">📞</span>
@@ -600,7 +600,7 @@ const RwandaContactDirectory: React.FC<ContactDirectoryProps> = ({ className = '
                         {supplier.services.slice(0, 2).map((service, index) => (
                           <span
                             key={index}
-                            className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-xs font-medium rounded border border-blue-200 dark:border-blue-700"
+                            className="px-2 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-xs font-medium rounded border border-primary-200 dark:border-primary-700"
                           >
                             {service}
                           </span>

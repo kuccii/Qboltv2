@@ -135,7 +135,7 @@ const CountryDemandMapping: React.FC<DemandMappingProps> = ({ countryCode, class
         </p>
         <button
           onClick={() => setShowSubmitForm(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
         >
           <Plus className="w-4 h-4 inline mr-2" />
           Submit Demand Data
@@ -157,7 +157,7 @@ const CountryDemandMapping: React.FC<DemandMappingProps> = ({ countryCode, class
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowSubmitForm(true)}
-            className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
           >
             <Plus className="w-4 h-4" />
             Submit Data
@@ -206,7 +206,7 @@ const CountryDemandMapping: React.FC<DemandMappingProps> = ({ countryCode, class
             onClick={() => setTimeRange('current')}
             className={`px-3 py-2 text-sm rounded-lg transition-colors ${
               timeRange === 'current'
-                ? 'bg-blue-600 text-white'
+                ? 'bg-primary-600 text-white'
                 : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
             }`}
           >
@@ -216,7 +216,7 @@ const CountryDemandMapping: React.FC<DemandMappingProps> = ({ countryCode, class
             onClick={() => setTimeRange('forecast')}
             className={`px-3 py-2 text-sm rounded-lg transition-colors ${
               timeRange === 'forecast'
-                ? 'bg-blue-600 text-white'
+                ? 'bg-primary-600 text-white'
                 : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
             }`}
           >
@@ -332,12 +332,12 @@ const CountryDemandMapping: React.FC<DemandMappingProps> = ({ countryCode, class
       )}
 
       {/* Info Box */}
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+      <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
         <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+          <Info className="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5 flex-shrink-0" />
           <div>
-            <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">About Demand Mapping</h4>
-            <p className="text-sm text-blue-700 dark:text-blue-300">
+            <h4 className="text-sm font-medium text-primary-800 dark:text-primary-200 mb-1">About Demand Mapping</h4>
+            <p className="text-sm text-primary-700 dark:text-primary-300">
               Demand mapping visualizes regional demand patterns for materials and helps identify market opportunities. 
               Submit demand data to contribute to the community database and improve market intelligence.
             </p>

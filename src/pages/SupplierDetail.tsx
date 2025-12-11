@@ -115,7 +115,7 @@ const SupplierDetail: React.FC<SupplierDetailProps> = () => {
                     </div>
                   )}
                   {supplier.insurance_active && (
-                    <div className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                    <div className="flex items-center gap-1 px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm font-medium">
                       <Shield className="h-4 w-4" />
                       <span>Insured</span>
                     </div>
@@ -200,9 +200,9 @@ const SupplierDetail: React.FC<SupplierDetailProps> = () => {
                       </div>
                       <p className="text-2xl font-bold text-gray-900">{supplier.on_time_delivery_rate?.toFixed(1)}%</p>
                     </div>
-                    <div className="p-4 bg-blue-50 rounded-lg">
+                    <div className="p-4 bg-primary-50 rounded-lg">
                       <div className="flex items-center gap-2 mb-2">
-                        <Package className="h-4 w-4 text-blue-600" />
+                        <Package className="h-4 w-4 text-primary-600" />
                         <span className="text-sm text-gray-600">Total Orders</span>
                       </div>
                       <p className="text-2xl font-bold text-gray-900">{supplier.total_orders || 0}</p>
@@ -308,7 +308,7 @@ const SupplierDetail: React.FC<SupplierDetailProps> = () => {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="bg-blue-600 h-2 rounded-full"
+                        className="bg-primary-600 h-2 rounded-full"
                         style={{ width: `${(supplier.rating || 0) * 10}%` }}
                       />
                     </div>
@@ -353,12 +353,12 @@ const SupplierDetail: React.FC<SupplierDetailProps> = () => {
 
             {/* Insurance Status */}
             {supplier.insurance_active && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <div className="bg-primary-50 border border-primary-200 rounded-lg p-6">
                 <div className="flex items-start gap-3">
-                  <Shield className="h-5 w-5 text-blue-600 mt-0.5" />
+                  <Shield className="h-5 w-5 text-primary-600 mt-0.5" />
                   <div>
-                    <h3 className="font-semibold text-blue-900 mb-1">Insured Supplier</h3>
-                    <p className="text-sm text-blue-700">
+                    <h3 className="font-semibold text-primary-900 mb-1">Insured Supplier</h3>
+                    <p className="text-sm text-primary-700">
                       This supplier is covered by trade insurance
                       {supplier.insurance_expiry && (
                         <span> until {new Date(supplier.insurance_expiry).toLocaleDateString()}</span>

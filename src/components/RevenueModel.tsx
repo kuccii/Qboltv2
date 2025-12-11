@@ -234,7 +234,7 @@ const RevenueModel: React.FC = () => {
       </div>
 
       {/* Revenue Projections */}
-      <div className="mt-12 bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900 dark:to-blue-900 rounded-2xl p-8">
+      <div className="mt-12 bg-gradient-to-r from-primary-50 to-primary-50 dark:from-primary-900 dark:to-primary-900 rounded-2xl p-8">
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
           Revenue Projections
         </h3>

@@ -320,9 +320,9 @@ const PriceTracking: React.FC = () => {
 
           {/* Loading State */}
           {pricesLoading && (
-            <div className="bg-blue-50 border border-blue-200 rounded-md p-3 flex items-center gap-2">
-              <RefreshCw className="h-4 w-4 text-blue-600 animate-spin" />
-              <span className="text-sm text-blue-800">Loading price data...</span>
+            <div className="bg-primary-50 border border-primary-200 rounded-md p-3 flex items-center gap-2">
+              <RefreshCw className="h-4 w-4 text-primary-600 animate-spin" />
+              <span className="text-sm text-primary-800">Loading price data...</span>
             </div>
           )}
 
@@ -353,7 +353,7 @@ const PriceTracking: React.FC = () => {
               </p>
             </div>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-blue-200 dark:border-gray-700">
+              <div className="flex items-center space-x-2 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-primary-200 dark:border-gray-700">
                 <TimeRangeButton value="1m" selected={timeRange === '1m'} onClick={() => setTimeRange('1m')} />
                 <TimeRangeButton value="3m" selected={timeRange === '3m'} onClick={() => setTimeRange('3m')} />
                 <TimeRangeButton value="6m" selected={timeRange === '6m'} onClick={() => setTimeRange('6m')} />
@@ -427,7 +427,7 @@ const PriceTracking: React.FC = () => {
                     
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div className="flex items-center gap-1">
-                        <Shield className="h-3 w-3 text-blue-500" />
+                        <Shield className="h-3 w-3 text-primary-500" />
                         <span className="text-gray-500">Status:</span>
                         <span className="font-medium">Active</span>
                       </div>
@@ -467,7 +467,7 @@ const PriceTracking: React.FC = () => {
                   placeholder="Save current view"
                   className="text-sm px-3 py-2 border-2 border-gray-300 rounded-xl"
                 />
-                <button onClick={saveView} className="px-4 py-2 text-sm font-bold bg-blue-500 text-white rounded-xl hover:bg-blue-600">Save</button>
+                <button onClick={saveView} className="px-4 py-2 text-sm font-bold bg-primary-500 text-white rounded-xl hover:bg-primary-600">Save</button>
               </div>
             </div>
             <div className="bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 dark:from-yellow-600 dark:via-yellow-700 dark:to-yellow-800 rounded-2xl shadow-2xl border-4 border-yellow-300 dark:border-yellow-500 p-6">

@@ -366,7 +366,7 @@ const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '', cou
       case 'error': return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900';
       case 'warning': return 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900';
       case 'success': return 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900';
-      case 'info': return 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900';
+      case 'info': return 'text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-900';
       default: return 'text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700';
     }
   };
@@ -468,7 +468,7 @@ const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '', cou
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
-                      <div className="p-3 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-blue-600 dark:text-blue-400 rounded-xl border-2 border-blue-300 dark:border-blue-700">
+                      <div className="p-3 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 text-primary-600 dark:text-primary-400 rounded-xl border-2 border-primary-300 dark:border-primary-700">
                         <Icon className="w-6 h-6" />
                       </div>
                       <div>
@@ -634,12 +634,12 @@ const RwandaSmartFeatures: React.FC<SmartFeaturesProps> = ({ className = '', cou
       </div>
 
       {/* Data Source Info */}
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+      <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
         <div className="flex items-start">
-          <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+          <Shield className="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5 mr-3 flex-shrink-0" />
           <div>
-            <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200">AI-Powered Insights</h4>
-            <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+            <h4 className="text-sm font-medium text-primary-800 dark:text-primary-200">AI-Powered Insights</h4>
+            <p className="text-sm text-primary-700 dark:text-primary-300 mt-1">
               Smart recommendations are generated using machine learning algorithms analyzing your data patterns, 
               market trends, and supplier performance metrics.
             </p>

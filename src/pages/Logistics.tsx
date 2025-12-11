@@ -266,7 +266,7 @@ const Logistics: React.FC = () => {
           title="Active Routes"
           value={filteredLogistics.length.toString()}
           change={{ type: 'increase', value: 12, period: 'vs last month' }}
-          icon={<Truck className="h-5 w-5 text-blue-600" />}
+          icon={<Truck className="h-5 w-5 text-primary-600" />}
         />
         <DashboardCard
           title="On-Time Delivery"
@@ -424,7 +424,7 @@ const Logistics: React.FC = () => {
                     {preset.description}
                   </div>
                   <div className="flex flex-wrap gap-1">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 text-primary-800">
                       Customs: {preset.customs.join(', ')}
                     </span>
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
@@ -490,12 +490,12 @@ const Logistics: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+            <div className="bg-primary-50 dark:bg-primary-900/20 p-4 rounded-lg">
               <div className="flex items-start">
-                <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3" />
+                <Info className="h-5 w-5 text-primary-600 dark:text-primary-400 mt-0.5 mr-3" />
                 <div>
-                  <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200">Cost Factors</h4>
-                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                  <h4 className="text-sm font-medium text-primary-800 dark:text-primary-200">Cost Factors</h4>
+                  <p className="text-sm text-primary-700 dark:text-primary-300 mt-1">
                     Calculations include fuel, tolls, driver costs, maintenance, and insurance.
                   </p>
                 </div>

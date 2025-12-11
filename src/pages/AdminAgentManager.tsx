@@ -240,8 +240,8 @@ const AdminAgentManager: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <AdminCard>
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-              <UserCog className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <div className="p-3 bg-primary-50 dark:bg-primary-900/30 rounded-lg">
+              <UserCog className="h-6 w-6 text-primary-600 dark:text-primary-400" />
             </div>
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Total Agents</p>
@@ -557,7 +557,7 @@ const AdminAgentManager: React.FC = () => {
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={() => handleVerify(agent.id, agent.verified)}
-                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                          className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300"
                           title={agent.verified ? 'Unverify' : 'Verify'}
                         >
                           <Shield className="h-4 w-4" />

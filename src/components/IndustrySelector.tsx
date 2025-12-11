@@ -25,12 +25,12 @@ const IndustryCard: React.FC<IndustryCardProps> = ({ industry, isSelected, onSel
       description: 'Build amazing things! Get materials, find suppliers, and manage your projects!',
       icon: Building2,
       color: 'blue',
-      bgGradient: 'from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950 dark:via-indigo-950 dark:to-purple-950',
-      borderColor: 'border-blue-200 dark:border-blue-800',
-      selectedBorder: 'border-blue-500 dark:border-blue-400',
-      selectedBg: 'bg-blue-50 dark:bg-blue-950/30',
-      iconColor: 'text-blue-600 dark:text-blue-400',
-      iconBg: 'bg-gradient-to-br from-blue-100 to-indigo-200 dark:from-blue-900/50 dark:to-indigo-900/50',
+      bgGradient: 'from-primary-50 via-indigo-50 to-purple-50 dark:from-primary-950 dark:via-indigo-950 dark:to-purple-950',
+      borderColor: 'border-primary-200 dark:border-primary-800',
+      selectedBorder: 'border-primary-500 dark:border-primary-400',
+      selectedBg: 'bg-primary-50 dark:bg-primary-950/30',
+      iconColor: 'text-primary-600 dark:text-primary-400',
+      iconBg: 'bg-gradient-to-br from-primary-100 to-indigo-200 dark:from-primary-900/50 dark:to-indigo-900/50',
     },
     agriculture: {
       name: 'Agriculture',
@@ -83,7 +83,7 @@ const IndustryCard: React.FC<IndustryCardProps> = ({ industry, isSelected, onSel
             <span>{industryConfig.name}</span>
           </h2>
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-medium px-2">{industryConfig.description}</p>
-          <button className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center gap-2 mx-auto">
+          <button className="mt-6 px-6 py-3 bg-gradient-to-r from-primary-500 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center gap-2 mx-auto">
             <span>Choose This!</span>
             <ArrowRight size={18} />
           </button>
@@ -105,14 +105,14 @@ const IndustrySelector: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50/30 to-indigo-50/30 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-3xl mb-6 shadow-2xl transform hover:scale-110 transition-transform border-4 border-white/30 dark:border-gray-700/30">
+          <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-primary-500 via-purple-500 to-pink-500 rounded-3xl mb-6 shadow-2xl transform hover:scale-110 transition-transform border-4 border-white/30 dark:border-gray-700/30">
             <span className="text-4xl sm:text-5xl">🚀</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3 sm:mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent mb-3 sm:mb-4">
             Welcome to Qivook! 🎉
           </h1>
           <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 mb-2 font-semibold flex items-center justify-center gap-2">

@@ -76,7 +76,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   const getIcon = (type: string) => {
     switch (type) {
       case 'supplier':
-        return <Building2 size={16} className="text-blue-500" />;
+        return <Building2 size={16} className="text-primary-500" />;
       case 'price':
         return <TrendingUp size={16} className="text-green-500" />;
       case 'logistics':
@@ -234,7 +234,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                       key={`${result.type}-${result.id}`}
                       onClick={() => handleResultClick(result)}
                       className={`w-full flex items-center p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg group transition-colors ${
-                        index === selectedIndex ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                        index === selectedIndex ? 'bg-primary-50 dark:bg-primary-900/20' : ''
                       }`}
                     >
                       {getIcon(result.type)}

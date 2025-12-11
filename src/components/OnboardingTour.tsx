@@ -213,10 +213,10 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
           </p>
           
           {currentStepData.action && (
-            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="mt-4 p-3 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
               <button
                 onClick={currentStepData.action.onClick}
-                className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                className="flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
               >
                 <ArrowRight size={16} />
                 {currentStepData.action.text}

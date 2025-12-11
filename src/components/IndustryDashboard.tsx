@@ -42,8 +42,8 @@ const IndustryDashboard: React.FC<IndustryDashboardProps> = ({ className = '' })
         change: '+2 this month',
         trend: 'up',
         icon: Building2,
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-50'
+        color: 'text-primary-600',
+        bgColor: 'bg-primary-50'
       },
       {
         title: 'Price Points Tracked',
@@ -89,8 +89,8 @@ const IndustryDashboard: React.FC<IndustryDashboardProps> = ({ className = '' })
         change: '+22% vs last season',
         trend: 'up',
         icon: TrendingUp,
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-50'
+        color: 'text-primary-600',
+        bgColor: 'bg-primary-50'
       },
       {
         title: 'Supplier Network',
@@ -123,7 +123,7 @@ const IndustryDashboard: React.FC<IndustryDashboardProps> = ({ className = '' })
         message: 'Project "Nairobi Office Complex" - Foundation phase completed',
         time: '2 hours ago',
         icon: Building2,
-        color: 'text-blue-600'
+        color: 'text-primary-600'
       },
       {
         type: 'price_update',
@@ -167,14 +167,14 @@ const IndustryDashboard: React.FC<IndustryDashboardProps> = ({ className = '' })
         message: 'New supplier "Green Seeds Ltd" verified',
         time: '5 hours ago',
         icon: Users,
-        color: 'text-blue-600'
+        color: 'text-primary-600'
       },
       {
         type: 'weather_alert',
         message: 'Heavy rainfall expected - adjust irrigation schedule',
         time: '7 hours ago',
         icon: Droplets,
-        color: 'text-blue-600'
+        color: 'text-primary-600'
       }
     ]
   };
@@ -188,8 +188,8 @@ const IndustryDashboard: React.FC<IndustryDashboardProps> = ({ className = '' })
         title: 'Start New Project',
         description: 'Create a new construction project',
         icon: Building2,
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-50',
+        color: 'text-primary-600',
+        bgColor: 'bg-primary-50',
         href: '/app/projects/new'
       },
       {
@@ -230,8 +230,8 @@ const IndustryDashboard: React.FC<IndustryDashboardProps> = ({ className = '' })
         title: 'Track Prices',
         description: 'Monitor input prices',
         icon: TrendingUp,
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-50',
+        color: 'text-primary-600',
+        bgColor: 'bg-primary-50',
         href: '/app/prices'
       },
       {
@@ -262,7 +262,7 @@ const IndustryDashboard: React.FC<IndustryDashboardProps> = ({ className = '' })
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-              isConstruction ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'
+              isConstruction ? 'bg-primary-100 text-primary-600' : 'bg-green-100 text-green-600'
             }`}>
               {isConstruction ? <Building2 size={24} /> : <Wheat size={24} />}
             </div>

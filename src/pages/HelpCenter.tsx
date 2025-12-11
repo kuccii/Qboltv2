@@ -185,7 +185,7 @@ const HelpCenter: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'open': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
+      case 'open': return 'bg-primary-100 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300';
       case 'in_progress': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300';
       case 'resolved': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300';
       case 'closed': return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
@@ -244,8 +244,8 @@ const HelpCenter: React.FC = () => {
                 onClick={() => setShowContactForm(true)}
                 className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-left hover:shadow-md transition-shadow"
               >
-                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center mb-4">
-                  <MessageSquare size={24} className="text-blue-600 dark:text-blue-400" />
+                <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/20 rounded-lg flex items-center justify-center mb-4">
+                  <MessageSquare size={24} className="text-primary-600 dark:text-primary-400" />
                 </div>
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Contact Support</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Get help from our support team</p>
@@ -278,7 +278,7 @@ const HelpCenter: React.FC = () => {
                   onClick={() => setSelectedCategory(category.id)}
                   className={`p-4 rounded-lg border text-left transition-colors ${
                     selectedCategory === category.id
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
+                      ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
                       : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
@@ -374,7 +374,7 @@ const HelpCenter: React.FC = () => {
                         <span>Updated: {new Date(ticket.updatedAt).toLocaleDateString()}</span>
                       </div>
                     </div>
-                    <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+                    <button className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
                       View Details
                     </button>
                   </div>
@@ -406,7 +406,7 @@ const HelpCenter: React.FC = () => {
                       type="text"
                       value={contactForm.subject}
                       onChange={(e) => setContactForm(prev => ({ ...prev, subject: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       placeholder="Brief description of your issue"
                       required
                     />
@@ -419,7 +419,7 @@ const HelpCenter: React.FC = () => {
                     <select
                       value={contactForm.category}
                       onChange={(e) => setContactForm(prev => ({ ...prev, category: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       required
                     >
                       <option value="">Select a category</option>
@@ -438,7 +438,7 @@ const HelpCenter: React.FC = () => {
                     <select
                       value={contactForm.priority}
                       onChange={(e) => setContactForm(prev => ({ ...prev, priority: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     >
                       <option value="low">Low</option>
                       <option value="medium">Medium</option>
@@ -455,7 +455,7 @@ const HelpCenter: React.FC = () => {
                       value={contactForm.description}
                       onChange={(e) => setContactForm(prev => ({ ...prev, description: e.target.value }))}
                       rows={4}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
                       placeholder="Please provide detailed information about your issue..."
                       required
                     />
@@ -464,7 +464,7 @@ const HelpCenter: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <button
                       type="submit"
-                      className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                      className="flex-1 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
                     >
                       Submit Ticket
                     </button>

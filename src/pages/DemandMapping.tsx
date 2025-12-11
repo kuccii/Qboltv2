@@ -425,7 +425,7 @@ const DemandMapping: React.FC = () => {
                 <>
                   <div className="w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
                   <div className="flex items-center gap-2">
-                    <Globe className="h-3 w-3 text-blue-500" />
+                    <Globe className="h-3 w-3 text-primary-500" />
                     <span className="text-xs text-gray-600 dark:text-gray-400">
                       ITC Data ({itcData.length} points)
                     </span>
@@ -581,14 +581,14 @@ const DemandMapping: React.FC = () => {
     <AppLayout>
       <PageLayout>
         {/* Playful Header */}
-        <div className="mb-6 p-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl shadow-xl border-4 border-blue-300 dark:border-blue-700">
+        <div className="mb-6 p-6 bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 rounded-2xl shadow-xl border-4 border-primary-300 dark:border-primary-700">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 flex items-center gap-3">
                 <span className="text-4xl sm:text-5xl">🗺️</span>
                 <span>Find Where Things Are Needed! 🌍</span>
               </h1>
-              <p className="text-blue-100 text-sm sm:text-base font-medium">
+              <p className="text-primary-100 text-sm sm:text-base font-medium">
                 See where people want to buy stuff across East Africa! 🎯
               </p>
             </div>
@@ -607,7 +607,7 @@ const DemandMapping: React.FC = () => {
             <button
               onClick={handleRefresh}
               disabled={demandLoading}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white text-blue-600 rounded-xl hover:bg-blue-50 disabled:opacity-50 shadow-lg transform hover:scale-105 transition-all"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white text-primary-600 rounded-xl hover:bg-primary-50 disabled:opacity-50 shadow-lg transform hover:scale-105 transition-all"
             >
               <RefreshCw className={`h-4 w-4 ${demandLoading ? 'animate-spin' : ''}`} />
               🔄 Refresh
@@ -643,14 +643,14 @@ const DemandMapping: React.FC = () => {
       
         <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           {/* Playful Tab Navigation */}
-          <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-blue-200 dark:border-blue-700 p-2">
+          <div className="bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-primary-200 dark:border-primary-700 p-2">
             <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
               <button
                 onClick={() => setSelectedTab('demand')}
                 className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                   selectedTab === 'demand'
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg border-2 border-blue-300'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg border-2 border-primary-300'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -844,14 +844,14 @@ const DemandMapping: React.FC = () => {
                   </div>
 
                   {/* Info Banner */}
-                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                  <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
                     <div className="flex items-start gap-3">
-                      <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                      <Info className="h-5 w-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5" />
                       <div className="flex-1">
-                        <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                        <h4 className="text-sm font-semibold text-primary-900 dark:text-primary-100 mb-1">
                           About ITC Export Potential Map
                         </h4>
-                        <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
+                        <p className="text-sm text-primary-800 dark:text-primary-200 mb-2">
                           The ITC Export Potential Map helps identify export opportunities by analyzing market size, 
                           growth potential, and competition. This interactive tool is provided by the International Trade Centre.
                         </p>
@@ -859,7 +859,7 @@ const DemandMapping: React.FC = () => {
                           href="https://exportpotential.intracen.org/"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-100 underline"
+                          className="text-sm text-primary-700 dark:text-primary-300 hover:text-primary-900 dark:hover:text-primary-100 underline"
                         >
                           Visit ITC Export Potential Map →
                         </a>
@@ -935,14 +935,14 @@ const DemandMapping: React.FC = () => {
                   </div>
 
                   {/* Info Banner */}
-                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                  <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
                     <div className="flex items-start gap-3">
-                      <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                      <Info className="h-5 w-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5" />
                       <div className="flex-1">
-                        <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                        <h4 className="text-sm font-semibold text-primary-900 dark:text-primary-100 mb-1">
                           About ITC Trade Map
                         </h4>
-                        <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
+                        <p className="text-sm text-primary-800 dark:text-primary-200 mb-2">
                           ITC Trade Map provides monthly, quarterly, and yearly trade data for 220 countries 
                           and territories and 5,300 products. Access detailed import/export statistics, 
                           market shares, and growth rates.
@@ -951,7 +951,7 @@ const DemandMapping: React.FC = () => {
                           href="https://www.trademap.org/"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-100 underline"
+                          className="text-sm text-primary-700 dark:text-primary-300 hover:text-primary-900 dark:hover:text-primary-100 underline"
                         >
                           Visit ITC Trade Map →
                         </a>

@@ -202,14 +202,14 @@ const Register: React.FC = () => {
                 Full Name <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary- transition-colors" />
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-800 transition-colors" />
                 <input
                   type="text"
                   id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary- focus:border-primary- dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-800 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -220,14 +220,14 @@ const Register: React.FC = () => {
                 Email Address <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary- transition-colors" />
+                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-800 transition-colors" />
                 <input
                   type="email"
                   id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary- focus:border-primary- dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-800 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                   placeholder="you@company.com"
                 />
               </div>
@@ -238,14 +238,14 @@ const Register: React.FC = () => {
                 Password <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary- transition-colors" />
+                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-800 transition-colors" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary- focus:border-primary- dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                  className="w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-800 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                   placeholder="Create a strong password"
                 />
                 <button
@@ -309,19 +309,19 @@ const Register: React.FC = () => {
                 Confirm Password <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary- transition-colors" />
+                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-800 transition-colors" />
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   id="confirmPassword"
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`w-full pl-12 pr-12 py-3.5 border-2 rounded-xl focus:ring-2 focus:ring-primary- dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm ${
+                  className={`w-full pl-12 pr-12 py-3.5 border-2 rounded-xl focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm ${
                     formData.confirmPassword && formData.password === formData.confirmPassword
                       ? 'border-green-500 focus:border-green-500'
                       : formData.confirmPassword && formData.password !== formData.confirmPassword
                       ? 'border-red-500 focus:border-red-500'
-                      : 'border-gray-200 dark:border-gray-700 focus:border-primary- hover:border-gray-300 dark:hover:border-gray-600'
+                      : 'border-gray-200 dark:border-gray-700 focus:border-primary-800 hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                   placeholder="Confirm your password"
                 />
@@ -360,14 +360,14 @@ const Register: React.FC = () => {
                 Company Name <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <Building2 className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary- transition-colors" />
+                <Building2 className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-800 transition-colors" />
                 <input
                   type="text"
                   id="company"
                   name="company"
                   value={formData.company}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary- focus:border-primary- dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-800 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                   placeholder="Enter your company name"
                 />
               </div>
@@ -383,12 +383,12 @@ const Register: React.FC = () => {
                   onClick={() => setFormData(prev => ({ ...prev, industry: 'construction' }))}
                   className={`group p-5 border-2 rounded-xl text-left transition-all duration-200 ${
                     formData.industry === 'construction'
-                      ? 'border-primary- bg-gradient-to-br from-primary- to-primary- dark:from-primary-/30 dark:to-primary-/30 shadow-lg scale-105'
+                      ? 'border-primary-800 bg-gradient-to-br from-primary-800 to-primary-600 dark:from-primary-/30 dark:to-primary-/30 shadow-lg scale-105'
                       : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md'
                   }`}
                 >
                   <Building2 className={`h-8 w-8 mb-3 transition-colors ${
-                    formData.industry === 'construction' ? 'text-primary- dark:text-primary-' : 'text-gray-400 group-hover:text-primary-'
+                    formData.industry === 'construction' ? 'text-primary-800 dark:text-primary-' : 'text-gray-400 group-hover:text-primary-'
                   }`} />
                   <div className="font-semibold text-gray-900 dark:text-white mb-1">Construction</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Building materials, equipment</div>
@@ -417,13 +417,13 @@ const Register: React.FC = () => {
                   Country <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Globe className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary- transition-colors" />
+                  <Globe className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-800 transition-colors" />
                   <select
                     id="country"
                     name="country"
                     value={formData.country}
                     onChange={handleChange}
-                    className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary- focus:border-primary- dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600 appearance-none bg-no-repeat bg-right pr-10"
+                    className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-800 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600 appearance-none bg-no-repeat bg-right pr-10"
                     style={{ backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundPosition: 'right 0.75rem center', backgroundSize: '1em 1em' }}
                   >
                     <option value="Kenya">Kenya</option>
@@ -439,14 +439,14 @@ const Register: React.FC = () => {
                   Phone Number <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary- transition-colors" />
+                  <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-800 transition-colors" />
                   <input
                     type="tel"
                     id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary- focus:border-primary- dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                    className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-800 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                     placeholder="+254 700 000 000"
                   />
                 </div>
@@ -463,7 +463,7 @@ const Register: React.FC = () => {
                 Your Role <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary- transition-colors z-10 pointer-events-none" />
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary-800 transition-colors z-10 pointer-events-none" />
                 <div className="pl-12">
                   <SelectInput
                     options={[
@@ -478,7 +478,7 @@ const Register: React.FC = () => {
                     onChange={(value) => setFormData(prev => ({ ...prev, role: value }))}
                     placeholder="Select your role"
                     size="lg"
-                    className="w-full border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary- focus:border-primary- dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                    className="w-full border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-800 dark:bg-gray-700 dark:text-white transition-all duration-200 shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                   />
                 </div>
               </div>
@@ -503,12 +503,12 @@ const Register: React.FC = () => {
                       onClick={() => setFormData(prev => ({ ...prev, companySize: size.value }))}
                       className={`group p-4 border-2 rounded-xl text-left transition-all duration-200 ${
                         formData.companySize === size.value
-                          ? 'border-primary- bg-gradient-to-br from-primary- to-primary- dark:from-primary-/30 dark:to-primary-/30 shadow-lg scale-105'
+                          ? 'border-primary-800 bg-gradient-to-br from-primary-800 to-primary-600 dark:from-primary-/30 dark:to-primary-/30 shadow-lg scale-105'
                           : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md'
                       }`}
                     >
                       <IconComponent className={`h-6 w-6 mb-2 transition-colors ${
-                        formData.companySize === size.value ? 'text-primary- dark:text-primary-' : 'text-gray-400 group-hover:text-primary-'
+                        formData.companySize === size.value ? 'text-primary-800 dark:text-primary-' : 'text-gray-400 group-hover:text-primary-'
                       }`} />
                       <div className="font-semibold text-gray-900 dark:text-white">{size.label}</div>
                     </button>
@@ -538,16 +538,16 @@ const Register: React.FC = () => {
                       onClick={() => handleInterestToggle(interest.name)}
                       className={`group p-4 border-2 rounded-xl text-left transition-all duration-200 ${
                         formData.interests.includes(interest.name)
-                          ? 'border-primary- bg-gradient-to-br from-primary- to-primary- dark:from-primary-/30 dark:to-primary-/30 shadow-md'
+                          ? 'border-primary-800 bg-gradient-to-br from-primary-800 to-primary-600 dark:from-primary-/30 dark:to-primary-/30 shadow-md'
                           : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-sm'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1">
                         <IconComponent className={`h-5 w-5 transition-colors ${
-                          formData.interests.includes(interest.name) ? 'text-primary- dark:text-primary-' : 'text-gray-400 group-hover:text-primary-'
+                          formData.interests.includes(interest.name) ? 'text-primary-800 dark:text-primary-' : 'text-gray-400 group-hover:text-primary-'
                         }`} />
                         {formData.interests.includes(interest.name) && (
-                          <CheckCircle2 className="h-5 w-5 text-primary- dark:text-primary-" />
+                          <CheckCircle2 className="h-5 w-5 text-primary-800 dark:text-primary-" />
                         )}
                       </div>
                       <div className={`text-sm font-medium ${
@@ -568,18 +568,18 @@ const Register: React.FC = () => {
       case 4:
         return (
           <div className="space-y-6 animate-fade-in">
-            <div className="bg-gradient-to-br from-primary- to-indigo-50 dark:from-primary-/20 dark:to-indigo-900/20 p-6 rounded-2xl border-2 border-primary- dark:border-primary-">
+            <div className="bg-gradient-to-br from-primary-800 to-indigo-50 dark:from-primary-/20 dark:to-indigo-900/20 p-6 rounded-2xl border-2 border-primary-800 dark:border-primary-">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary- to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary-800 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
                     <Shield className="h-6 w-6 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-xl font-bold text-primary- dark:text-primary- mb-2">
+                  <h4 className="text-xl font-bold text-primary-800 dark:text-primary-800 mb-2">
                     Almost There! 🎉
                   </h4>
-                  <p className="text-primary- dark:text-primary- leading-relaxed">
+                  <p className="text-primary-800 dark:text-primary-800 leading-relaxed">
                     By creating an account, you'll get access to real-time market data, supplier networks, 
                     and tools to optimize your business operations.
                   </p>
@@ -588,21 +588,21 @@ const Register: React.FC = () => {
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-start gap-4 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary- dark:hover:border-primary- transition-all duration-200 bg-gray-50 dark:bg-gray-800/50">
+              <div className="flex items-start gap-4 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary-800 dark:hover:border-primary-800 transition-all duration-200 bg-gray-50 dark:bg-gray-800/50">
                 <input
                   type="checkbox"
                   id="agreeTerms"
                   checked={formData.agreeTerms}
                   onChange={(e) => handleCheckboxChange('agreeTerms', e.target.checked)}
-                  className="mt-1 h-5 w-5 text-primary- focus:ring-primary- border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-offset-2 cursor-pointer transition-all"
+                  className="mt-1 h-5 w-5 text-primary-800 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-offset-2 cursor-pointer transition-all"
                 />
                 <label htmlFor="agreeTerms" className="flex-1 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
                   I agree to the{' '}
-                  <Link to="/terms" className="font-semibold text-primary- hover:text-primary- dark:text-primary- dark:hover:text-primary- underline decoration-2 underline-offset-2 transition-colors">
+                  <Link to="/terms" className="font-semibold text-primary-800 hover:text-primary-800 dark:text-primary-800 dark:hover:text-primary-800 underline decoration-2 underline-offset-2 transition-colors">
                     Terms of Service
                   </Link>{' '}
                   and{' '}
-                  <Link to="/privacy" className="font-semibold text-primary- hover:text-primary- dark:text-primary- dark:hover:text-primary- underline decoration-2 underline-offset-2 transition-colors">
+                  <Link to="/privacy" className="font-semibold text-primary-800 hover:text-primary-800 dark:text-primary-800 dark:hover:text-primary-800 underline decoration-2 underline-offset-2 transition-colors">
                     Privacy Policy
                   </Link>
                   <span className="text-red-500 ml-1">*</span>
@@ -615,7 +615,7 @@ const Register: React.FC = () => {
                   id="agreeMarketing"
                   checked={formData.agreeMarketing}
                   onChange={(e) => handleCheckboxChange('agreeMarketing', e.target.checked)}
-                  className="mt-1 h-5 w-5 text-primary- focus:ring-primary- border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-offset-2 cursor-pointer transition-all"
+                  className="mt-1 h-5 w-5 text-primary-800 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-offset-2 cursor-pointer transition-all"
                 />
                 <label htmlFor="agreeMarketing" className="flex-1 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
                   I'd like to receive updates about new features and market insights
@@ -631,7 +631,7 @@ const Register: React.FC = () => {
               </h5>
               <div className="space-y-3">
                 {[
-                  { icon: Mail, text: 'Verify your email address', bgClass: 'bg-primary- dark:bg-primary-/30', iconClass: 'text-primary- dark:text-primary-' },
+                  { icon: Mail, text: 'Verify your email address', bgClass: 'bg-primary-800 dark:bg-primary-/30', iconClass: 'text-primary-800 dark:text-primary-' },
                   { icon: User, text: 'Complete your industry profile', bgClass: 'bg-purple-50 dark:bg-purple-900/30', iconClass: 'text-purple-600 dark:text-purple-400' },
                   { icon: TrendingUp, text: 'Access your personalized dashboard', bgClass: 'bg-green-50 dark:bg-green-900/30', iconClass: 'text-green-600 dark:text-green-400' }
                 ].map((step, index) => (
@@ -661,7 +661,7 @@ const Register: React.FC = () => {
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary- via-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary-800 via-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
                   <Building2 className="text-white" size={32} />
                 </div>
                 <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center animate-pulse">
@@ -688,7 +688,7 @@ const Register: React.FC = () => {
                         currentStep > step.id
                           ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg scale-110'
                           : currentStep === step.id
-                          ? 'bg-gradient-to-br from-primary- to-purple-600 text-white shadow-lg scale-110 ring-4 ring-primary- dark:ring-primary-'
+                          ? 'bg-gradient-to-br from-primary-800 to-purple-600 text-white shadow-lg scale-110 ring-4 ring-primary-500 dark:ring-primary-'
                           : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
                       }`}>
                         {currentStep > step.id ? (
@@ -700,7 +700,7 @@ const Register: React.FC = () => {
                       <div className="mt-2 text-center hidden sm:block">
                         <div className={`text-xs font-medium ${
                           currentStep >= step.id
-                            ? 'text-primary- dark:text-primary-'
+                            ? 'text-primary-800 dark:text-primary-'
                             : 'text-gray-500 dark:text-gray-400'
                         }`}>
                           {step.title}
@@ -773,7 +773,7 @@ const Register: React.FC = () => {
                 <button
                   onClick={handleNext}
                   disabled={!validateStep(currentStep)}
-                  className="flex items-center gap-2 px-8 py-3 text-sm font-semibold text-white bg-gradient-to-r from-primary- to-purple-600 rounded-xl hover:from-primary- hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:hover:scale-100"
+                  className="flex items-center gap-2 px-8 py-3 text-sm font-semibold text-white bg-gradient-to-r from-primary-800 to-purple-600 rounded-xl hover:from-primary-800 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:hover:scale-100"
                 >
                   Next Step
                   <ArrowRight className="h-4 w-4" />
@@ -806,7 +806,7 @@ const Register: React.FC = () => {
               Already have an account?{' '}
               <Link 
                 to="/login" 
-                className="font-semibold text-primary- hover:text-primary- dark:text-primary- dark:hover:text-primary- transition-colors"
+                className="font-semibold text-primary-800 hover:text-primary-800 dark:text-primary-800 dark:hover:text-primary-800 transition-colors"
               >
                 Sign in here
               </Link>
@@ -816,7 +816,7 @@ const Register: React.FC = () => {
       </div>
 
       {/* Right side - Hero Section */}
-      <div className="hidden lg:flex lg:flex-1 bg-gradient-to-br from-primary- via-purple-600 to-indigo-700 items-center justify-center p-12 relative overflow-hidden">
+      <div className="hidden lg:flex lg:flex-1 bg-gradient-to-br from-primary-800 via-purple-600 to-indigo-700 items-center justify-center p-12 relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -834,7 +834,7 @@ const Register: React.FC = () => {
             Trade Intelligence Platform
           </h2>
           
-          <p className="text-primary- text-lg leading-relaxed mb-10">
+          <p className="text-primary-800 text-lg leading-relaxed mb-10">
             Empowering East African businesses with real-time market intelligence, 
             supplier insights, and trade financing solutions.
           </p>
@@ -848,7 +848,7 @@ const Register: React.FC = () => {
             ].map((feature, index) => (
               <div 
                 key={index} 
-                className="flex items-center gap-4 text-primary- bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/20 transition-all duration-200"
+                className="flex items-center gap-4 text-primary-800 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/20 transition-all duration-200"
               >
                 <div className={`${feature.color} rounded-lg p-2`}>
                   <feature.icon className="w-5 h-5 text-white" />
@@ -859,7 +859,7 @@ const Register: React.FC = () => {
           </div>
 
           <div className="mt-12 pt-8 border-t border-white/20">
-            <p className="text-primary- text-sm">
+            <p className="text-primary-800 text-sm">
               Trusted by 10,000+ businesses across East Africa
             </p>
           </div>

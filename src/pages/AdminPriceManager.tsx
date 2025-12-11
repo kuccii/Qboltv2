@@ -244,8 +244,8 @@ const AdminPriceManager: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <AdminCard>
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-blue-500/20 rounded-lg">
-                  <CheckCircle className="h-6 w-6 text-blue-400" />
+                <div className="p-3 bg-primary-500/20 rounded-lg">
+                  <CheckCircle className="h-6 w-6 text-primary-400" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-400">Total Records</p>

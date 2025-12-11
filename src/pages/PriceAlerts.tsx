@@ -202,8 +202,8 @@ const PriceAlerts: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <DashboardCard>
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <Bell className="h-6 w-6 text-blue-600" />
+            <div className="p-3 bg-primary-50 rounded-lg">
+              <Bell className="h-6 w-6 text-primary-600" />
             </div>
             <div>
               <p className="text-sm text-gray-600">Total Alerts</p>
@@ -385,8 +385,8 @@ const PriceAlerts: React.FC = () => {
                 }`}
               >
                 <div className="flex items-center gap-4 flex-1">
-                  <div className={`p-2 rounded-lg ${alert.active ? 'bg-blue-50' : 'bg-gray-200'}`}>
-                    <Bell className={`h-5 w-5 ${alert.active ? 'text-blue-600' : 'text-gray-400'}`} />
+                  <div className={`p-2 rounded-lg ${alert.active ? 'bg-primary-50' : 'bg-gray-200'}`}>
+                    <Bell className={`h-5 w-5 ${alert.active ? 'text-primary-600' : 'text-gray-400'}`} />
                   </div>
 
                   <div className="flex-1">
@@ -413,7 +413,7 @@ const PriceAlerts: React.FC = () => {
 
                     <div className="flex items-center gap-3 mt-1">
                       {alert.triggerCount !== undefined && alert.triggerCount > 0 && (
-                        <span className="text-xs text-blue-600">
+                        <span className="text-xs text-primary-600">
                           Triggered {alert.triggerCount} time{alert.triggerCount > 1 ? 's' : ''}
                         </span>
                       )}

@@ -59,8 +59,8 @@ const AdminUserManager: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <DashboardCard>
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-              <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <div className="p-3 bg-primary-50 dark:bg-primary-900/30 rounded-lg">
+              <Users className="h-6 w-6 text-primary-600 dark:text-primary-400" />
             </div>
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Total Users</p>

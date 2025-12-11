@@ -60,7 +60,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
               className={cn(
                 'px-4 py-2 rounded-md text-sm font-medium transition-colors',
                 action.variant === 'primary'
-                  ? 'bg-blue-600 text-white hover:bg-blue-700'
+                  ? 'bg-primary-600 text-white hover:bg-primary-700'
                   : 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100 hover:bg-gray-200 dark:hover:bg-slate-700'
               )}
             >

@@ -408,7 +408,7 @@ const SupplierDirectory: React.FC = () => {
   return (
     <AppLayout>
       {/* Playful Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 sm:px-6 lg:px-8 py-6 shadow-lg">
+      <div className="bg-gradient-to-r from-primary-600 to-indigo-600 text-white px-4 sm:px-6 lg:px-8 py-6 shadow-lg">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
@@ -416,7 +416,7 @@ const SupplierDirectory: React.FC = () => {
                 <span>🏢</span>
                 {getIndustryTerm('suppliers')} Directory!
               </h1>
-              <p className="text-blue-100 flex items-center gap-2">
+              <p className="text-primary-100 flex items-center gap-2">
                 <span>🔍</span>
                 Find and connect with awesome {getIndustryTerm('suppliers').toLowerCase()}!
               </p>
@@ -591,7 +591,7 @@ const SupplierDirectory: React.FC = () => {
                   filteredSuppliers.map(supplier => (
                   <div 
                     key={supplier.id} 
-                    className="bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-800 dark:to-blue-900/20 rounded-xl shadow-lg border-2 border-blue-200 dark:border-blue-700 p-5 hover:shadow-xl hover:border-blue-400 dark:hover:border-blue-600 transition-all transform hover:scale-[1.02]"
+                    className="bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 rounded-xl shadow-lg border-2 border-primary-200 dark:border-primary-700 p-5 hover:shadow-xl hover:border-primary-400 dark:hover:border-primary-600 transition-all transform hover:scale-[1.02]"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
@@ -643,7 +643,7 @@ const SupplierDirectory: React.FC = () => {
                         {supplier.materials.map((material, index) => (
                           <span 
                             key={index} 
-                            className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 text-blue-800 dark:text-blue-200 border-2 border-blue-300 dark:border-blue-700"
+                            className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-primary-100 to-primary-200 dark:from-primary-900/40 dark:to-primary-800/40 text-primary-800 dark:text-primary-200 border-2 border-primary-300 dark:border-primary-700"
                           >
                             {material}
                           </span>
@@ -679,7 +679,7 @@ const SupplierDirectory: React.FC = () => {
                       
                       <div className="pt-2 space-y-2">
                         {(supplier as any).phone && (
-                          <div className="flex items-center gap-2 text-sm bg-blue-50 dark:bg-blue-900/30 px-3 py-2 rounded-lg border border-blue-200 dark:border-blue-700">
+                          <div className="flex items-center gap-2 text-sm bg-primary-50 dark:bg-primary-900/30 px-3 py-2 rounded-lg border border-primary-200 dark:border-primary-700">
                             <span>📞</span>
                             <span className="font-semibold text-gray-700 dark:text-gray-300">{(supplier as any).phone}</span>
                           </div>
@@ -695,7 +695,7 @@ const SupplierDirectory: React.FC = () => {
                       <div className="pt-2 grid grid-cols-2 gap-2">
                         <button 
                           onClick={() => navigate(`/app/suppliers/${supplier.id}`)}
-                          className="py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 text-sm font-bold shadow-md"
+                          className="py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg hover:from-primary-600 hover:to-primary-700 transition-all transform hover:scale-105 text-sm font-bold shadow-md"
                         >
                           <span>💬</span> Contact
                         </button>

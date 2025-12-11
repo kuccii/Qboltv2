@@ -69,8 +69,8 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
       className={({ isActive }) => `
         flex items-center gap-3 py-3.5 px-4 rounded-xl text-sm font-bold transition-all transform hover:scale-105
         ${isActive 
-          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105' 
-          : 'text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:bg-blue-900/20'
+          ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg scale-105' 
+          : 'text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-100 dark:hover:bg-primary-900/20'
         }
       `}
       onClick={() => {
@@ -100,7 +100,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
     <div className="space-y-1">
       <button
         onClick={() => toggleSection(section)}
-        className="flex items-center justify-between w-full py-3.5 px-4 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:bg-blue-900/20 rounded-xl transition-all transform hover:scale-105"
+        className="flex items-center justify-between w-full py-3.5 px-4 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-100 dark:hover:bg-primary-900/20 rounded-xl transition-all transform hover:scale-105"
       >
         <div className="flex items-center gap-3">
           {emoji && <span className="text-xl">{emoji}</span>}
@@ -128,11 +128,11 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
       />
       
       {/* Navigation Panel */}
-      <div className="fixed inset-y-0 right-0 w-80 bg-white dark:bg-gray-800 shadow-2xl transform transition-transform border-l-2 border-blue-200 dark:border-blue-700">
+      <div className="fixed inset-y-0 right-0 w-80 bg-white dark:bg-gray-800 shadow-2xl transform transition-transform border-l-2 border-primary-200 dark:border-primary-700">
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b-2 border-blue-200 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
-            <h2 className="text-xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
+          <div className="flex items-center justify-between p-4 border-b-2 border-primary-200 dark:border-primary-700 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20">
+            <h2 className="text-xl font-extrabold bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
               <span>🎯</span>
               Menu
             </h2>
@@ -147,7 +147,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
           {/* User Info */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-purple-600 flex items-center justify-center text-white font-semibold">
                 {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
               </div>
               <div className="flex-1">

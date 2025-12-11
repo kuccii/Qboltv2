@@ -60,8 +60,8 @@ const AdminDocumentManager: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <DashboardCard>
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-              <FileText className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <div className="p-3 bg-primary-50 dark:bg-primary-900/30 rounded-lg">
+              <FileText className="h-6 w-6 text-primary-600 dark:text-primary-400" />
             </div>
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Total Documents</p>
@@ -115,7 +115,7 @@ const AdminDocumentManager: React.FC = () => {
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">
                         {doc.file_url && (
-                          <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-900 dark:text-blue-400">
+                          <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-900 dark:text-primary-400">
                             <Download className="h-4 w-4" />
                           </a>
                         )}

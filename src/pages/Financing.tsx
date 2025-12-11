@@ -492,7 +492,7 @@ const Financing: React.FC = () => {
                             setSelectedApplication(app);
                             setShowApplicationModal(true);
                           }}
-                          className="border-2 rounded-xl p-4 hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900/20 dark:hover:to-purple-900/20 transition-all cursor-pointer transform hover:scale-105 shadow-md hover:shadow-lg"
+                          className="border-2 rounded-xl p-4 hover:bg-gradient-to-br hover:from-primary-50 hover:to-purple-50 dark:hover:from-primary-900/20 dark:hover:to-purple-900/20 transition-all cursor-pointer transform hover:scale-105 shadow-md hover:shadow-lg"
                         >
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center gap-2">
@@ -539,7 +539,7 @@ const Financing: React.FC = () => {
           <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
             {/* Tab Navigation - Matching Country Profile Style */}
             <div className="mb-6">
-              <div className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-blue-200 dark:border-gray-700 shadow-lg overflow-x-auto scrollbar-hide">
+              <div className="flex items-center gap-2 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 border-2 border-primary-200 dark:border-gray-700 shadow-lg overflow-x-auto scrollbar-hide">
                 <button
                   onClick={() => setSelectedTab('offers')}
                   className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
@@ -555,8 +555,8 @@ const Financing: React.FC = () => {
                   onClick={() => setSelectedTab('applications')}
                   className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 relative ${
                     selectedTab === 'applications'
-                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-300'
+                      ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg scale-105'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-gray-700 hover:text-primary-700 dark:hover:text-primary-300'
                   }`}
                 >
                   <span>📝</span>
@@ -584,7 +584,7 @@ const Financing: React.FC = () => {
             >
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-6">
-                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-6 border-4 border-blue-300 dark:border-blue-700 shadow-lg">
+                  <div className="bg-gradient-to-br from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20 rounded-2xl p-6 border-4 border-primary-300 dark:border-primary-700 shadow-lg">
                     <label className="block text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                       <span className="text-2xl">💰</span>
                       <span>How Much Money Do You Need?</span>
@@ -602,13 +602,13 @@ const Financing: React.FC = () => {
                       step="1000"
                       value={financeAmount}
                       onChange={(e) => setFinanceAmount(parseInt(e.target.value))}
-                      className="w-full h-4 bg-gradient-to-r from-blue-200 to-purple-200 dark:from-blue-800 dark:to-purple-800 rounded-full appearance-none cursor-pointer accent-primary-600 shadow-inner"
+                      className="w-full h-4 bg-gradient-to-r from-primary-200 to-purple-200 dark:from-primary-800 dark:to-purple-800 rounded-full appearance-none cursor-pointer accent-primary-600 shadow-inner"
                       style={{
                         background: `linear-gradient(to right, rgb(59, 130, 246) 0%, rgb(59, 130, 246) ${((financeAmount - 5000) / (50000 - 5000)) * 100}%, rgb(203, 213, 225) ${((financeAmount - 5000) / (50000 - 5000)) * 100}%, rgb(203, 213, 225) 100%)`
                       }}
                     />
                     <div className="flex justify-between text-sm font-bold text-gray-700 dark:text-gray-300 mt-3">
-                      <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-blue-300 dark:border-blue-700">💵 $5K</span>
+                      <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-primary-300 dark:border-primary-700">💵 $5K</span>
                       <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-purple-300 dark:border-purple-700">💎 $50K</span>
                     </div>
                   </div>
@@ -692,14 +692,14 @@ const Financing: React.FC = () => {
             </SectionLayout>
 
             {/* Filters and Sorting - Fun and Interactive */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl border-4 border-blue-300 dark:border-blue-700 shadow-lg">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl border-4 border-primary-300 dark:border-primary-700 shadow-lg">
               <div className="flex items-center gap-3 flex-wrap">
                 <span className="text-2xl">🔍</span>
                 <span className="text-base font-bold text-gray-900 dark:text-white">Find Offers:</span>
                 <select
                   value={filterBy}
                   onChange={(e) => setFilterBy(e.target.value as FilterOption)}
-                  className="text-base font-bold border-4 border-blue-400 dark:border-blue-600 rounded-xl px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-lg hover:scale-105 transform transition-all cursor-pointer"
+                  className="text-base font-bold border-4 border-primary-400 dark:border-primary-600 rounded-xl px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-lg hover:scale-105 transform transition-all cursor-pointer"
                 >
                   <option value="all">🌟 All Offers</option>
                   <option value="eligible">✅ I Can Get These!</option>
@@ -904,7 +904,7 @@ const Financing: React.FC = () => {
                                 {offer.features.slice(0, 3).map((feature: string, idx: number) => (
                                   <div 
                                     key={idx} 
-                                    className="px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-xl border-2 border-blue-300 dark:border-blue-700 text-sm font-bold text-gray-800 dark:text-gray-200 shadow-md"
+                                    className="px-4 py-2 bg-gradient-to-r from-primary-100 to-purple-100 dark:from-primary-900/30 dark:to-purple-900/30 rounded-xl border-2 border-primary-300 dark:border-primary-700 text-sm font-bold text-gray-800 dark:text-gray-200 shadow-md"
                                   >
                                     ✨ {feature}
                                   </div>
@@ -917,7 +917,7 @@ const Financing: React.FC = () => {
                           <div className="lg:w-96">
                             <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl p-5 border-4 border-indigo-300 dark:border-indigo-700 shadow-xl space-y-4">
                               <div className="grid grid-cols-2 gap-4">
-                                <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-blue-300 dark:border-blue-700 text-center shadow-lg">
+                                <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-primary-300 dark:border-primary-700 text-center shadow-lg">
                                   <div className="text-2xl mb-2">💰</div>
                                   <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Amount</div>
                                   <div className="text-lg font-extrabold text-gray-900 dark:text-white">
@@ -1105,7 +1105,7 @@ const Financing: React.FC = () => {
                 </div>
               </div>
               
-              <div className="mt-6 p-6 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 dark:from-blue-900/30 dark:via-purple-900/30 dark:to-pink-900/30 border-4 border-blue-400 dark:border-blue-700 rounded-2xl shadow-xl">
+              <div className="mt-6 p-6 bg-gradient-to-r from-primary-100 via-purple-100 to-pink-100 dark:from-primary-900/30 dark:via-purple-900/30 dark:to-pink-900/30 border-4 border-primary-400 dark:border-primary-700 rounded-2xl shadow-xl">
                 <div className="flex items-start gap-4">
                   <span className="text-5xl">🧠</span>
                   <div>
@@ -1167,12 +1167,12 @@ const Financing: React.FC = () => {
                                          app.status === 'under_review' ? '⏳' : '📋';
                       const statusColor = app.status === 'approved' ? 'from-green-500 to-emerald-600' : 
                                          app.status === 'rejected' ? 'from-red-500 to-pink-600' : 
-                                         app.status === 'under_review' ? 'from-yellow-500 to-orange-600' : 'from-blue-500 to-indigo-600';
+                                         app.status === 'under_review' ? 'from-yellow-500 to-orange-600' : 'from-primary-500 to-indigo-600';
                       
                       return (
                         <div 
                           key={app.id} 
-                          className="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 dark:from-gray-800 dark:via-blue-900/20 dark:to-purple-900/20 border-4 border-gray-300 dark:border-gray-600 rounded-2xl p-5 sm:p-6 hover:border-primary-400 dark:hover:border-primary-600 transition-all cursor-pointer transform hover:scale-[1.02] shadow-lg"
+                          className="bg-gradient-to-br from-white via-primary-50/30 to-purple-50/30 dark:from-gray-800 dark:via-primary-900/20 dark:to-purple-900/20 border-4 border-gray-300 dark:border-gray-600 rounded-2xl p-5 sm:p-6 hover:border-primary-400 dark:hover:border-primary-600 transition-all cursor-pointer transform hover:scale-[1.02] shadow-lg"
                           onClick={() => {
                             setSelectedApplication(app);
                             setShowApplicationModal(true);
@@ -1211,7 +1211,7 @@ const Financing: React.FC = () => {
                           </div>
                           
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4">
-                            <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-blue-300 dark:border-blue-700 text-center shadow-md">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 border-2 border-primary-300 dark:border-primary-700 text-center shadow-md">
                               <div className="text-2xl mb-1">💰</div>
                               <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Money Asked</div>
                               <div className="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white">
@@ -1256,7 +1256,7 @@ const Financing: React.FC = () => {
                           )}
 
                           {app.approval_notes && (
-                            <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border-2 border-blue-300 dark:border-blue-700">
+                            <div className="mt-4 p-4 bg-gradient-to-r from-primary-50 to-indigo-50 dark:from-primary-900/20 dark:to-indigo-900/20 rounded-xl border-2 border-primary-300 dark:border-primary-700">
                               <div className="flex items-start gap-2">
                                 <span className="text-xl">📝</span>
                                 <div>
@@ -1383,12 +1383,12 @@ const Financing: React.FC = () => {
               )}
 
               {selectedApplication.partner_application_id && (
-                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <div className="p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg border border-primary-200 dark:border-primary-800">
                   <div className="flex items-center gap-2 mb-2">
-                    <Shield className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                    <span className="text-sm font-medium text-blue-900 dark:text-blue-100">Partner Application</span>
+                    <Shield className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                    <span className="text-sm font-medium text-primary-900 dark:text-primary-100">Partner Application</span>
                   </div>
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                  <p className="text-sm text-primary-800 dark:text-primary-200">
                     Application ID: {selectedApplication.partner_application_id}
                   </p>
                   {selectedApplication.metadata?.redirectUrl && (
@@ -1396,7 +1396,7 @@ const Financing: React.FC = () => {
                       href={selectedApplication.metadata.redirectUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-2 inline-block text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                      className="mt-2 inline-block text-sm text-primary-600 dark:text-primary-400 hover:underline"
                     >
                       View on Partner Portal →
                     </a>

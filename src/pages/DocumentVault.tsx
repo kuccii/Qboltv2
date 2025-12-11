@@ -631,7 +631,7 @@ const DocumentVault: React.FC = () => {
       case 'medium':
         return 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800';
       case 'low':
-        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800';
+        return 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-800';
       default:
         return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
     }
@@ -642,7 +642,7 @@ const DocumentVault: React.FC = () => {
       case 'approved':
         return 'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-300';
       case 'applied':
-        return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300';
+        return 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300';
       case 'in_progress':
         return 'bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-300';
       case 'rejected':
@@ -687,14 +687,14 @@ const DocumentVault: React.FC = () => {
     <AppLayout>
       <PageLayout>
         {/* Playful Header */}
-        <div className="mb-6 p-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl shadow-xl border-4 border-blue-300 dark:border-blue-700">
+        <div className="mb-6 p-6 bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 rounded-2xl shadow-xl border-4 border-primary-300 dark:border-primary-700">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 flex items-center gap-3">
                 <span className="text-4xl sm:text-5xl">📄</span>
                 <span>Your Paperwork Helper! 📋</span>
               </h1>
-              <p className="text-blue-100 text-sm sm:text-base font-medium">
+              <p className="text-primary-100 text-sm sm:text-base font-medium">
                 All the papers you need for trading, made super easy! 🎯
               </p>
             </div>
@@ -726,7 +726,7 @@ const DocumentVault: React.FC = () => {
       
         <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           {/* Playful Tab Navigation */}
-          <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-blue-200 dark:border-blue-700 p-2">
+          <div className="bg-gradient-to-r from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-4 border-primary-200 dark:border-primary-700 p-2">
             <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
               {[
                 { id: 'overview', label: 'Overview', icon: '👀', emoji: '👀' },
@@ -740,13 +740,13 @@ const DocumentVault: React.FC = () => {
                   className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-bold rounded-xl transition-all whitespace-nowrap flex-shrink-0 transform hover:scale-105 ${
                     activeTab === tab.id
                       ? tab.id === 'overview'
-                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg border-2 border-blue-300'
+                        ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg border-2 border-primary-300'
                         : tab.id === 'documents'
                           ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg border-2 border-purple-300'
                           : tab.id === 'checklist'
                             ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg border-2 border-green-300'
                             : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg border-2 border-pink-300'
-                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -763,7 +763,7 @@ const DocumentVault: React.FC = () => {
             {activeTab === 'overview' && (
                 <div className="space-y-6">
                   {/* Welcome Message */}
-                  <div className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 dark:from-blue-900/30 dark:via-purple-900/30 dark:to-pink-900/30 rounded-2xl p-6 border-4 border-blue-300 dark:border-blue-700">
+                  <div className="bg-gradient-to-r from-primary-100 via-purple-100 to-pink-100 dark:from-primary-900/30 dark:via-purple-900/30 dark:to-pink-900/30 rounded-2xl p-6 border-4 border-primary-300 dark:border-primary-700">
                     <div className="flex items-start gap-4">
                       <div className="text-5xl">📚</div>
                       <div className="flex-1">
@@ -776,7 +776,7 @@ const DocumentVault: React.FC = () => {
                         <div className="flex flex-wrap gap-2">
                           <button 
                             onClick={() => setActiveTab('documents')}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-xl font-bold hover:bg-blue-600 transform hover:scale-105 transition-all shadow-lg"
+                            className="px-4 py-2 bg-primary-500 text-white rounded-xl font-bold hover:bg-primary-600 transform hover:scale-105 transition-all shadow-lg"
                           >
                             📄 See All Documents →
                           </button>
@@ -805,7 +805,7 @@ const DocumentVault: React.FC = () => {
                             setActiveTab('documents');
                             setSelectedCategory(cat.name === 'all' ? 'all' : cat.name);
                           }}
-                          className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-xl p-5 border-4 border-blue-200 dark:border-blue-700 hover:shadow-xl transition-all cursor-pointer transform hover:scale-105"
+                          className="bg-gradient-to-br from-primary-50 via-purple-50 to-pink-50 dark:from-primary-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-xl p-5 border-4 border-primary-200 dark:border-primary-700 hover:shadow-xl transition-all cursor-pointer transform hover:scale-105"
                         >
                           <div className="flex items-center gap-3 mb-2">
                             <span className="text-3xl">{getCategoryIcon(cat.name)}</span>
@@ -827,11 +827,11 @@ const DocumentVault: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {[
                         { emoji: '⏰', icon: <Clock className="h-5 w-5 text-warning-600" />, title: 'Start Early! 🚀', desc: 'Get your papers ready 2-4 weeks before you ship stuff! This way you won\'t be in a rush!', color: 'from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30' },
-                        { emoji: '📋', icon: <FileText className="h-5 w-5 text-info-600" />, title: 'Keep Copies! 📄', desc: 'Save both digital (on your computer) and paper copies! You never know when you\'ll need them!', color: 'from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30' },
+                        { emoji: '📋', icon: <FileText className="h-5 w-5 text-info-600" />, title: 'Keep Copies! 📄', desc: 'Save both digital (on your computer) and paper copies! You never know when you\'ll need them!', color: 'from-primary-100 to-cyan-100 dark:from-primary-900/30 dark:to-cyan-900/30' },
                         { emoji: '✅', icon: <CheckCircle2 className="h-5 w-5 text-success-600" />, title: 'Double Check! 🔍', desc: 'Always ask the people in charge before you ship! Rules can change, so make sure you have everything!', color: 'from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30' },
                         { emoji: '🌐', icon: <Globe className="h-5 w-5 text-primary-600" />, title: 'Use the Internet! 💻', desc: 'Apply online when you can! It\'s faster and easier than going to offices in person!', color: 'from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30' },
                       ].map((tip, idx) => (
-                        <div key={idx} className={`flex items-start gap-4 p-5 bg-gradient-to-r ${tip.color} rounded-xl border-4 border-blue-200 dark:border-blue-700 hover:shadow-lg transition-all transform hover:scale-105`}>
+                        <div key={idx} className={`flex items-start gap-4 p-5 bg-gradient-to-r ${tip.color} rounded-xl border-4 border-primary-200 dark:border-primary-700 hover:shadow-lg transition-all transform hover:scale-105`}>
                           <div className="text-4xl">{tip.emoji}</div>
                           <div className="flex-1">
                             <div className="font-extrabold text-lg text-gray-900 dark:text-white mb-1">{tip.title}</div>
@@ -1034,7 +1034,7 @@ const DocumentVault: React.FC = () => {
                                 </div>
 
                                 {/* Quick Actions - Make it More Useful! */}
-                                <div className="border-t-4 border-blue-300 dark:border-blue-700 pt-4 mt-4">
+                                <div className="border-t-4 border-primary-300 dark:border-primary-700 pt-4 mt-4">
                                   <h4 className="font-extrabold text-base text-gray-900 dark:text-white mb-3 flex items-center gap-2">
                                     <span>⚡</span>
                                     <span>Quick Actions - Get Things Done!</span>
@@ -1046,7 +1046,7 @@ const DocumentVault: React.FC = () => {
                                         navigator.clipboard.writeText(requirements);
                                         addToast({ type: 'success', title: 'Copied! 📋', message: 'Document requirements copied to clipboard!' });
                                       }}
-                                      className="px-3 py-2 bg-blue-500 text-white rounded-xl text-xs font-bold hover:bg-blue-600 transform hover:scale-105 transition-all shadow-md"
+                                      className="px-3 py-2 bg-primary-500 text-white rounded-xl text-xs font-bold hover:bg-primary-600 transform hover:scale-105 transition-all shadow-md"
                                     >
                                       📋 Copy Info
                                     </button>
@@ -1218,7 +1218,7 @@ const DocumentVault: React.FC = () => {
                         >
                           <div className="flex items-start justify-between">
                             <div className="flex items-start gap-3 flex-1">
-                              <div className={`mt-1 ${docStatus?.status === 'approved' ? 'text-success-600' : docStatus?.status === 'applied' ? 'text-blue-600' : 'text-gray-400'}`}>
+                              <div className={`mt-1 ${docStatus?.status === 'approved' ? 'text-success-600' : docStatus?.status === 'applied' ? 'text-primary-600' : 'text-gray-400'}`}>
                                 {docStatus?.status === 'approved' ? (
                                   <CheckCircle className="h-5 w-5" />
                                 ) : docStatus?.status === 'applied' ? (

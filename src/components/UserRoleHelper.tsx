@@ -83,7 +83,7 @@ SELECT id, email, name, role FROM public.user_profiles WHERE email = '${user.ema
               </div>
               <button
                 onClick={copyToClipboard}
-                className="mt-2 flex items-center gap-2 px-3 py-1.5 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                className="mt-2 flex items-center gap-2 px-3 py-1.5 text-xs bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors"
               >
                 <Copy className="h-3 w-3" />
                 {copied ? 'Copied!' : 'Copy SQL'}
