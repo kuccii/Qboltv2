@@ -231,7 +231,7 @@ const Home: React.FC = () => {
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
               Your Trade Adventure
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-200 animate-pulse">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-accent-200 via-accent-100 to-accent-200 animate-pulse">
                 Starts Here! 🎯
               </span>
             </h1>
@@ -242,7 +242,7 @@ const Home: React.FC = () => {
             
             {/* Live Price Ticker - Kid Friendly */}
             <div className="mb-8">
-              <div className="inline-flex items-center bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-2xl shadow-2xl px-6 py-4 border-4 border-yellow-300 dark:border-yellow-600 transform hover:scale-105 transition-transform">
+              <div className="inline-flex items-center bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-2xl shadow-2xl px-6 py-4 border-4 border-accent-300 dark:border-accent-600 transform hover:scale-105 transition-transform">
                 <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
                   <div className="flex items-center space-x-2">
                     <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
@@ -478,7 +478,7 @@ const Home: React.FC = () => {
             {isLoggedIn ? (
               <Link
                 to="/app"
-                className="inline-flex items-center px-8 py-4 text-lg font-bold text-primary-800 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
+                className="inline-flex items-center px-8 py-4 text-lg font-bold text-primary-800 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-accent-300 transform hover:scale-110"
               >
                 🎯 Go to Dashboard
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -487,7 +487,7 @@ const Home: React.FC = () => {
               <>
                 <Link
                   to="/register"
-                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-primary-800 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-yellow-300 transform hover:scale-110"
+                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-primary-800 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-accent-300 transform hover:scale-110"
                 >
                   🚀 Start FREE Now!
                   <ArrowRight className="ml-2 h-5 w-5" />
