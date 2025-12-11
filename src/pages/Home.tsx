@@ -170,7 +170,7 @@ const Home: React.FC = () => {
           <div className="h-16 flex items-center justify-between">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 gradient-primary-construction rounded-lg flex items-center justify-center">
                 <Building2 className="text-white" size={20} />
               </div>
               <span className="text-xl font-bold text-gray-900 dark:text-white">
@@ -180,19 +180,19 @@ const Home: React.FC = () => {
 
             {/* Navigation */}
             <nav className="hidden md:flex items-center gap-6">
-              <Link to="/#features" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link to="/#features" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-400 transition-colors">
                 Features
               </Link>
-              <Link to="/#testimonials" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link to="/#testimonials" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-400 transition-colors">
                 Testimonials
               </Link>
-              <Link to="/#coverage" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link to="/#coverage" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-400 transition-colors">
                 Coverage
               </Link>
               {isLoggedIn ? (
                 <Link
                   to="/app"
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="btn-primary"
                 >
                   Dashboard
                 </Link>
@@ -200,13 +200,13 @@ const Home: React.FC = () => {
                 <>
                   <Link
                     to="/login"
-                    className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-400 transition-colors"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                    className="btn-primary"
                   >
                     Get Started
                   </Link>
@@ -218,7 +218,7 @@ const Home: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 dark:from-blue-700 dark:via-purple-700 dark:to-pink-700">
+      <div className="relative overflow-hidden gradient-primary-construction dark:from-primary-900 dark:via-primary-800 dark:to-primary-700">
         {/* Animated background pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] bg-[size:24px_24px]"></div>
         {/* Animated gradient overlay */}
@@ -250,7 +250,7 @@ const Home: React.FC = () => {
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-lg font-extrabold text-gray-900 dark:text-white">{currentPrice.material}</span>
-                    <span className="text-xl font-bold text-blue-600 dark:text-blue-400">{currentPrice.price}</span>
+                    <span className="text-xl font-bold text-primary-800 dark:text-primary-400">{currentPrice.price}</span>
                     <div className={`flex items-center space-x-1 px-2 py-1 rounded-lg ${
                       currentPrice.trend === 'up' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                     }`}>
@@ -287,7 +287,7 @@ const Home: React.FC = () => {
                   </Link>
                   <button
                     onClick={() => setShowDemo(true)}
-                    className="inline-flex items-center px-8 py-4 text-lg font-bold text-blue-600 bg-white border-4 border-blue-400 rounded-xl hover:bg-blue-50 transition-all shadow-xl transform hover:scale-110"
+                    className="inline-flex items-center px-8 py-4 text-lg font-bold text-primary-800 bg-white border-4 border-primary-400 rounded-xl hover:bg-primary-50 transition-all shadow-xl transform hover:scale-110"
                   >
                     <Play className="mr-2 h-5 w-5" />
                     🎬 Watch Demo
@@ -323,7 +323,7 @@ const Home: React.FC = () => {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-lg border-4 border-blue-200 dark:border-blue-700 transform hover:scale-110 transition-all">
+              <div key={index} className="text-center bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-lg border-4 border-primary-200 dark:border-primary-700 transform hover:scale-110 transition-all">
                 <div className="flex items-center justify-center mb-3 text-3xl">
                   {stat.icon}
                 </div>
@@ -356,7 +356,7 @@ const Home: React.FC = () => {
               <Link
                 key={index}
                 to={feature.link}
-                className="group p-6 bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-blue-900/20 rounded-2xl shadow-lg border-4 border-blue-200 dark:border-blue-700 hover:shadow-2xl hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 transform hover:scale-105"
+                className="group p-6 bg-gradient-to-br from-white to-primary-50 dark:from-gray-800 dark:to-primary-900/20 rounded-2xl shadow-lg border-4 border-primary-200 dark:border-primary-700 hover:shadow-2xl hover:border-primary-400 dark:hover:border-primary-500 transition-all duration-300 transform hover:scale-105"
               >
                 <div className="flex items-start mb-4">
                   <div className="text-4xl mr-3 transform group-hover:scale-125 transition-transform">
@@ -373,10 +373,10 @@ const Home: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-lg">
+                  <span className="text-sm font-bold text-primary-800 dark:text-primary-400 bg-primary-100 dark:bg-primary-900/30 px-3 py-1 rounded-lg">
                     {feature.stats}
                   </span>
-                  <div className="inline-flex items-center text-blue-600 dark:text-blue-400 font-bold group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
+                  <div className="inline-flex items-center text-primary-800 dark:text-primary-400 font-bold group-hover:text-primary-700 dark:group-hover:text-primary-300 transition-colors">
                     Try It! 
                     <ChevronRight className="ml-1 h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -494,7 +494,7 @@ const Home: React.FC = () => {
                 </Link>
                 <Link
                   to="/login"
-                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-white border-4 border-white rounded-xl hover:bg-white hover:text-blue-600 transition-all shadow-xl transform hover:scale-110"
+                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-white border-4 border-white rounded-xl hover:bg-white hover:text-primary-800 transition-all shadow-xl transform hover:scale-110"
                 >
                   📞 Need Help?
                   <Phone className="ml-2 h-5 w-5" />
