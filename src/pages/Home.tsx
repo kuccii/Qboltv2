@@ -165,12 +165,12 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+      <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-16 flex items-center justify-between">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <div className="w-8 h-8 gradient-primary-construction rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary-800 rounded-lg flex items-center justify-center">
                 <Building2 className="text-white" size={20} />
               </div>
               <span className="text-xl font-bold text-gray-900 dark:text-white">
@@ -218,7 +218,7 @@ const Home: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden gradient-primary-construction">
+      <div className="relative overflow-hidden bg-primary-800 dark:bg-primary-900">
         {/* Animated background pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] bg-[size:24px_24px]"></div>
         {/* Animated gradient overlay */}
@@ -231,7 +231,7 @@ const Home: React.FC = () => {
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
               Your Trade Adventure
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-accent-200 via-accent-100 to-accent-200 animate-pulse">
+              <span className="block text-white">
                 Starts Here! 🎯
               </span>
             </h1>
@@ -242,7 +242,7 @@ const Home: React.FC = () => {
             
             {/* Live Price Ticker - Kid Friendly */}
             <div className="mb-8">
-              <div className="inline-flex items-center bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-2xl shadow-2xl px-6 py-4 border-4 border-accent-300 dark:border-accent-600 transform hover:scale-105 transition-transform">
+              <div className="inline-flex items-center bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-xl shadow-lg px-6 py-4 transform hover:scale-105 transition-transform">
                 <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
                   <div className="flex items-center space-x-2">
                     <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
@@ -271,7 +271,7 @@ const Home: React.FC = () => {
               {isLoggedIn ? (
                 <Link
                   to="/app"
-                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-white gradient-accent-construction rounded-xl hover:opacity-90 transition-all shadow-2xl border-4 border-accent-300 transform hover:scale-110"
+                  className="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-primary-800 hover:bg-primary-700 rounded-lg transition-all shadow-md transform hover:scale-105"
                 >
                   🎯 Go to Dashboard
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -280,14 +280,14 @@ const Home: React.FC = () => {
                 <>
                   <Link
                     to="/register"
-                    className="inline-flex items-center px-8 py-4 text-lg font-bold text-white gradient-accent-construction rounded-xl hover:opacity-90 transition-all shadow-2xl border-4 border-accent-300 transform hover:scale-110"
+                    className="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-primary-800 hover:bg-primary-700 rounded-lg transition-all shadow-md transform hover:scale-105"
                   >
                     🚀 Start Your Adventure FREE!
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                   <button
                     onClick={() => setShowDemo(true)}
-                    className="inline-flex items-center px-8 py-4 text-lg font-bold text-primary-800 bg-white border-4 border-primary-400 rounded-xl hover:bg-primary-50 transition-all shadow-xl transform hover:scale-110"
+                    className="inline-flex items-center px-8 py-4 text-lg font-semibold text-primary-800 bg-white rounded-lg hover:bg-gray-50 transition-all shadow-md transform hover:scale-105"
                   >
                     <Play className="mr-2 h-5 w-5" />
                     🎬 Watch Demo
@@ -304,7 +304,7 @@ const Home: React.FC = () => {
               </p>
               <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-8">
                 {logos.map((logo, index) => (
-                  <div key={index} className="text-sm sm:text-base font-bold text-white/80 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl border-2 border-white/30 hover:bg-white/30 transition-all transform hover:scale-105">
+                  <div key={index} className="text-sm sm:text-base font-medium text-white/90 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg hover:bg-white/20 transition-all">
                     {logo}
                   </div>
                 ))}
@@ -315,7 +315,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Stats Section - Kid Friendly */}
-      <div className="bg-gradient-to-br from-primary-50 via-primary-100 to-accent-50 dark:from-primary-900/20 dark:via-primary-800/20 dark:to-accent-900/20 py-16 border-t-4 border-b-4 border-accent-300 dark:border-accent-600">
+      <div className="bg-gray-50 dark:bg-gray-800/50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-gray-900 dark:text-white mb-8 flex items-center justify-center gap-2">
             <span>📊</span>
@@ -323,7 +323,7 @@ const Home: React.FC = () => {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-lg border-4 border-primary-200 dark:border-primary-700 transform hover:scale-110 transition-all">
+              <div key={index} className="text-center bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 shadow-md hover:shadow-lg transition-all">
                 <div className="flex items-center justify-center mb-3 text-3xl">
                   {stat.icon}
                 </div>
@@ -356,7 +356,7 @@ const Home: React.FC = () => {
               <Link
                 key={index}
                 to={feature.link}
-                className="group p-6 bg-gradient-to-br from-white to-primary-50 dark:from-gray-800 dark:to-primary-900/20 rounded-2xl shadow-lg border-4 border-primary-200 dark:border-primary-700 hover:shadow-2xl hover:border-primary-400 dark:hover:border-primary-500 transition-all duration-300 transform hover:scale-105"
+                className="group p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
               >
                 <div className="flex items-start mb-4">
                   <div className="text-4xl mr-3 transform group-hover:scale-125 transition-transform">
@@ -388,7 +388,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Coverage Map Section - Kid Friendly */}
-      <div id="coverage" className="bg-gradient-to-br from-success-50 via-primary-50 to-primary-100 dark:from-success-900/20 dark:via-primary-900/20 dark:to-primary-800/20 py-16 sm:py-20 border-t-4 border-b-4 border-success-300 dark:border-success-600">
+      <div id="coverage" className="bg-gray-50 dark:bg-gray-800/50 py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 flex items-center justify-center gap-3">
@@ -402,7 +402,7 @@ const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {coverageMap.map((country, index) => (
-              <div key={index} className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border-4 border-green-200 dark:border-green-700 hover:border-green-400 dark:hover:border-green-500 transform hover:scale-105 transition-all">
+              <div key={index} className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
                 <div className="flex items-center mb-4">
                   <div className="text-3xl mr-2">📍</div>
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white">{country.country}</h3>
@@ -439,9 +439,9 @@ const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gradient-to-br from-accent-50 via-accent-100 to-primary-50 dark:from-accent-900/20 dark:via-accent-800/20 dark:to-primary-900/20 rounded-2xl p-6 shadow-xl border-4 border-accent-200 dark:border-accent-700 transform hover:scale-105 transition-all">
+              <div key={index} className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
                 <div className="flex items-center mb-4">
-                  <div className="w-14 h-14 rounded-full gradient-primary-construction flex items-center justify-center text-2xl font-bold text-white mr-4 border-4 border-white shadow-lg">
+                  <div className="w-14 h-14 rounded-full bg-primary-800 flex items-center justify-center text-2xl font-bold text-white mr-4 shadow-md">
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>
@@ -480,7 +480,7 @@ const Home: React.FC = () => {
             {isLoggedIn ? (
               <Link
                 to="/app"
-                className="inline-flex items-center px-8 py-4 text-lg font-bold text-primary-800 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-accent-300 transform hover:scale-110"
+                className="inline-flex items-center px-8 py-4 text-lg font-semibold text-primary-800 bg-white rounded-lg hover:bg-gray-50 transition-all shadow-md transform hover:scale-105"
               >
                 🎯 Go to Dashboard
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -489,14 +489,14 @@ const Home: React.FC = () => {
               <>
                 <Link
                   to="/register"
-                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-primary-800 bg-white rounded-xl hover:bg-gray-50 transition-all shadow-2xl border-4 border-accent-300 transform hover:scale-110"
+                  className="inline-flex items-center px-8 py-4 text-lg font-semibold text-primary-800 bg-white rounded-lg hover:bg-gray-50 transition-all shadow-md transform hover:scale-105"
                 >
                   🚀 Start FREE Now!
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
                 <Link
                   to="/login"
-                  className="inline-flex items-center px-8 py-4 text-lg font-bold text-white border-4 border-white rounded-xl hover:bg-white hover:text-primary-800 transition-all shadow-xl transform hover:scale-110"
+                  className="inline-flex items-center px-8 py-4 text-lg font-semibold text-white rounded-lg hover:bg-white/10 transition-all shadow-md transform hover:scale-105"
                 >
                   📞 Need Help?
                   <Phone className="ml-2 h-5 w-5" />
@@ -514,7 +514,7 @@ const Home: React.FC = () => {
             {/* Company Info */}
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 gradient-primary-construction rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-primary-800 rounded-lg flex items-center justify-center">
                   <Building2 className="text-white" size={20} />
                 </div>
                 <span className="text-xl font-bold text-white">
@@ -593,7 +593,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* Bottom Bar */}
-          <div className="mt-8 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+          <div className="mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-gray-400">
               © {new Date().getFullYear()} Qivook. All rights reserved.
             </p>
@@ -608,7 +608,7 @@ const Home: React.FC = () => {
       {showDemo && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between p-6">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Qivook Platform Demo</h3>
               <button
                 onClick={() => setShowDemo(false)}
