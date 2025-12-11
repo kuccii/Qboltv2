@@ -842,7 +842,7 @@ const Register: React.FC = () => {
           <div className="space-y-4">
             {[
               { icon: CheckCircle, text: 'Real-time price tracking', color: 'bg-green-400' },
-              { icon: Shield, text: 'Verified supplier network', color: 'bg-primary-' },
+              { icon: Shield, text: 'Verified supplier network', color: 'bg-primary-400' },
               { icon: TrendingUp, text: 'Trade financing solutions', color: 'bg-purple-400' },
               { icon: Globe, text: 'Multi-country coverage', color: 'bg-indigo-400' }
             ].map((feature, index) => (

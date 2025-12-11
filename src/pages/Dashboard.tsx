@@ -378,7 +378,7 @@ const Dashboard: React.FC = () => {
               </button>
               <button
                 onClick={() => setShowOnboarding(true)}
-                className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-md bg-primary-800 text-white hover:bg-primary-"
+                className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-md bg-primary-800 text-white hover:bg-primary-700"
               >
                 <Plus className="h-4 w-4" /> Tour
               </button>
