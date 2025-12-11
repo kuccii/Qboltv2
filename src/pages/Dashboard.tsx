@@ -310,7 +310,7 @@ const Dashboard: React.FC = () => {
     <AppLayout>
       {/* Playful header strip */}
       <div className="px-3 sm:px-4 md:px-6 pt-4 sm:pt-5">
-        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 dark:from-blue-600 dark:via-purple-600 dark:to-pink-600 rounded-2xl p-4 sm:p-5 md:p-6 shadow-2xl border-2 border-white/20 dark:border-white/10">
+        <div className="bg-gradient-to-r from-primary- via-purple-500 to-pink-500 dark:from-primary- dark:via-purple-600 dark:to-pink-600 rounded-2xl p-4 sm:p-5 md:p-6 shadow-2xl border-2 border-white/20 dark:border-white/10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
@@ -378,7 +378,7 @@ const Dashboard: React.FC = () => {
               </button>
               <button
                 onClick={() => setShowOnboarding(true)}
-                className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+                className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-md bg-primary- text-white hover:bg-primary-"
               >
                 <Plus className="h-4 w-4" /> Tour
               </button>
@@ -398,7 +398,7 @@ const Dashboard: React.FC = () => {
             {/* View Prices */}
             <Link
               to="/app/countries/rw/pricing"
-              className="relative bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-blue-300 dark:border-blue-700 transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2 cursor-pointer"
+              className="relative bg-gradient-to-br from-primary- to-primary- hover:from-primary- hover:to-primary- text-white rounded-xl p-4 sm:p-5 shadow-lg border-2 border-primary- dark:border-primary- transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2 cursor-pointer"
               title="Go to Prices Page - Track material prices"
             >
               <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8" />
@@ -477,7 +477,7 @@ const Dashboard: React.FC = () => {
         <RailLayout
           right={
             <div className="space-y-4">
-              <div className="bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-blue-600 dark:via-blue-700 dark:to-blue-800 rounded-2xl shadow-2xl border-4 border-blue-300 dark:border-blue-500 p-5">
+              <div className="bg-gradient-to-br from-primary- via-primary- to-primary- dark:from-primary- dark:via-primary- dark:to-primary- rounded-2xl shadow-2xl border-4 border-primary- dark:border-primary- p-5">
                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <span>🔍</span>
                   Quick Filters
@@ -603,11 +603,11 @@ const Dashboard: React.FC = () => {
         >
           <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
             {/* Playful Tab Navigation */}
-            <div className="flex bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 w-full sm:w-fit overflow-x-auto scrollbar-hide border-2 border-blue-200 dark:border-gray-700 shadow-lg">
+            <div className="flex bg-gradient-to-r from-primary- to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-2 w-full sm:w-fit overflow-x-auto scrollbar-hide border-2 border-primary- dark:border-gray-700 shadow-lg">
               <button 
                 className={`px-4 sm:px-6 py-3 rounded-xl text-sm sm:text-base font-bold transition-all whitespace-nowrap flex-shrink-0 flex items-center gap-2 transform hover:scale-105 ${selectedTab === 'overview' 
-                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105' 
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-300'}`}
+                  ? 'bg-gradient-to-r from-primary- to-primary- text-white shadow-lg scale-105' 
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-primary- dark:hover:bg-gray-700 hover:text-primary- dark:hover:text-primary-'}`}
                 onClick={() => setSelectedTab('overview')}
               >
                 <span>📊</span>
@@ -648,7 +648,7 @@ const Dashboard: React.FC = () => {
                     </p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-6">
-                    <div className="bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-blue-600 dark:via-blue-700 dark:to-blue-800 rounded-2xl shadow-2xl border-4 border-blue-300 dark:border-blue-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
+                    <div className="bg-gradient-to-br from-primary- via-primary- to-primary- dark:from-primary- dark:via-primary- dark:to-primary- rounded-2xl shadow-2xl border-4 border-primary- dark:border-primary- p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
                           <span>🛒</span>
@@ -657,7 +657,7 @@ const Dashboard: React.FC = () => {
                         <ShoppingCart size={24} className="text-white/80" />
                       </div>
                       <div className="text-4xl font-extrabold text-white mb-2">{metrics.totalTransactions}</div>
-                      <div className="text-sm text-blue-100 font-medium mb-2">Last 30 days</div>
+                      <div className="text-sm text-primary- font-medium mb-2">Last 30 days</div>
                       <div className="flex items-center text-sm text-green-200 font-bold">
                         <TrendingUp size={18} className="mr-1" />
                         +12% from last month 🚀
@@ -982,7 +982,7 @@ const Dashboard: React.FC = () => {
                     </p>
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-blue-600 dark:via-blue-700 dark:to-blue-800 rounded-2xl shadow-2xl border-4 border-blue-300 dark:border-blue-500 p-6">
+                    <div className="bg-gradient-to-br from-primary- via-primary- to-primary- dark:from-primary- dark:via-primary- dark:to-primary- rounded-2xl shadow-2xl border-4 border-primary- dark:border-primary- p-6">
                       <div className="flex items-center gap-3 mb-4">
                         <span className="text-2xl">📊</span>
                         <h3 className="text-xl font-bold text-white">Key Takeaways</h3>
@@ -1342,7 +1342,7 @@ const Dashboard: React.FC = () => {
                     </p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div className="bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 dark:from-blue-600 dark:via-blue-700 dark:to-blue-800 rounded-2xl shadow-2xl border-4 border-blue-300 dark:border-blue-500 p-5 hover:scale-105 transition-transform">
+                    <div className="bg-gradient-to-br from-primary- via-primary- to-primary- dark:from-primary- dark:via-primary- dark:to-primary- rounded-2xl shadow-2xl border-4 border-primary- dark:border-primary- p-5 hover:scale-105 transition-transform">
                       <div className="flex items-center gap-2 mb-3">
                         <span className="text-2xl">✅</span>
                         <h4 className="font-bold text-white text-lg">Work with Many Suppliers</h4>
@@ -1401,7 +1401,7 @@ const Dashboard: React.FC = () => {
                 ? 'border-red-200 dark:border-red-800/60 bg-red-50 dark:bg-red-900/20'
                 : kind === 'warning'
                   ? 'border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-900/20'
-                  : 'border-blue-200 dark:border-blue-800/60 bg-white dark:bg-gray-800';
+                  : 'border-primary- dark:border-primary-/60 bg-white dark:bg-gray-800';
             const Icon = kind === 'success' ? CheckCircle : kind === 'error' ? XCircle : kind === 'warning' ? AlertTriangle : Bell;
             return (
               <div
@@ -1411,7 +1411,7 @@ const Dashboard: React.FC = () => {
                 <div className="flex items-start justify-between">
                   <div className="flex-1 pr-3">
                     <div className="flex items-center gap-2">
-                      <Icon size={16} className={kind === 'success' ? 'text-green-600' : kind === 'error' ? 'text-red-600' : kind === 'warning' ? 'text-amber-600' : 'text-blue-600'} />
+                      <Icon size={16} className={kind === 'success' ? 'text-green-600' : kind === 'error' ? 'text-red-600' : kind === 'warning' ? 'text-amber-600' : 'text-primary-'} />
                       <h4 className="font-medium text-gray-900 dark:text-white text-sm">
                         {notification.title}
                       </h4>
@@ -1430,7 +1430,7 @@ const Dashboard: React.FC = () => {
                 {notification.action && (
                   <button
                     onClick={notification.action.onClick}
-                    className="mt-2 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-300 hover:underline"
+                    className="mt-2 text-sm text-primary- hover:text-primary- dark:text-primary- hover:underline"
                   >
                     {notification.action.label}
                   </button>

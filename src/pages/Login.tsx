@@ -121,11 +121,11 @@ const Login: React.FC = () => {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-xl transform hover:scale-110 transition-transform">
+              <div className="w-20 h-20 gradient-primary-construction rounded-2xl flex items-center justify-center shadow-xl transform hover:scale-110 transition-transform">
                 <span className="text-4xl">🚀</span>
               </div>
             </div>
-            <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary-800 to-primary-600 bg-clip-text text-transparent mb-2">
               Welcome Back! 👋
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 mt-2 flex items-center justify-center gap-2">
@@ -160,7 +160,7 @@ const Login: React.FC = () => {
 
           {/* Demo Credentials (disabled for production)
           {authConfig.isDemoMode && (
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 p-4 rounded-lg mb-6">
+            <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300 p-4 rounded-lg mb-6">
               <p className="font-medium text-sm mb-3">Demo Credentials:</p>
               <div className="text-xs space-y-2">
                 <div className="flex justify-between">
@@ -188,14 +188,14 @@ const Login: React.FC = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail size={20} className="text-blue-500" />
+                  <Mail size={20} className="text-primary-600" />
                 </div>
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-12 w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 py-3.5 px-4 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                  className="pl-12 w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 py-3.5 px-4 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm"
                   placeholder="you@company.com"
                   required
                 />
@@ -209,14 +209,14 @@ const Login: React.FC = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock size={20} className="text-blue-500" />
+                  <Lock size={20} className="text-primary-600" />
                 </div>
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-12 pr-12 w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 py-3.5 px-4 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                  className="pl-12 pr-12 w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 py-3.5 px-4 text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all shadow-sm"
                   placeholder="Enter your secret password"
                   required
                   disabled={isLocked}
@@ -243,13 +243,13 @@ const Login: React.FC = () => {
                 <input
                   id="remember"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+                  className="h-4 w-4 text-primary-800 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
                 />
                 <label htmlFor="remember" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                   Remember me
                 </label>
               </div>
-              <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
+              <a href="#" className="text-sm font-medium text-primary-800 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">
                 Forgot password?
               </a>
             </div>
@@ -268,7 +268,7 @@ const Login: React.FC = () => {
                   disabled: loading || isLocked || !email || !password || password.length < authConfig.passwordMinLength
                 });
               }}
-              className="w-full flex justify-center items-center gap-2 py-4 px-6 border-2 border-transparent rounded-xl shadow-lg text-base font-bold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95"
+              className="w-full flex justify-center items-center gap-2 py-4 px-6 border-2 border-transparent rounded-xl shadow-lg text-base font-bold text-white gradient-primary-construction hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95"
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -289,7 +289,7 @@ const Login: React.FC = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Don't have an account?{" "}
-              <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
+              <Link to="/register" className="font-medium text-primary-800 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">
                 Sign up
               </Link>
             </p>
@@ -308,7 +308,7 @@ const Login: React.FC = () => {
       </div>
 
       {/* Right side - Hero Section */}
-      <div className="hidden lg:flex lg:flex-1 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 items-center justify-center p-8 relative overflow-hidden">
+      <div className="hidden lg:flex lg:flex-1 gradient-primary-construction items-center justify-center p-8 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
         }}></div>
