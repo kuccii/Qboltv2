@@ -636,7 +636,6 @@ const Dashboard: React.FC = () => {
                     <div className="bg-primary-800 dark:bg-primary-900 rounded-lg shadow-md border border-primary-800 dark:border-primary-800 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                          <span>≡ƒ¢Æ</span>
                           {description.metrics.transactions}
                         </h3>
                         <ShoppingCart size={24} className="text-white/80" />
@@ -645,14 +644,13 @@ const Dashboard: React.FC = () => {
                       <div className="text-sm text-primary-800 font-medium mb-2">Last 30 days</div>
                       <div className="flex items-center text-sm text-green-200 font-bold">
                         <TrendingUp size={18} className="mr-1" />
-                        +12% from last month ≡ƒÜÇ
+                        +12% from last month 
                       </div>
                     </div>
                     
                     <div className="bg-success-500 dark:bg-success-700 rounded-lg shadow-md border border-success-300 dark:border-success-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                          <span>≡ƒÆ░</span>
                           Prices We're Watching
                         </h3>
                         <TrendingUp size={24} className="text-white/80" />
@@ -661,14 +659,13 @@ const Dashboard: React.FC = () => {
                       <div className="text-sm text-green-100 font-medium mb-2">Active price points</div>
                       <div className="flex items-center text-sm text-green-200 font-bold">
                         <TrendingUp size={18} className="mr-1" />
-                        +{Math.floor((realPrices?.length || 0) * 0.15)} this month ≡ƒôè
+                        +{Math.floor((realPrices?.length || 0) * 0.15)} this month 
                       </div>
                     </div>
                     
                     <div className="bg-accent-500 dark:bg-accent-700 rounded-lg shadow-md border border-accent-300 dark:border-accent-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                          <span>≡ƒæÑ</span>
                           {description.metrics.suppliers}
                         </h3>
                         <Users size={24} className="text-white/80" />
@@ -677,14 +674,13 @@ const Dashboard: React.FC = () => {
                       <div className="text-sm text-purple-100 font-medium mb-2">Active network</div>
                       <div className="flex items-center text-sm text-purple-200 font-bold">
                         <TrendingUp size={18} className="mr-1" />
-                        +5 new this month ≡ƒÄè
+                        +5 new this month 
                       </div>
                     </div>
                     
                     <div className="bg-warning-500 dark:bg-warning-700 rounded-lg shadow-md border border-warning-300 dark:border-warning-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                          <span>ΓÜí</span>
                           {description.metrics.volatility}
                         </h3>
                         <Activity size={24} className="text-white/80" />
@@ -693,14 +689,13 @@ const Dashboard: React.FC = () => {
                       <div className="text-sm text-orange-100 font-medium mb-2">30-day average</div>
                       <div className="flex items-center text-sm text-orange-200 font-bold">
                         <AlertTriangle size={18} className="mr-1" />
-                        Keep an eye on this! ≡ƒæÇ
+                        Keep an eye on this! 
                       </div>
                     </div>
                     
                     <div className="bg-primary-600 dark:bg-primary-700 rounded-lg shadow-md border border-primary-300 dark:border-primary-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                          <span>≡ƒôª</span>
                           Active Shipments
                         </h3>
                         <Package size={24} className="text-white/80" />
@@ -709,14 +704,13 @@ const Dashboard: React.FC = () => {
                       <div className="text-sm text-cyan-100 font-medium mb-2">On the way!</div>
                       <div className="flex items-center text-sm text-cyan-200 font-bold">
                         <TrendingUp size={18} className="mr-1" />
-                        All on track! Γ£à
+                        All on track! 
                       </div>
                     </div>
                     
                     <div className="bg-error-500 dark:bg-error-700 rounded-lg shadow-md border border-error-300 dark:border-error-500 p-5 sm:p-6 transform hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                          <span>ΓÜá∩╕Å</span>
                           Risk Alerts
                         </h3>
                         <AlertTriangle size={24} className="text-white/80" />
@@ -725,7 +719,7 @@ const Dashboard: React.FC = () => {
                       <div className="text-sm text-rose-100 font-medium mb-2">Active alerts</div>
                       <div className="flex items-center text-sm text-rose-200 font-bold">
                         <AlertTriangle size={18} className="mr-1" />
-                        {Array.isArray(realAlerts) && realAlerts.length > 0 ? 'Check them out! ≡ƒæå' : 'All good! ≡ƒÄë'}
+                        {Array.isArray(realAlerts) && realAlerts.length > 0 ? 'Check them out! ' : 'All good! '}
                       </div>
                     </div>
                   </div>
@@ -735,23 +729,21 @@ const Dashboard: React.FC = () => {
                 <div className="mb-6">
                   <div className="mb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <span>≡ƒôè</span>
                       Price Adventure!
                     </h2>
                     <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
-                      <span>≡ƒÄó</span>
                       Watch how prices go up and down like a fun roller coaster!
                     </p>
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="bg-primary-700 dark:bg-primary-800 rounded-lg shadow-md border border-primary-300 dark:border-primary-500 p-6 lg:col-span-2">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="text-2xl">≡ƒôê</span>
+                        <span className="text-2xl"></span>
                         <h3 className="text-xl font-bold text-white">Price Trends Chart</h3>
                       </div>
                       {isLoading ? (
                         <div className="h-[300px] animate-pulse bg-indigo-400/30 dark:bg-indigo-700/30 rounded-xl flex items-center justify-center">
-                          <span className="text-white text-lg">Loading chart... ≡ƒÄ¿</span>
+                          <span className="text-white text-lg">Loading chart... </span>
                         </div>
                       ) : (
                         <div className="bg-white/10 dark:bg-white/5 rounded-xl p-4">
@@ -766,7 +758,7 @@ const Dashboard: React.FC = () => {
                     
                     <div className="bg-accent-500 dark:bg-accent-700 rounded-lg shadow-md border border-accent-300 dark:border-accent-500 p-6">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="text-2xl">≡ƒÆ╣</span>
+                        <span className="text-2xl"></span>
                         <h3 className="text-xl font-bold text-white">Price Changes</h3>
                       </div>
                       <div className="space-y-3 mt-4">
@@ -777,7 +769,7 @@ const Dashboard: React.FC = () => {
                               <div className="flex items-center justify-between">
                                 <span className="text-white font-bold text-sm">{key.charAt(0).toUpperCase() + key.slice(1)}</span>
                                 <span className={`flex items-center font-extrabold text-lg ${isPositive ? 'text-red-200' : 'text-green-200'}`}>
-                                  {isPositive ? '≡ƒôê' : '≡ƒôë'} {isPositive ? '+' : ''}{value}%
+                                  {isPositive ? '' : ''} {isPositive ? '+' : ''}{value}%
                                 </span>
                               </div>
                             </div>
@@ -792,22 +784,20 @@ const Dashboard: React.FC = () => {
                 <div className="mb-6">
                   <div className="mb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <span>ΓÜá∩╕Å</span>
                       Important Alerts!
                     </h2>
                     <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
-                      <span>≡ƒöö</span>
                       Things you need to know about your supply chain!
                     </p>
                   </div>
                   <div className="bg-warning-500 dark:bg-warning-700 rounded-lg shadow-md border border-warning-300 dark:border-warning-500 p-6">
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="text-2xl">≡ƒÜ¿</span>
+                      <span className="text-2xl"></span>
                       <h3 className="text-xl font-bold text-white">Active Alerts</h3>
                     </div>
                     <div className="space-y-4 mt-4">
                       {metrics.materialShortages.map((shortage: any, index: number) => {
-                        const severityEmoji = shortage.severity === 'high' ? '≡ƒö┤' : shortage.severity === 'medium' ? '≡ƒƒí' : '≡ƒƒó';
+                        const severityEmoji = shortage.severity === 'high' ? '' : shortage.severity === 'medium' ? '' : '';
                         return (
                           <div key={`shortage-${index}-${shortage.material || shortage.id || index}`} className="bg-white/20 dark:bg-white/10 rounded-xl p-4 border-2 border-white/30">
                             <div className="flex items-start gap-3">
@@ -831,10 +821,10 @@ const Dashboard: React.FC = () => {
                                 </p>
                                 <p className="text-sm text-white/80 mt-2">
                                   {shortage.severity === 'high' 
-                                    ? '≡ƒÜ¿ Critical shortage affecting prices and availability!' 
+                                    ? ' Critical shortage affecting prices and availability!' 
                                     : shortage.severity === 'medium' 
-                                      ? 'ΓÜá∩╕Å Moderate supply constraints expected.' 
-                                      : 'Γä╣∩╕Å Minor supply issues reported.'
+                                      ? ' Moderate supply constraints expected.' 
+                                      : ' Minor supply issues reported.'
                                   }
                                 </p>
                               </div>
@@ -850,22 +840,20 @@ const Dashboard: React.FC = () => {
                 <div className="mb-6">
                   <div className="mb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <span>≡ƒÆ╝</span>
                       Amazing Opportunities!
                     </h2>
                     <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
-                      <span>≡ƒÄü</span>
                       Cool projects and deals waiting for you!
                     </p>
                   </div>
                   <div className="bg-success-500 dark:bg-success-700 rounded-lg shadow-md border border-success-300 dark:border-success-500 p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl">≡ƒîƒ</span>
+                        <span className="text-2xl"></span>
                         <h3 className="text-xl font-bold text-white">Active Opportunities</h3>
                       </div>
                       <button className="text-sm text-white font-bold bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl border-2 border-white/30 transition-colors">
-                        View All ≡ƒæë
+                        View All 
                       </button>
                     </div>
                     
@@ -876,7 +864,6 @@ const Dashboard: React.FC = () => {
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex-1">
                               <h4 className="font-bold text-white text-lg mb-2 flex items-center gap-2">
-                                <span>≡ƒÄ»</span>
                                 {opportunity.title || opportunity.opportunity_type}
                               </h4>
                               <p className="text-sm text-white/90 mb-3">{opportunity.description || 'Trade opportunity'}</p>
@@ -916,7 +903,7 @@ const Dashboard: React.FC = () => {
                               {opportunity.material && (
                                 <div className="flex flex-wrap gap-1">
                                   <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold bg-white/30 text-white border-2 border-white/40">
-                                    ≡ƒôª {opportunity.material}
+                                     {opportunity.material}
                                   </span>
                                 </div>
                               )}
@@ -933,7 +920,7 @@ const Dashboard: React.FC = () => {
                                 text={opportunity.status?.toUpperCase() || 'ACTIVE'} 
                               />
                               <button className="px-4 py-2 text-sm font-bold text-emerald-600 bg-white rounded-xl hover:bg-emerald-50 border-2 border-white/50 transition-colors">
-                                View ≡ƒæÇ
+                                View 
                               </button>
                             </div>
                           </div>
@@ -941,9 +928,9 @@ const Dashboard: React.FC = () => {
                         ))
                       ) : (
                         <div className="text-center py-8 text-white/80">
-                          <span className="text-4xl block mb-2">≡ƒô¡</span>
+                          <span className="text-4xl block mb-2"></span>
                           <p className="text-base font-medium">No trade opportunities available yet</p>
-                          <p className="text-sm mt-1">Check back soon for new opportunities! ≡ƒÄë</p>
+                          <p className="text-sm mt-1">Check back soon for new opportunities! </p>
                         </div>
                       )}
                     </div>
@@ -958,45 +945,42 @@ const Dashboard: React.FC = () => {
                 <div className="mb-6">
                   <div className="mb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <span>≡ƒÆí</span>
                       Smart Ideas & Tips!
                     </h2>
                     <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
-                      <span>≡ƒºá</span>
                       Learn cool things about your market and how to grow!
                     </p>
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="bg-primary-800 dark:bg-primary-900 rounded-lg shadow-md border border-primary-800 dark:border-primary-800 p-6">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="text-2xl">≡ƒôè</span>
+                        <span className="text-2xl"></span>
                         <h3 className="text-xl font-bold text-white">Key Takeaways</h3>
                       </div>
                       <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                         <h3 className="font-bold text-white mb-3 flex items-center gap-2">
-                          <span>≡ƒöì</span>
                           Market Analysis
                         </h3>
                         <ul className="space-y-3 text-white">
                           <li className="flex items-start gap-2">
-                            <span className="text-xl">≡ƒÆí</span>
+                            <span className="text-xl"></span>
                             <span className="font-medium">{currentIndustry === 'construction' 
-                              ? 'Cement prices are going up because lots of people are building in cities! ≡ƒÅù∩╕Å'
-                              : 'Fertilizer prices are getting better after some problems with shipping! ≡ƒî╛'
+                              ? 'Cement prices are going up because lots of people are building in cities! '
+                              : 'Fertilizer prices are getting better after some problems with shipping! '
                             }</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <span className="text-xl">≡ƒÆí</span>
+                            <span className="text-xl"></span>
                             <span className="font-medium">{currentIndustry === 'construction' 
-                              ? 'Steel sellers are giving discounts if you buy a lot! ≡ƒÆ░'
-                              : 'Seed prices change a lot because of seasons and shipping! ≡ƒî▒'
+                              ? 'Steel sellers are giving discounts if you buy a lot! '
+                              : 'Seed prices change a lot because of seasons and shipping! '
                             }</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <span className="text-xl">≡ƒÆí</span>
+                            <span className="text-xl"></span>
                             <span className="font-medium">{currentIndustry === 'construction' 
-                              ? 'New rules about buying from other countries are coming! ≡ƒôï'
-                              : 'The government is helping farmers with money in Rwanda and Uganda! ≡ƒÄü'
+                              ? 'New rules about buying from other countries are coming! '
+                              : 'The government is helping farmers with money in Rwanda and Uganda! '
                             }</span>
                           </li>
                         </ul>
@@ -1005,31 +989,29 @@ const Dashboard: React.FC = () => {
                     
                     <div className="bg-accent-500 dark:bg-accent-700 rounded-lg shadow-md border border-accent-300 dark:border-accent-500 p-6">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="text-2xl">≡ƒÜÇ</span>
+                        <span className="text-2xl"></span>
                         <h3 className="text-xl font-bold text-white">Growth Opportunities</h3>
                       </div>
                       <div className="space-y-3">
                         <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <h4 className="font-bold text-white mb-2 flex items-center gap-2">
-                            <span>≡ƒîì</span>
                             Market Expansion
                           </h4>
                           <p className="text-sm text-white/90 font-medium">
                             {currentIndustry === 'construction' 
-                              ? 'More people need stuff in Tanzania and Uganda - great chance to grow! ≡ƒôê'
-                              : 'You can sell organic fertilizers to nearby countries! ≡ƒî┐'
+                              ? 'More people need stuff in Tanzania and Uganda - great chance to grow! '
+                              : 'You can sell organic fertilizers to nearby countries! '
                             }
                           </p>
                         </div>
                         <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <h4 className="font-bold text-white mb-2 flex items-center gap-2">
-                            <span>≡ƒÆ░</span>
                             Save Money!
                           </h4>
                           <p className="text-sm text-white/90 font-medium">
                             {currentIndustry === 'construction' 
-                              ? 'Buying lots at once can save you 15%! ≡ƒÄë'
-                              : 'Buying directly from farmers can save 20%! ≡ƒî╛'
+                              ? 'Buying lots at once can save you 15%! '
+                              : 'Buying directly from farmers can save 20%! '
                             }
                           </p>
                         </div>
@@ -1039,43 +1021,39 @@ const Dashboard: React.FC = () => {
                   
                   <div className="mt-6">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                      <span>Γ£à</span>
                       Things You Should Do!
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       <div className="bg-success-500 dark:bg-success-700 rounded-lg shadow-md border border-success-300 dark:border-success-500 p-5 hover:scale-105 transition-transform">
                         <h4 className="font-bold text-white mb-2 flex items-center gap-2">
-                          <span>≡ƒ¢Æ</span>
                           Buying Strategy
                         </h4>
                         <p className="text-sm text-white/90 font-medium">
                           {currentIndustry === 'construction' 
-                            ? 'Lock in cement prices with reliable suppliers! ≡ƒöÆ' 
-                            : 'Get fertilizer before the busy season starts! ΓÅ░'
+                            ? 'Lock in cement prices with reliable suppliers! ' 
+                            : 'Get fertilizer before the busy season starts! '
                           }
                         </p>
                       </div>
                       <div className="bg-warning-500 dark:bg-warning-700 rounded-lg shadow-md border border-warning-300 dark:border-warning-500 p-5 hover:scale-105 transition-transform">
                         <h4 className="font-bold text-white mb-2 flex items-center gap-2">
-                          <span>≡ƒñ¥</span>
                           Make Friends!
                         </h4>
                         <p className="text-sm text-white/90 font-medium">
                           {currentIndustry === 'construction' 
-                            ? 'Work with different steel sellers to stay safe! ≡ƒ¢í∩╕Å' 
-                            : 'Partner with local seed growers! ≡ƒî▒'
+                            ? 'Work with different steel sellers to stay safe! ' 
+                            : 'Partner with local seed growers! '
                           }
                         </p>
                       </div>
                       <div className="bg-primary-600 dark:bg-primary-700 rounded-lg shadow-md border border-primary-300 dark:border-primary-500 p-5 hover:scale-105 transition-transform">
                         <h4 className="font-bold text-white mb-2 flex items-center gap-2">
-                          <span>≡ƒ¢í∩╕Å</span>
                           Stay Safe!
                         </h4>
                         <p className="text-sm text-white/90 font-medium">
                           {currentIndustry === 'construction' 
-                            ? 'Protect yourself from price changes! ≡ƒôè' 
-                            : 'Have backup suppliers ready! ≡ƒöä'
+                            ? 'Protect yourself from price changes! ' 
+                            : 'Have backup suppliers ready! '
                           }
                         </p>
                       </div>
@@ -1087,11 +1065,9 @@ const Dashboard: React.FC = () => {
                 <div className="mb-6">
                   <div className="mb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <span>≡ƒôê</span>
                       How Awesome You're Doing!
                     </h2>
                     <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
-                      <span>≡ƒÄ»</span>
                       Check out your amazing scores!
                     </p>
                   </div>
@@ -1099,37 +1075,34 @@ const Dashboard: React.FC = () => {
                     <div className="bg-success-500 dark:bg-success-700 rounded-lg shadow-md border border-success-300 dark:border-success-500 p-6">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                          <span>ΓÜí</span>
                           Efficiency Score
                         </h3>
                         <Activity size={24} className="text-white/80" />
                       </div>
                       <div className="text-5xl font-extrabold text-white mb-2">87%</div>
-                      <div className="text-sm text-emerald-100 font-bold">You're doing great! ≡ƒÄë</div>
+                      <div className="text-sm text-emerald-100 font-bold">You're doing great! </div>
                     </div>
                     
                     <div className="bg-accent-500 dark:bg-accent-700 rounded-lg shadow-md border border-accent-300 dark:border-accent-500 p-6">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                          <span>≡ƒÆ░</span>
                           Money Saved!
                         </h3>
                         <DollarSign size={24} className="text-white/80" />
                       </div>
                       <div className="text-5xl font-extrabold text-white mb-2">12%</div>
-                      <div className="text-sm text-violet-100 font-bold">vs last quarter ≡ƒÜÇ</div>
+                      <div className="text-sm text-violet-100 font-bold">vs last quarter </div>
                     </div>
                     
                     <div className="bg-primary-600 dark:bg-primary-700 rounded-lg shadow-md border border-primary-300 dark:border-primary-500 p-6">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-base font-bold text-white flex items-center gap-2">
-                          <span>≡ƒôè</span>
                           Market Share
                         </h3>
                         <BarChart3 size={24} className="text-white/80" />
                       </div>
                       <div className="text-5xl font-extrabold text-white mb-2">24%</div>
-                      <div className="text-sm text-sky-100 font-bold">In your region ≡ƒîì</div>
+                      <div className="text-sm text-sky-100 font-bold">In your region </div>
                     </div>
                   </div>
                 </div>
@@ -1142,27 +1115,25 @@ const Dashboard: React.FC = () => {
                 <div className="mb-6">
                   <div className="mb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <span>≡ƒöö</span>
                       Important Alerts!
                     </h2>
                     <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
-                      <span>ΓÜá∩╕Å</span>
                       Things you need to know about right away!
                     </p>
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="bg-warning-500 dark:bg-warning-700 rounded-lg shadow-md border border-warning-300 dark:border-warning-500 p-6">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="text-2xl">≡ƒÆ░</span>
+                        <span className="text-2xl"></span>
                         <h3 className="text-xl font-bold text-white">Price Alerts</h3>
                       </div>
                       <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <div className="flex items-center gap-3">
-                            <span className="text-2xl">≡ƒôê</span>
+                            <span className="text-2xl"></span>
                             <div>
                               <h4 className="font-bold text-white text-lg">Cement Price Surge!</h4>
-                              <p className="text-sm text-white/90 font-medium">Prices went up 5.2% in one day! ΓÜí</p>
+                              <p className="text-sm text-white/90 font-medium">Prices went up 5.2% in one day! </p>
                             </div>
                           </div>
                           <StatusBadge type="warning" text="ACTIVE" />
@@ -1170,10 +1141,10 @@ const Dashboard: React.FC = () => {
                         
                         <div className="flex items-center justify-between p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <div className="flex items-center gap-3">
-                            <span className="text-2xl">≡ƒÜ¿</span>
+                            <span className="text-2xl"></span>
                             <div>
                               <h4 className="font-bold text-white text-lg">Supply Problem!</h4>
-                              <p className="text-sm text-white/90 font-medium">Steel delivery is 3 days late! ≡ƒÿ░</p>
+                              <p className="text-sm text-white/90 font-medium">Steel delivery is 3 days late! </p>
                             </div>
                           </div>
                           <StatusBadge type="error" text="CRITICAL" />
@@ -1183,24 +1154,22 @@ const Dashboard: React.FC = () => {
 
                     <div className="bg-warning-500 dark:bg-warning-700 rounded-lg shadow-md border border-warning-300 dark:border-warning-500 p-6">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="text-2xl">≡ƒ¢í∩╕Å</span>
+                        <span className="text-2xl"></span>
                         <h3 className="text-xl font-bold text-white">Risk Check</h3>
                       </div>
                       <div className="space-y-3">
                         <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <div className="flex justify-between items-center mb-2">
                             <span className="text-sm font-bold text-white flex items-center gap-2">
-                              <span>ΓÜá∩╕Å</span>
                               Supply Disruption
                             </span>
                             <StatusBadge type="warning" text="MEDIUM" />
                           </div>
-                          <p className="text-xs text-white/90 font-medium">Watch your suppliers closely! ≡ƒæÇ</p>
+                          <p className="text-xs text-white/90 font-medium">Watch your suppliers closely! </p>
                         </div>
                         <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <div className="flex justify-between items-center mb-2">
                             <span className="text-sm font-bold text-white flex items-center gap-2">
-                              <span>≡ƒôè</span>
                               Price Volatility
                             </span>
                             <StatusBadge 
@@ -1208,17 +1177,16 @@ const Dashboard: React.FC = () => {
                               text={metrics.priceVolatility > 10 ? "HIGH" : "MEDIUM"} 
                             />
                           </div>
-                          <p className="text-xs text-white/90 font-medium">Prices are changing a lot! ≡ƒÆ╣</p>
+                          <p className="text-xs text-white/90 font-medium">Prices are changing a lot! </p>
                         </div>
                         <div className="p-4 bg-white/20 dark:bg-white/10 rounded-xl border-2 border-white/30">
                           <div className="flex justify-between items-center mb-2">
                             <span className="text-sm font-bold text-white flex items-center gap-2">
-                              <span>Γ£à</span>
                               Quality Consistency
                             </span>
                             <StatusBadge type="success" text="LOW" />
                           </div>
-                          <p className="text-xs text-white/90 font-medium">Everything looks good! ≡ƒÄë</p>
+                          <p className="text-xs text-white/90 font-medium">Everything looks good! </p>
                         </div>
                       </div>
                     </div>
@@ -1229,18 +1197,16 @@ const Dashboard: React.FC = () => {
                 <div className="mb-6">
                   <div className="mb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <span>≡ƒÜ¿</span>
                       Active Risk Alerts!
                     </h2>
                     <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
-                      <span>ΓÜí</span>
                       Real-time alerts from your supply chain!
                     </p>
                   </div>
                   <div className="space-y-4">
                     {Array.isArray(realAlerts) && realAlerts.length > 0 ? (
                       realAlerts.slice(0, 5).map((alert: any, index: number) => {
-                        const severityEmoji = alert.severity === 'high' ? '≡ƒö┤' : alert.severity === 'medium' ? '≡ƒƒí' : '≡ƒƒó';
+                        const severityEmoji = alert.severity === 'high' ? '' : alert.severity === 'medium' ? '' : '';
                         const bgGradient = alert.severity === 'high' 
                           ? 'bg-error-500 dark:bg-error-700 border-error-300 dark:border-error-500'
                           : alert.severity === 'medium'
@@ -1296,7 +1262,7 @@ const Dashboard: React.FC = () => {
                                 }}
                                 className="ml-4 px-4 py-2 text-sm font-bold bg-white text-gray-700 rounded-xl hover:bg-gray-100 border-2 border-white/50 transition-colors"
                               >
-                                Fix It! Γ£à
+                                Fix It! 
                               </button>
                             </div>
                           </div>
@@ -1304,10 +1270,10 @@ const Dashboard: React.FC = () => {
                       })
                     ) : (
                       <div className="bg-success-500 dark:bg-success-700 rounded-lg shadow-md border border-success-300 dark:border-success-500 p-8 text-center">
-                        <span className="text-6xl block mb-4">≡ƒÄë</span>
+                        <span className="text-6xl block mb-4"></span>
                         <h3 className="text-2xl font-bold text-white mb-2">All Clear!</h3>
                         <p className="text-base text-white/90 font-medium">
-                          No active risk alerts right now! Everything is working great! Γ£¿
+                          No active risk alerts right now! Everything is working great! 
                         </p>
                       </div>
                     )}
@@ -1318,42 +1284,40 @@ const Dashboard: React.FC = () => {
                 <div className="mb-6">
                   <div className="mb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <span>≡ƒ¢í∩╕Å</span>
                       How to Stay Safe!
                     </h2>
                     <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
-                      <span>≡ƒÆ¬</span>
                       Things you can do to protect your business!
                     </p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div className="bg-primary-800 dark:bg-primary-900 rounded-lg shadow-md border border-primary-800 dark:border-primary-800 p-5 hover:scale-105 transition-transform">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-2xl">Γ£à</span>
+                        <span className="text-2xl"></span>
                         <h4 className="font-bold text-white text-lg">Work with Many Suppliers</h4>
                       </div>
                       <p className="text-sm text-white/90 font-medium">
-                        Having lots of suppliers keeps you safe! ≡ƒ¢í∩╕Å
+                        Having lots of suppliers keeps you safe! 
                       </p>
                     </div>
                     
                     <div className="bg-warning-500 dark:bg-warning-700 rounded-lg shadow-md border border-warning-300 dark:border-warning-500 p-5 hover:scale-105 transition-transform">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-2xl">≡ƒÆ░</span>
+                        <span className="text-2xl"></span>
                         <h4 className="font-bold text-white text-lg">Protect Your Prices!</h4>
                       </div>
                       <p className="text-sm text-white/90 font-medium">
-                        Use price protection to stay safe from changes! ≡ƒôè
+                        Use price protection to stay safe from changes! 
                       </p>
                     </div>
                     
                     <div className="bg-success-500 dark:bg-success-700 rounded-lg shadow-md border border-success-300 dark:border-success-500 p-5 hover:scale-105 transition-transform">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-2xl">Γ£à</span>
+                        <span className="text-2xl"></span>
                         <h4 className="font-bold text-white text-lg">Quality Check Active!</h4>
                       </div>
                       <p className="text-sm text-white/90 font-medium">
-                        We're watching quality for you! ≡ƒæÇ
+                        We're watching quality for you! 
                       </p>
                     </div>
                   </div>
