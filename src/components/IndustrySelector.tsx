@@ -25,12 +25,12 @@ const IndustryCard: React.FC<IndustryCardProps> = ({ industry, isSelected, onSel
       description: 'Build amazing things! Get materials, find suppliers, and manage your projects!',
       icon: Building2,
       color: 'blue',
-      bgGradient: 'from-primary-50 via-indigo-50 to-purple-50 dark:from-primary-950 dark:via-indigo-950 dark:to-purple-950',
+      bgGradient: 'from-primary-50 to-primary-100 dark:from-primary-950 dark:to-primary-900',
       borderColor: 'border-primary-200 dark:border-primary-800',
       selectedBorder: 'border-primary-500 dark:border-primary-400',
       selectedBg: 'bg-primary-50 dark:bg-primary-950/30',
       iconColor: 'text-primary-600 dark:text-primary-400',
-      iconBg: 'bg-gradient-to-br from-primary-100 to-indigo-200 dark:from-primary-900/50 dark:to-indigo-900/50',
+      iconBg: 'bg-primary-100 dark:bg-primary-900/50',
     },
     agriculture: {
       name: 'Agriculture',
@@ -38,12 +38,12 @@ const IndustryCard: React.FC<IndustryCardProps> = ({ industry, isSelected, onSel
       description: 'Grow your farm! Get seeds, tools, and tips to make your crops amazing!',
       icon: Wheat,
       color: 'green',
-      bgGradient: 'from-green-50 via-emerald-50 to-teal-50 dark:from-green-950 dark:via-emerald-950 dark:to-teal-950',
+      bgGradient: 'from-green-50 to-green-100 dark:from-green-950 dark:to-green-900',
       borderColor: 'border-green-200 dark:border-green-800',
       selectedBorder: 'border-green-500 dark:border-green-400',
       selectedBg: 'bg-green-50 dark:bg-green-950/30',
       iconColor: 'text-green-600 dark:text-green-400',
-      iconBg: 'bg-gradient-to-br from-green-100 to-emerald-200 dark:from-green-900/50 dark:to-emerald-900/50',
+      iconBg: 'bg-green-100 dark:bg-green-900/50',
     }
   };
 
@@ -60,22 +60,22 @@ const IndustryCard: React.FC<IndustryCardProps> = ({ industry, isSelected, onSel
     >
       <div 
         className={`
-          p-6 sm:p-8 rounded-2xl border-4 transition-all duration-300 transform
-          ${isSelected ? `${industryConfig.selectedBorder} ${industryConfig.selectedBg} shadow-2xl scale-105` : `${industryConfig.borderColor} bg-white dark:bg-gray-900 hover:scale-102`}
-          hover:shadow-xl
+          p-6 sm:p-8 rounded-lg border transition-all duration-300 transform
+          ${isSelected ? `${industryConfig.selectedBorder} ${industryConfig.selectedBg} shadow-md scale-105` : `${industryConfig.borderColor} bg-white dark:bg-gray-900 hover:scale-102`}
+          hover:shadow-md
           bg-gradient-to-br ${industryConfig.bgGradient}
         `}
       >
         {/* Selection indicator */}
         {isSelected && (
-          <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-xl border-4 border-white dark:border-gray-800">
+          <div className="absolute -top-3 -right-3 w-10 h-10 bg-green-600 rounded-full flex items-center justify-center shadow-md border border-white dark:border-gray-800">
             <CheckCircle className="w-6 h-6 text-white" />
           </div>
         )}
 
         {/* Header */}
         <div className="text-center">
-          <div className={`w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-4 rounded-3xl ${industryConfig.iconBg} flex items-center justify-center shadow-xl border-4 border-white/50 dark:border-gray-700/50 ${isSelected ? 'ring-4 ring-white dark:ring-gray-700 ring-opacity-50 scale-110' : ''} transition-all`}>
+          <div className={`w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-4 rounded-lg ${industryConfig.iconBg} flex items-center justify-center shadow-md border border-white/50 dark:border-gray-700/50 ${isSelected ? 'ring-2 ring-white dark:ring-gray-700 ring-opacity-50 scale-110' : ''} transition-all`}>
             <span className="text-5xl sm:text-6xl">{industryConfig.emoji}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-3 flex items-center justify-center gap-2">
@@ -83,7 +83,7 @@ const IndustryCard: React.FC<IndustryCardProps> = ({ industry, isSelected, onSel
             <span>{industryConfig.name}</span>
           </h2>
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-medium px-2">{industryConfig.description}</p>
-          <button className="mt-6 px-6 py-3 bg-gradient-to-r from-primary-500 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center gap-2 mx-auto">
+          <button className="mt-6 px-6 py-3 bg-primary-800 hover:bg-primary-700 text-white font-bold rounded-lg shadow-md hover:shadow-md transform hover:scale-105 transition-all flex items-center gap-2 mx-auto">
             <span>Choose This!</span>
             <ArrowRight size={18} />
           </button>
@@ -105,14 +105,14 @@ const IndustrySelector: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50/30 to-indigo-50/30 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-primary-500 via-purple-500 to-pink-500 rounded-3xl mb-6 shadow-2xl transform hover:scale-110 transition-transform border-4 border-white/30 dark:border-gray-700/30">
+          <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-primary-800 rounded-lg mb-6 shadow-md transform hover:scale-105 transition-transform border border-white/30 dark:border-gray-700/30">
             <span className="text-4xl sm:text-5xl">🚀</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent mb-3 sm:mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-400 mb-3 sm:mb-4">
             Welcome to Qivook! 🎉
           </h1>
           <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 mb-2 font-semibold flex items-center justify-center gap-2">
