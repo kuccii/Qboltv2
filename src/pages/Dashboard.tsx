@@ -553,7 +553,6 @@ const Dashboard: React.FC = () => {
 
               <div className="bg-success-500 dark:bg-success-700 rounded-lg shadow-md border border-success-300 dark:border-success-500 p-5">
                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <span>≡ƒô¥</span>
                   Recent Activity
                 </h3>
                 <div className="space-y-3">
@@ -565,10 +564,10 @@ const Dashboard: React.FC = () => {
                         : 'Recently';
                       const message = activity.details?.message || activity.action || 'Activity';
                       
-                      let emoji = '≡ƒôî';
-                      if (actionType.includes('price')) emoji = '≡ƒÆ░';
-                      else if (actionType.includes('supplier')) emoji = '≡ƒæÑ';
-                      else if (actionType.includes('alert')) emoji = '≡ƒöö';
+                      let emoji = '';
+                      if (actionType.includes('price')) emoji = '';
+                      else if (actionType.includes('supplier')) emoji = '';
+                      else if (actionType.includes('alert')) emoji = '';
                       
                       return (
                         <div key={activity.id || index} className="bg-white/20 dark:bg-white/10 rounded-xl p-3 border-2 border-white/30 hover:bg-white/30 transition-colors">
