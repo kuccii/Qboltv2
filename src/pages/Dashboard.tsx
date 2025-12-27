@@ -626,11 +626,9 @@ const Dashboard: React.FC = () => {
                 <div className="mb-6">
                   <div className="mb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <span>≡ƒôê</span>
                       Your Amazing Numbers!
                     </h2>
                     <p className="text-base text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
-                      <span>≡ƒÄë</span>
                       See how awesome your {getIndustryTerm('materials')} business is doing!
                     </p>
                   </div>
