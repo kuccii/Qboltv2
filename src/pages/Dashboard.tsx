@@ -314,11 +314,9 @@ const Dashboard: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
-                <span>≡ƒÄ»</span>
                 {description.title}
               </h1>
               <p className="text-base text-white/90 dark:text-white/80 mt-2 flex items-center gap-2">
-                <span>Γ£¿</span>
                 {description.subtitle}
               </p>
             </div>
@@ -478,13 +476,11 @@ const Dashboard: React.FC = () => {
             <div className="space-y-4">
               <div className="bg-primary-800 dark:bg-primary-900 rounded-lg shadow-md border border-primary-800 dark:border-primary-800 p-5">
                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <span>≡ƒöì</span>
                   Quick Filters
                 </h3>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-bold text-white mb-2 flex items-center gap-2">
-                      <span>ΓÅ░</span>
                       Time Range
                     </label>
                     <SelectInput
@@ -500,7 +496,6 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-white mb-2 flex items-center gap-2">
-                      <span>≡ƒîì</span>
                       Countries
                     </label>
                     <div className="space-y-2 bg-white/10 dark:bg-white/5 rounded-xl p-3">
@@ -528,19 +523,17 @@ const Dashboard: React.FC = () => {
 
               <div className="bg-accent-500 dark:bg-accent-700 rounded-lg shadow-md border border-accent-300 dark:border-accent-500 p-5">
                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <span>Γ¡É</span>
                   Top Suppliers
                 </h3>
                 <div className="space-y-3">
                   {topSuppliers.length === 0 && (
-                    <div className="text-sm text-white/80 text-center py-4">No suppliers to show yet! ≡ƒÄ»</div>
+                    <div className="text-sm text-white/80 text-center py-4">No suppliers to show yet!</div>
                   )}
                   {topSuppliers.map((supplier: any, index: number) => (
                     <div key={supplier.id} className="bg-white/20 dark:bg-white/10 rounded-xl p-3 border-2 border-white/30 hover:bg-white/30 transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-lg">≡ƒÅå</span>
                             <div className="text-sm font-bold text-white">{supplier.name || supplier.company_name}</div>
                           </div>
                           <div className="text-xs text-white/80 flex items-center gap-1">
@@ -550,7 +543,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         <div className="text-right">
                           <div className="text-lg font-extrabold text-white">{supplier.rating || supplier.score || 'N/A'}</div>
-                          <div className="text-xs text-white/80">{supplier.rating ? 'Γ¡É Rating' : '≡ƒôè Score'}</div>
+                          <div className="text-xs text-white/80">{supplier.rating ? 'Rating' : 'Score'}</div>
                         </div>
                       </div>
                     </div>
