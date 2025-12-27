@@ -583,7 +583,6 @@ const Dashboard: React.FC = () => {
                     })
                   ) : (
                     <div className="text-center py-4 text-white/80 text-sm">
-                      <span className="text-2xl block mb-2">≡ƒÿ┤</span>
                       No recent activity
                     </div>
                   )}
@@ -601,7 +600,6 @@ const Dashboard: React.FC = () => {
                   : 'text-gray-600 dark:text-gray-400 hover:bg-primary-800 dark:hover:bg-gray-700 hover:text-primary-800 dark:hover:text-primary-'}`}
                 onClick={() => setSelectedTab('overview')}
               >
-                <span>≡ƒôè</span>
                 Overview
               </button>
               <button 
@@ -610,7 +608,6 @@ const Dashboard: React.FC = () => {
                   : 'text-gray-600 dark:text-gray-400 hover:bg-purple-100 dark:hover:bg-gray-700 hover:text-purple-700 dark:hover:text-purple-300'}`}
                 onClick={() => setSelectedTab('insights')}
               >
-                <span>≡ƒÆí</span>
                 Insights
               </button>
               <button 
@@ -619,7 +616,6 @@ const Dashboard: React.FC = () => {
                   : 'text-gray-600 dark:text-gray-400 hover:bg-red-100 dark:hover:bg-gray-700 hover:text-red-700 dark:hover:text-red-300'}`}
                 onClick={() => setSelectedTab('alerts')}
               >
-                <span>≡ƒöö</span>
                 Alerts
               </button>
             </div>
